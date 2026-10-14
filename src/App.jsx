@@ -350,13 +350,11 @@ export default function App() {
           {/* Desktop Navigation */}
           <nav className="desktop-nav">
             {[
-              ['#hero', 'Inicio'],
-              ['#emprendedor', 'Combos Emprendedor'],
-              ['#catalog', 'Relojes Caballero'],
-              ['#catalog', 'Relojes Dama'],
-              ['#beneficios', 'Beneficios'],
-              ['#faq', 'Preguntas'],
-              ['#order-builder', 'Pedir Ahora'],
+              ['#catalog', '⌚ Relojes'],
+              ['#emprendedor', '💼 Combos Mayoristas'],
+              ['#combo-detail', '🎁 ¿Qué Incluye?'],
+              ['#real-photos', '📸 Fotos Reales'],
+              ['#order-builder', '⚡ Pedir Ahora'],
             ].map(([href, label], i) => (
               <a key={i} href={href} className="nav-a" onClick={playTick}>{label}</a>
             ))}
@@ -419,7 +417,7 @@ export default function App() {
             <div>
               <div className="hero-eyebrow sr d1">
                 <ShieldCheck className="w-4 h-4" />
-                Relojería de Alta Presencia · Ibagué & Colombia
+                Relojería Urbana de Alta Presencia · Ibagué & Colombia
               </div>
 
               <h1 className="hero-h1 sr d2">
@@ -428,8 +426,8 @@ export default function App() {
               </h1>
 
               <p className="hero-p sr d2">
-                Relojes de presencia masiva y estética imponente <strong>tipo Invicta</strong>. 
-                El kit más vendido de Colombia incluye <strong>estuche de lujo y pila sellada</strong> de repuesto.
+                Relojes imponentes <strong>tipo Invicta</strong> en Ibagué y Colombia. 
+                Cada reloj incluye <strong>estuche rígido de lujo y pila sellada</strong> de repuesto. ¡Pago contra entrega garantizado!
               </p>
 
               {/* Price Hero Box */}
@@ -459,7 +457,7 @@ export default function App() {
 
               {/* CTAs */}
               <div className="cta-row sr d3">
-                <a href="#order-builder" onClick={playTick} className="btn-gold">
+                <a href="#order-builder" onClick={playTick} className="btn-cta-primary">
                   <ShoppingBag className="w-5 h-5" />
                   Pedir Contra Entrega ($85K)
                 </a>
@@ -514,19 +512,19 @@ export default function App() {
           </div>
         </section>
 
-        {/* ── 5. CATEGORIES STRIP (Container of time style) ────────────────── */}
+        {/* ── 5. CATEGORIES STRIP (E-Commerce Navigation) ────────────────── */}
         <section className="cat-strip">
           <div className="container cat-strip-inner">
-            <span style={{ fontSize: '.8rem', color: 'var(--t3)', fontWeight: 700, textTransform: 'uppercase', letterSpacing: 1 }}>
-              Explorar:
+            <span style={{ fontSize: '.78rem', color: 'var(--gold-lt)', fontWeight: 800, textTransform: 'uppercase', letterSpacing: 1.5 }}>
+              SECCIONES:
             </span>
             {[
-              { label: '🔥 El Combo $85K', target: '#combo-detail' },
-              { label: '💼 Combos Emprendedor (Lotes x3, x5, x10)', target: '#emprendedor' },
-              { label: '👔 Relojes Caballero', target: '#catalog' },
-              { label: '🌸 Relojes Dama & Pareja', target: '#catalog' },
-              { label: '📸 Fotos Reales Stock Ibagué', target: '#real-photos' },
-              { label: '🚚 Envíos & Garantía', target: '#shipping-policy' },
+              { label: '⌚ Relojes (Catálogo)', target: '#catalog' },
+              { label: '💼 Combos Mayoristas (x3, x5, x10)', target: '#emprendedor' },
+              { label: '🎁 ¿Qué Incluye el Combo $85K?', target: '#combo-detail' },
+              { label: '📸 Fotos Reales en Mano', target: '#real-photos' },
+              { label: '⚡ Arma tu Pedido', target: '#order-builder' },
+              { label: '🚚 Envíos & Garantía', target: '#beneficios' },
             ].map((chip, i) => (
               <a
                 key={i}
@@ -794,11 +792,11 @@ export default function App() {
                       target="_blank"
                       rel="noopener noreferrer"
                       onClick={playChime}
-                      className="btn-gold"
+                      className="btn-cta-primary"
                       style={{ width: '100%' }}
                     >
                       <ShoppingBag className="w-4 h-4" />
-                      Pedir {combo.name}
+                      Pedir {combo.name} por WhatsApp
                     </a>
                   </div>
                 </div>
