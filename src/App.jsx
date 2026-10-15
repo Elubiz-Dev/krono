@@ -135,7 +135,7 @@ export default function App() {
       { name: 'Mateo G.',     city: 'Ibagué (Jordan)',    watch: 'Combo Emprendedor x5' },
       { name: 'Sebastián V.', city: 'Bogotá D.C.',        watch: 'Krono Ocean Blue Sapphire' },
       { name: 'David P.',     city: 'Ibagué (Centro)',    watch: 'Krono Venom Red Sport' },
-      { name: 'Alejandro T.', city: 'Medellín',           watch: 'Combo Pareja King & Queen' },
+      { name: 'Alejandro T.', city: 'Medellín',           watch: 'Combo Emprendedor x3' },
     ];
     let i = 0;
     const show = () => {
@@ -211,8 +211,6 @@ export default function App() {
   const filteredProducts = activeFilter === 'all'
     ? PRODUCTS
     : PRODUCTS.filter(p => {
-        if (activeFilter === 'caballero') return p.gender === 'caballero';
-        if (activeFilter === 'dama') return p.gender === 'dama' || p.gender === 'pareja';
         if (activeFilter === 'gold') return p.name.toLowerCase().includes('gold') || p.id.includes('gold');
         if (activeFilter === 'black') return p.name.toLowerCase().includes('black') || p.id.includes('black');
         return true;
@@ -220,11 +218,9 @@ export default function App() {
 
   /* Filter categories tabs */
   const filterTabs = [
-    { id: 'all',       label: '⚡ Todos los Modelos' },
-    { id: 'caballero', label: '👔 Relojes Caballero' },
-    { id: 'dama',      label: '🌸 Relojes Dama & Pareja' },
-    { id: 'gold',      label: '👑 Edición Oro Real' },
-    { id: 'black',     label: '🌑 Stealth Black' },
+    { id: 'all',   label: '⚡ Todos los Modelos' },
+    { id: 'gold',  label: '👑 Edición Oro Real' },
+    { id: 'black', label: '🌑 Stealth Black' },
   ];
 
   return (
@@ -563,7 +559,6 @@ export default function App() {
               subtitle: 'Bisel dorado · Gold King · El más vendido',
               products: PRODUCTS.filter(p =>
                 (p.id.includes('subaqua') || p.id.includes('gold') || p.name.toLowerCase().includes('subaqua'))
-                && p.gender !== 'dama' && p.gender !== 'pareja'
               )
             },
             {
@@ -860,7 +855,7 @@ export default function App() {
               <span className="sec-tag">PEDIDO RÁPIDO & DIRECTO</span>
               <h2 className="sec-h2">Arma tu Pedido en 30 Segundos</h2>
               <p className="sec-p">
-                Selecciona tu modelo y ciudad. Se genera automáticamente la plantilla de pedido directo a Juan.
+                Selecciona tu modelo y ciudad. Se genera automáticamente la plantilla de pedido directo a tu asesor.
               </p>
             </div>
 

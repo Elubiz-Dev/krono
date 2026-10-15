@@ -222,54 +222,6 @@ export const PRODUCTS = [
     ]
   },
   {
-    id: 'krono-dama-rose-gold',
-    name: 'Krono Dama Queen Rosé Gold',
-    brand: 'Krono Elegance',
-    category: 'dama',
-    gender: 'dama',
-    series: 'Feminine Elegance Collection',
-    tier: 'Línea Premium',
-    tierClass: 'tier-premium',
-    price: 85000,
-    oldPrice: 160000,
-    savings: 75000,
-    discountPct: 47,
-    image: '/assets/img/watch_invicta_gold_chrono.png',
-    badge: '🌸 Línea Dama',
-    stock: 'Disponible',
-    specs: [
-      'Caja delicada de 38mm en tono oro rosa reluciente',
-      'Incrustaciones brillantes tipo circonia en bisel',
-      'Pulso ergonómico suave en silicona rosada pastel',
-      'Maquinaria japonesa de cuarzo de alta precisión',
-      'Incluye estuche de lujo acolchado y pila de repuesto'
-    ]
-  },
-  {
-    id: 'combo-pareja-royal',
-    name: 'Combo Pareja King & Queen (2 Relojes)',
-    brand: 'Krono Special Combos',
-    category: 'dama',
-    gender: 'pareja',
-    series: 'Duo Lovers Edition',
-    tier: 'Línea Exclusiva',
-    tierClass: 'tier-exclusive',
-    price: 160000,
-    oldPrice: 320000,
-    savings: 160000,
-    discountPct: 50,
-    image: '/assets/img/watch_invicta_gold_subaqua_real.png',
-    badge: '❤️ Combo Pareja',
-    stock: 'Stock en Ibagué',
-    specs: [
-      '1x Reloj Caballero Subaqua Gold King 50mm',
-      '1x Reloj Dama Queen Rosé Gold 38mm',
-      '2x Estuches rígidos de lujo individuales',
-      '2x Pilas de repuesto originales selladas',
-      'Envío prioritario con obsequio especial'
-    ]
-  },
-  {
     id: 'combo-completo-box',
     name: 'Kit Completo Krono ($85K)',
     brand: 'Kit Oficial',
