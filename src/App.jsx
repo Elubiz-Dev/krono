@@ -163,6 +163,7 @@ export default function App() {
   const [customerName, setCustomerName]      = useState('');
   const [customerAddr, setCustomerAddr]      = useState('');
   const [activeFilter, setActiveFilter]      = useState('all');
+  const [activeStoreTab, setActiveStoreTab]  = useState('relojes'); // 'relojes' | 'combos' | 'incluye' | 'fotos' | 'pedido' | 'todo'
   const [lightbox, setLightbox]              = useState({ open: false, img: '', title: '' });
   const [stories, setStories]               = useState({ open: false, idx: 0 });
   const [activeFaq, setActiveFaq]            = useState(0);
@@ -347,16 +348,27 @@ export default function App() {
             </div>
           </a>
 
-          {/* Desktop Navigation */}
+          {/* Desktop Navigation linked to Tabbed Views */}
           <nav className="desktop-nav">
             {[
-              ['#catalog', '⌚ Relojes'],
-              ['#emprendedor', '💼 Combos Mayoristas'],
-              ['#combo-detail', '🎁 ¿Qué Incluye?'],
-              ['#real-photos', '📸 Fotos Reales'],
-              ['#order-builder', '⚡ Pedir Ahora'],
-            ].map(([href, label], i) => (
-              <a key={i} href={href} className="nav-a" onClick={playTick}>{label}</a>
+              ['relojes', '⌚ Relojes'],
+              ['combos',  '💼 Combos Mayoristas'],
+              ['incluye', '🎁 ¿Qué Incluye?'],
+              ['fotos',   '📸 Fotos Reales'],
+              ['pedido',  '⚡ Pedir Ahora'],
+            ].map(([tabId, label]) => (
+              <button
+                key={tabId}
+                onClick={() => {
+                  playTick();
+                  setActiveStoreTab(tabId);
+                  document.getElementById('store-views')?.scrollIntoView({ behavior: 'smooth' });
+                }}
+                className={`nav-a ${activeStoreTab === tabId ? 'active' : ''}`}
+                style={{ background: 'none', cursor: 'pointer', border: 'none' }}
+              >
+                {label}
+              </button>
             ))}
           </nav>
 
@@ -427,7 +439,7 @@ export default function App() {
 
               <p className="hero-p sr d2">
                 Relojes imponentes <strong>tipo Invicta</strong> en Ibagué y Colombia. 
-                Cada reloj incluye <strong>estuche rígido de lujo y pila sellada</strong> de repuesto. ¡Pago contra entrega garantizado!
+                Tu combo de <strong>$85.000 COP</strong> incluye estuche de lujo y pila sellada gratis. ¡Pago contra entrega!
               </p>
 
               {/* Price Hero Box */}
@@ -457,18 +469,39 @@ export default function App() {
 
               {/* CTAs */}
               <div className="cta-row sr d3">
-                <a href="#order-builder" onClick={playTick} className="btn-cta-primary">
+                <button
+                  onClick={() => {
+                    playTick();
+                    setActiveStoreTab('pedido');
+                    document.getElementById('store-views')?.scrollIntoView({ behavior: 'smooth' });
+                  }}
+                  className="btn-cta-primary"
+                >
                   <ShoppingBag className="w-5 h-5" />
                   Pedir Contra Entrega ($85K)
-                </a>
-                <a href="#emprendedor" onClick={playTick} className="btn-ghost">
-                  <TrendingUp className="w-5 h-5 text-[#ffd000]" />
+                </button>
+                <button
+                  onClick={() => {
+                    playTick();
+                    setActiveStoreTab('combos');
+                    document.getElementById('store-views')?.scrollIntoView({ behavior: 'smooth' });
+                  }}
+                  className="btn-ghost"
+                >
+                  <TrendingUp className="w-5 h-5 text-[#dfb86c]" />
                   Combos Mayoristas
-                </a>
-                <a href="#real-photos" onClick={playTick} className="btn-ghost">
-                  <Camera className="w-5 h-5 text-[#ffd000]" />
+                </button>
+                <button
+                  onClick={() => {
+                    playTick();
+                    setActiveStoreTab('fotos');
+                    document.getElementById('store-views')?.scrollIntoView({ behavior: 'smooth' });
+                  }}
+                  className="btn-ghost"
+                >
+                  <Camera className="w-5 h-5 text-[#dfb86c]" />
                   Fotos Reales
-                </a>
+                </button>
               </div>
 
               {/* Trust badges */}
@@ -512,43 +545,17 @@ export default function App() {
           </div>
         </section>
 
-        {/* ── 5. CATEGORIES STRIP (E-Commerce Navigation) ────────────────── */}
-        <section className="cat-strip">
-          <div className="container cat-strip-inner">
-            <span style={{ fontSize: '.78rem', color: 'var(--gold-lt)', fontWeight: 800, textTransform: 'uppercase', letterSpacing: 1.5 }}>
-              SECCIONES:
-            </span>
-            {[
-              { label: '⌚ Relojes (Catálogo)', target: '#catalog' },
-              { label: '💼 Combos Mayoristas (x3, x5, x10)', target: '#emprendedor' },
-              { label: '🎁 ¿Qué Incluye el Combo $85K?', target: '#combo-detail' },
-              { label: '📸 Fotos Reales en Mano', target: '#real-photos' },
-              { label: '⚡ Arma tu Pedido', target: '#order-builder' },
-              { label: '🚚 Envíos & Garantía', target: '#beneficios' },
-            ].map((chip, i) => (
-              <a
-                key={i}
-                href={chip.target}
-                onClick={playTick}
-                className="cat-chip"
-              >
-                {chip.label}
-              </a>
-            ))}
-          </div>
-        </section>
-
-        {/* ── 6. BENEFITS BAR ($P Company style) ──────────────────────────── */}
+        {/* ── 5. BENEFITS BAR (Garantías de Compra) ───────────────────────── */}
         <section className="benefits-bar" id="beneficios">
           <div className="container">
             <div className="benefits-grid">
               {BENEFITS.map((b, i) => (
                 <div key={i} className="benefit-item sr d1">
                   <div className="benefit-icon">
-                    {b.icon === 'Truck' && <Truck className="w-5 h-5 text-[#ffd000]" />}
-                    {b.icon === 'Gift' && <Gift className="w-5 h-5 text-[#ffd000]" />}
-                    {b.icon === 'Phone' && <Phone className="w-5 h-5 text-[#ffd000]" />}
-                    {b.icon === 'ShieldCheck' && <ShieldCheck className="w-5 h-5 text-[#ffd000]" />}
+                    {b.icon === 'Truck' && <Truck className="w-5 h-5 text-[#dfb86c]" />}
+                    {b.icon === 'Gift' && <Gift className="w-5 h-5 text-[#dfb86c]" />}
+                    {b.icon === 'Phone' && <Phone className="w-5 h-5 text-[#dfb86c]" />}
+                    {b.icon === 'ShieldCheck' && <ShieldCheck className="w-5 h-5 text-[#dfb86c]" />}
                   </div>
                   <div className="benefit-text">
                     <h4>{b.title}</h4>
@@ -560,253 +567,313 @@ export default function App() {
           </div>
         </section>
 
-        {/* ── 7. COMBO BREAKDOWN ──────────────────────────────────────────── */}
-        <section className="sec" id="combo-detail">
+        {/* ── 6. STORE SEGMENTED CONTROL (Vistas por Secciones / Desglose Modular) ── */}
+        <div className="store-nav-sticky" id="store-views">
           <div className="container">
-            <div className="sec-head sr">
-              <span className="sec-tag">EL COMBO DEFINITIVO</span>
-              <h2 className="sec-h2">¿Qué Recibes por tus $85.000 COP?</h2>
-              <p className="sec-p">
-                En <strong>Krono</strong> no compras únicamente un reloj; adquieres una experiencia completa
-                de lujo y presencia con obsequios útiles para que no gastes un peso adicional.
-              </p>
-            </div>
-
-            <div className="combo-grid">
+            <div className="store-tabs-wrap">
               {[
-                { n:'01', Icon: Clock, title:'Reloj Estilo Invicta',
-                  desc:'Caja maciza de 50 mm con presencia dominante, bisel exterior deportivo, dial multinivel con sub-diales y correa ergonómica anti-sudor con inserciones metálicas.',
-                  pill:<><Check className="w-3.5 h-3.5" /> Diseño Imponente</> },
-                { n:'02', Icon: Box, title:'Estuche de Lujo Rígido',
-                  desc:'Caja rígida amarilla oficial con interior acolchado. Ideal para regalar o para proteger tu reloj de golpes y polvo en todo momento.',
-                  pill:<><Gift className="w-3.5 h-3.5" /> Obsequio $0</> },
-                { n:'03', Icon: BatteryCharging, title:'Pila de Repuesto Gratis',
-                  desc:'Batería original de repuesto sellada en blíster de fábrica. Te ahorras gastos de mantenimiento futuros y aseguras años de uso ininterrumpido.',
-                  pill:<><Gift className="w-3.5 h-3.5" /> Obsequio $0</> },
-                { n:'04', Icon: Tag, title:'Etiquetas y Sellos',
-                  desc:'Cada reloj viene sellado con etiqueta de marca colgante y certificado de inspección previa en Ibagué para garantizar máxima calidad.',
-                  pill:<><ShieldCheck className="w-3.5 h-3.5" /> 100% Nuevo</> },
-              ].map(({ n, Icon, title, desc, pill }, i) => (
-                <div key={n} className={`combo-card sr d${i + 1}`}>
-                  <span className="cc-num">{n}</span>
-                  <div className="cc-icon">
-                    <Icon className="w-6 h-6 text-[#ffd000]" />
-                  </div>
-                  <h3 className="cc-title">{title}</h3>
-                  <p className="cc-desc">{desc}</p>
-                  <span className="cc-pill">
-                    {pill}
-                  </span>
-                </div>
-              ))}
-            </div>
-          </div>
-        </section>
-
-        {/* ── 8. REAL PHOTOS GALLERY ──────────────────────────────────────── */}
-        <section className="sec sec-dark" id="real-photos">
-          <div className="container">
-            <div className="sec-head sr">
-              <span className="sec-tag">TRANSPARENCIA TOTAL</span>
-              <h2 className="sec-h2">Fotos 100% Reales de Nuestro Stock</h2>
-              <p className="sec-p">
-                Cero filtros engañosos. Ves con exactitud las piezas reales, cajas amarillas rígidas
-                y pilas selladas que tenemos disponibles en Ibagué para entrega inmediata.
-              </p>
-            </div>
-
-            <div className="proof-banner sr">
-              <ShieldCheck className="w-5 h-5 text-[#ffd000] shrink-0" />
-              <span>Lo que ves en estas fotos reales es exactamente lo que llegará a la puerta de tu casa.</span>
-            </div>
-
-            <div className="gallery-3">
-              {REAL_PHOTOS.map((photo, i) => (
-                <div
-                  key={photo.id}
-                  className={`g-item sr d${i + 1}`}
-                  onClick={() => {
-                    playTick();
-                    setLightbox({ open: true, img: photo.image, title: photo.title });
-                  }}
-                >
-                  <img src={photo.image} alt={photo.title} loading="lazy" />
-                  <span className="g-badge">{photo.badge}</span>
-                  <div className="g-cap">
-                    <h4>{photo.title}</h4>
-                    <p>{photo.desc}</p>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
-        </section>
-
-        {/* ── 9. PRODUCT CATALOG (Cards con calidad, precio tachado & WhatsApp 1-Click) */}
-        <section className="sec" id="catalog">
-          <div className="container">
-            <div className="sec-head sr">
-              <span className="sec-tag">CATÁLOGO EXCLUSIVO</span>
-              <h2 className="sec-h2">Elige el Modelo que Define tu Estilo</h2>
-              <p className="sec-p">
-                Todos los modelos incluyen el combo promocional de{' '}
-                <strong>$85.000 COP</strong> con estuche rígido y pila de repuesto incluida.
-              </p>
-            </div>
-
-            {/* Filter tabs */}
-            <div className="filter-row sr">
-              {filterTabs.map(tab => (
+                { id: 'relojes', icon: Clock, label: '⌚ Relojes ($85K)' },
+                { id: 'combos',  icon: TrendingUp, label: '💼 Combos Mayoristas' },
+                { id: 'incluye', icon: Gift, label: '🎁 ¿Qué Incluye?' },
+                { id: 'fotos',   icon: Camera, label: '📸 Fotos Reales' },
+                { id: 'pedido',  icon: ShoppingBag, label: '⚡ Arma tu Pedido' },
+                { id: 'todo',    icon: Layers, label: '📜 Ver Todo' },
+              ].map(tab => (
                 <button
                   key={tab.id}
-                  onClick={() => { playTick(); setActiveFilter(tab.id); }}
-                  className={`f-btn ${activeFilter === tab.id ? 'active' : ''}`}
+                  onClick={() => { playTick(); setActiveStoreTab(tab.id); }}
+                  className={`store-tab-btn ${activeStoreTab === tab.id ? 'active' : ''}`}
                 >
-                  {tab.label}
+                  <tab.icon className="w-4 h-4 text-[#dfb86c]" />
+                  <span>{tab.label}</span>
                 </button>
               ))}
             </div>
+          </div>
+        </div>
 
-            {/* Products Grid */}
-            <div className="products-grid">
-              {filteredProducts.map((p, i) => (
-                <article key={p.id} className={`prod-card sr d${(i % 3) + 1}`}>
-                  <div className="prod-img">
-                    <img src={p.image} alt={p.name} loading="lazy" />
-                    <span className="p-badge">{p.badge}</span>
-                    <span className="p-stock">{p.stock}</span>
-                    {/* Quality Tier (SP Company inspiration) */}
-                    <span className={`quality-tier ${p.tierClass}`}>
-                      <Award className="w-3 h-3" /> {p.tier}
-                    </span>
-                  </div>
+        {/* ── 9. PRODUCT CATALOG (Cards con calidad, precio tachado & WhatsApp 1-Click) */}
+        {(activeStoreTab === 'relojes' || activeStoreTab === 'todo') && (
+          <section className="sec" id="catalog">
+            <div className="container">
+              <div className="sec-head sr">
+                <span className="sec-tag">CATÁLOGO EXCLUSIVO</span>
+                <h2 className="sec-h2">Elige el Modelo que Define tu Estilo</h2>
+                <p className="sec-p">
+                  Todos los modelos incluyen el combo promocional de{' '}
+                  <strong>$85.000 COP</strong> con estuche rígido y pila de repuesto incluida.
+                </p>
+              </div>
 
-                  <div className="prod-body">
-                    <span className="prod-line">{p.series}</span>
-                    <h3 className="prod-name">{p.name}</h3>
+              {/* Filter tabs */}
+              <div className="filter-row sr">
+                {filterTabs.map(tab => (
+                  <button
+                    key={tab.id}
+                    onClick={() => { playTick(); setActiveFilter(tab.id); }}
+                    className={`f-btn ${activeFilter === tab.id ? 'active' : ''}`}
+                  >
+                    {tab.label}
+                  </button>
+                ))}
+              </div>
 
-                    <ul className="prod-specs">
-                      {p.specs.slice(0, 3).map((s, si) => (
-                        <li key={si}>
-                          <CheckCircle2 className="w-3.5 h-3.5 text-[#ffd000] shrink-0 mt-0.5" />
-                          <span>{s}</span>
-                        </li>
-                      ))}
-                    </ul>
+              {/* Products Grid */}
+              <div className="products-grid">
+                {filteredProducts.map((p, i) => (
+                  <article key={p.id} className={`prod-card sr d${(i % 3) + 1}`}>
+                    <div className="prod-img">
+                      <img src={p.image} alt={p.name} loading="lazy" />
+                      <span className="p-badge">{p.badge}</span>
+                      <span className="p-stock">{p.stock}</span>
+                      {/* Quality Tier (SP Company inspiration) */}
+                      <span className={`quality-tier ${p.tierClass}`}>
+                        <Award className="w-3 h-3" /> {p.tier}
+                      </span>
+                    </div>
 
-                    <div className="prod-footer">
-                      <div>
-                        <span className="p-label">Precio Combo</span>
-                        <div style={{ display: 'flex', alignItems: 'baseline', gap: 6 }}>
-                          <span className="p-now">${fmt(p.price)} <small style={{ fontSize: '.75rem', color: 'var(--gold-lt)' }}>COP</small></span>
-                          <span className="p-was">${fmt(p.oldPrice)}</span>
+                    <div className="prod-body">
+                      <span className="prod-line">{p.series}</span>
+                      <h3 className="prod-name">{p.name}</h3>
+
+                      <ul className="prod-specs">
+                        {p.specs.slice(0, 2).map((s, si) => (
+                          <li key={si}>
+                            <CheckCircle2 className="w-3.5 h-3.5 text-[#dfb86c] shrink-0 mt-0.5" />
+                            <span>{s}</span>
+                          </li>
+                        ))}
+                      </ul>
+
+                      <div className="prod-footer">
+                        <div>
+                          <span className="p-label">Precio Combo</span>
+                          <div style={{ display: 'flex', alignItems: 'baseline', gap: 6 }}>
+                            <span className="p-now">${fmt(p.price)} <small style={{ fontSize: '.75rem', color: 'var(--gold-lt)' }}>COP</small></span>
+                            <span className="p-was">${fmt(p.oldPrice)}</span>
+                          </div>
+                          <span className="p-save">Ahorras ${fmt(p.savings)} COP (-{p.discountPct}%)</span>
                         </div>
-                        <span className="p-save">Ahorras ${fmt(p.savings)} COP (-{p.discountPct}%)</span>
+                      </div>
+
+                      {/* Direct 1-Click WhatsApp CTA (Strategic conversion element) */}
+                      <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
+                        <a
+                          href={directProductWa(p)}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          onClick={playChime}
+                          className="btn-wa-product"
+                        >
+                          <MessageCircle className="w-4 h-4" />
+                          Comprar en 1 Clic por WhatsApp
+                        </a>
+                        <button
+                          className="btn-ghost"
+                          style={{ padding: '9px 14px', fontSize: '.82rem' }}
+                          onClick={() => selectAndScroll(p)}
+                        >
+                          Personalizar en Pedido <ArrowRight className="w-3.5 h-3.5" />
+                        </button>
+                      </div>
+                    </div>
+                  </article>
+                ))}
+              </div>
+
+              {/* Quick switch to wholesale */}
+              <div style={{ marginTop: '2.5rem', textAlign: 'center', background: 'rgba(223,184,108,0.06)', border: '1px dashed rgba(223,184,108,0.3)', borderRadius: 14, padding: '1.25rem' }}>
+                <p style={{ margin: 0, fontSize: '.95rem', color: '#f1f5f9' }}>
+                  💼 <strong>¿Deseas comprar por lote para negocio o reventa?</strong> Precios especiales desde <strong>$70.000 COP</strong> por reloj.
+                </p>
+                <button 
+                  onClick={() => { playTick(); setActiveStoreTab('combos'); document.getElementById('store-views')?.scrollIntoView({ behavior: 'smooth' }); }}
+                  className="btn-ghost" 
+                  style={{ marginTop: 12, display: 'inline-flex', alignItems: 'center', gap: 6 }}
+                >
+                  Ver Combos Mayoristas <ArrowRight className="w-4 h-4" />
+                </button>
+              </div>
+            </div>
+          </section>
+        )}
+
+        {/* ── 10. COMBOS EMPRENDEDOR & MAYORISTA ─────────────────────────── */}
+        {(activeStoreTab === 'combos' || activeStoreTab === 'todo') && (
+          <section className="sec emprendedor-section" id="emprendedor">
+            <div className="container">
+              <div className="sec-head sr">
+                <span className="sec-tag">LÍNEA MAYORISTA & REVENTA</span>
+                <h2 className="sec-h2">Combos Emprendedor: Gana Dinero Vendiendo Krono</h2>
+                <p className="sec-p">
+                  Lotes de 3, 5 y 10 unidades con precio mayorista preferencial, estuches amarillos y pilas incluidas. Multiplica tu capital de inmediato.
+                </p>
+              </div>
+
+              <div className="emp-grid">
+                {ENTREPRENEUR_COMBOS.map((combo, i) => (
+                  <div
+                    key={combo.id}
+                    className={`emp-card ${combo.featured ? 'featured' : ''} sr d${i + 1}`}
+                  >
+                    <span className="emp-ribbon">{combo.ribbon}</span>
+
+                    <div className="emp-head">
+                      <div className="emp-icon">
+                        <TrendingUp className="w-6 h-6 text-[#dfb86c]" />
+                      </div>
+                      <h3 className="emp-name">{combo.name}</h3>
+                      <p className="emp-desc">{combo.subtitle}</p>
+                    </div>
+
+                    <div className="emp-pricing">
+                      <div className="emp-price-was">${fmt(combo.oldPriceTotal)} COP</div>
+                      <div className="emp-price-now">
+                        ${fmt(combo.priceTotal)} <small style={{ fontSize: '.9rem', color: 'var(--gold-lt)' }}>COP</small>
+                      </div>
+                      <div className="emp-price-unit">
+                        A solo <strong>${fmt(combo.pricePerUnit)} COP</strong> por reloj con estuche y pila
+                      </div>
+                      <span className="emp-save">
+                        Ahorras ${fmt(combo.savings)} COP · {combo.discountPct}% OFF
+                      </span>
+                      <div style={{ marginTop: 8, fontSize: '.84rem', color: '#a7f3d0', fontWeight: 700 }}>
+                        📈 Ganancia estimada para ti: +${fmt(combo.estimatedProfit)} COP
                       </div>
                     </div>
 
-                    {/* Direct 1-Click WhatsApp CTA (Strategic conversion element) */}
-                    <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
+                    <div className="emp-includes">
+                      <h5>¿Qué incluye este lote?</h5>
+                      {combo.includes.map((inc, ii) => (
+                        <div key={ii} className="emp-item-row">
+                          <Check className="w-4 h-4 text-[#dfb86c] shrink-0" />
+                          <span>{inc}</span>
+                        </div>
+                      ))}
+                    </div>
+
+                    <div className="emp-footer">
                       <a
-                        href={directProductWa(p)}
+                        href={directComboWa(combo)}
                         target="_blank"
                         rel="noopener noreferrer"
                         onClick={playChime}
-                        className="btn-wa-product"
+                        className="btn-cta-primary"
+                        style={{ width: '100%' }}
                       >
-                        <MessageCircle className="w-4 h-4" />
-                        Comprar en 1 Clic por WhatsApp
+                        <ShoppingBag className="w-4 h-4" />
+                        Pedir {combo.name} por WhatsApp
                       </a>
-                      <button
-                        className="btn-ghost"
-                        style={{ padding: '9px 14px', fontSize: '.82rem' }}
-                        onClick={() => selectAndScroll(p)}
-                      >
-                        Personalizar en Pedido <ArrowRight className="w-3.5 h-3.5" />
-                      </button>
                     </div>
                   </div>
-                </article>
-              ))}
-            </div>
-          </div>
-        </section>
+                ))}
+              </div>
 
-        {/* ── 10. COMBOS EMPRENDEDOR & MAYORISTA (Container of Time & SP Company style) ── */}
-        <section className="sec emprendedor-section" id="emprendedor">
-          <div className="container">
-            <div className="sec-head sr">
-              <span className="sec-tag">LÍNEA MAYORISTA & REVENTA</span>
-              <h2 className="sec-h2">Combos Emprendedor: Gana Dinero Vendiendo Krono</h2>
-              <p className="sec-p">
-                Inspirado en los lotes por volumen de mayoristas líderes. Adquiere lotes de 3, 5 o 10 kits con
-                precio preferencial, estuches y pilas incluidas. ¡Multiplica tu capital de inmediato!
-              </p>
-            </div>
-
-            <div className="emp-grid">
-              {ENTREPRENEUR_COMBOS.map((combo, i) => (
-                <div
-                  key={combo.id}
-                  className={`emp-card ${combo.featured ? 'featured' : ''} sr d${i + 1}`}
+              {/* Quick switch to individual watches */}
+              <div style={{ marginTop: '2.5rem', textAlign: 'center', background: 'rgba(0,230,118,0.06)', border: '1px dashed rgba(0,230,118,0.25)', borderRadius: 14, padding: '1.25rem' }}>
+                <p style={{ margin: 0, fontSize: '.95rem', color: '#f1f5f9' }}>
+                  ⌚ <strong>¿Solo buscas 1 reloj para uso personal?</strong> Llévatelo en combo completo por solo <strong>$85.000 COP</strong>.
+                </p>
+                <button 
+                  onClick={() => { playTick(); setActiveStoreTab('relojes'); document.getElementById('store-views')?.scrollIntoView({ behavior: 'smooth' }); }}
+                  className="btn-ghost" 
+                  style={{ marginTop: 12, display: 'inline-flex', alignItems: 'center', gap: 6 }}
                 >
-                  <span className="emp-ribbon">{combo.ribbon}</span>
-
-                  <div className="emp-head">
-                    <div className="emp-icon">
-                      <TrendingUp className="w-6 h-6 text-[#ffd000]" />
-                    </div>
-                    <h3 className="emp-name">{combo.name}</h3>
-                    <p className="emp-desc">{combo.subtitle}</p>
-                  </div>
-
-                  <div className="emp-pricing">
-                    <div className="emp-price-was">${fmt(combo.oldPriceTotal)} COP</div>
-                    <div className="emp-price-now">
-                      ${fmt(combo.priceTotal)} <small style={{ fontSize: '.9rem', color: 'var(--gold-lt)' }}>COP</small>
-                    </div>
-                    <div className="emp-price-unit">
-                      A solo <strong>${fmt(combo.pricePerUnit)} COP</strong> por reloj con estuche y pila
-                    </div>
-                    <span className="emp-save">
-                      Ahorras ${fmt(combo.savings)} COP · {combo.discountPct}% OFF
-                    </span>
-                    <div style={{ marginTop: 8, fontSize: '.84rem', color: '#a7f3d0', fontWeight: 700 }}>
-                      📈 Ganancia estimada para ti: +${fmt(combo.estimatedProfit)} COP
-                    </div>
-                  </div>
-
-                  <div className="emp-includes">
-                    <h5>¿Qué incluye este lote?</h5>
-                    {combo.includes.map((inc, ii) => (
-                      <div key={ii} className="emp-item-row">
-                        <Check className="w-4 h-4 text-[#ffd000] shrink-0" />
-                        <span>{inc}</span>
-                      </div>
-                    ))}
-                  </div>
-
-                  <div className="emp-footer">
-                    <a
-                      href={directComboWa(combo)}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      onClick={playChime}
-                      className="btn-cta-primary"
-                      style={{ width: '100%' }}
-                    >
-                      <ShoppingBag className="w-4 h-4" />
-                      Pedir {combo.name} por WhatsApp
-                    </a>
-                  </div>
-                </div>
-              ))}
+                  Ver Relojes Individuales <ArrowRight className="w-4 h-4" />
+                </button>
+              </div>
             </div>
-          </div>
-        </section>
+          </section>
+        )}
+
+        {/* ── 9. DETALLE DEL COMBO $85.000 ────────────────────────────────── */}
+        {(activeStoreTab === 'incluye' || activeStoreTab === 'todo') && (
+          <section className="sec" id="combo-detail">
+            <div className="container">
+              <div className="sec-head sr">
+                <span className="sec-tag">KIT COMPLETO $85K</span>
+                <h2 className="sec-h2">¿Qué Recibes por tus $85.000 COP?</h2>
+                <p className="sec-p">
+                  Todo lo necesario en una sola compra. Cero costos ocultos ni adicionales.
+                </p>
+              </div>
+
+              <div className="combo-grid">
+                {[
+                  { n:'01', Icon: Clock, title:'Reloj Tipo Invicta',
+                    desc:'Caja de 50mm con bisel deportivo y pulso ergonómico anti-sudor.',
+                    pill:<><Check className="w-3.5 h-3.5" /> Diseño Imponente</> },
+                  { n:'02', Icon: Box, title:'Estuche Rígido de Lujo',
+                    desc:'Caja amarilla oficial con interior acolchado para máxima protección.',
+                    pill:<><Gift className="w-3.5 h-3.5" /> Obsequio $0</> },
+                  { n:'03', Icon: BatteryCharging, title:'Pila de Repuesto Gratis',
+                    desc:'Batería sellada en blíster de fábrica para años de uso ininterrumpido.',
+                    pill:<><Gift className="w-3.5 h-3.5" /> Obsequio $0</> },
+                  { n:'04', Icon: Tag, title:'Etiquetas y Sellos',
+                    desc:'Inspección física previa en Ibagué y certificado de calidad garantizada.',
+                    pill:<><ShieldCheck className="w-3.5 h-3.5" /> 100% Nuevo</> },
+                ].map(({ n, Icon, title, desc, pill }, i) => (
+                  <div key={n} className={`combo-card sr d${i + 1}`}>
+                    <span className="cc-num">{n}</span>
+                    <div className="cc-icon">
+                      <Icon className="w-5 h-5 text-[#dfb86c]" />
+                    </div>
+                    <h3 className="cc-title">{title}</h3>
+                    <p className="cc-desc">{desc}</p>
+                    <span className="cc-pill">
+                      {pill}
+                    </span>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </section>
+        )}
+
+        {/* ── 10. REAL PHOTOS GALLERY ─────────────────────────────────────── */}
+        {(activeStoreTab === 'fotos' || activeStoreTab === 'todo') && (
+          <section className="sec sec-dark" id="real-photos">
+            <div className="container">
+              <div className="sec-head sr">
+                <span className="sec-tag">TRANSPARENCIA TOTAL</span>
+                <h2 className="sec-h2">Fotos 100% Reales de Nuestro Stock</h2>
+                <p className="sec-p">
+                  Cero filtros engañosos. Ves con exactitud las piezas reales, cajas amarillas rígidas
+                  y pilas selladas que tenemos disponibles en Ibagué para entrega inmediata.
+                </p>
+              </div>
+
+              <div className="proof-banner sr">
+                <ShieldCheck className="w-5 h-5 text-[#dfb86c] shrink-0" />
+                <span>Lo que ves en estas fotos reales es exactamente lo que llegará a la puerta de tu casa.</span>
+              </div>
+
+              <div className="gallery-3">
+                {REAL_PHOTOS.map((photo, i) => (
+                  <div
+                    key={photo.id}
+                    className={`g-item sr d${i + 1}`}
+                    onClick={() => {
+                      playTick();
+                      setLightbox({ open: true, img: photo.image, title: photo.title });
+                    }}
+                  >
+                    <img src={photo.image} alt={photo.title} loading="lazy" />
+                    <span className="g-badge">{photo.badge}</span>
+                    <div className="g-cap">
+                      <h4>{photo.title}</h4>
+                      <p>{photo.desc}</p>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </section>
+        )}
 
         {/* ── 11. ORDER BUILDER INTERACTIVO ───────────────────────────────── */}
-        <section className="sec order-section" id="order-builder">
+        {(activeStoreTab === 'pedido' || activeStoreTab === 'todo') && (
+          <section className="sec order-section" id="order-builder">
           <div className="container">
             <div className="sec-head sr">
               <span className="sec-tag">PEDIDO RÁPIDO & DIRECTO</span>
@@ -980,7 +1047,8 @@ export default function App() {
               </div>
             </div>
           </div>
-        </section>
+          </section>
+        )}
 
         {/* ── 12. LOGÍSTICA & MÉTODOS DE PAGO ─────────────────────────────── */}
         <section className="sec" id="shipping-policy">
