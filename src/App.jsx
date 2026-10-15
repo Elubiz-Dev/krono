@@ -74,67 +74,6 @@ function FlipDigit({ value }) {
   );
 }
 
-/* ─── Canvas Particles ───────────────────────────────────────────────────── */
-function GoldParticles() {
-  const canvasRef = useRef(null);
-
-  useEffect(() => {
-    const canvas = canvasRef.current;
-    if (!canvas) return;
-    const ctx = canvas.getContext('2d');
-    let animId;
-
-    const resize = () => {
-      canvas.width = canvas.offsetWidth;
-      canvas.height = canvas.offsetHeight;
-    };
-    resize();
-    window.addEventListener('resize', resize);
-
-    const particles = Array.from({ length: 50 }, () => ({
-      x: Math.random() * canvas.width,
-      y: Math.random() * canvas.height,
-      r: Math.random() * 2.2 + 0.5,
-      dx: (Math.random() - 0.5) * 0.25,
-      dy: (Math.random() - 0.5) * 0.2 - 0.08,
-      alpha: Math.random() * 0.5 + 0.15,
-      dAlpha: (Math.random() - 0.5) * 0.005,
-    }));
-
-    const draw = () => {
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
-      particles.forEach(p => {
-        p.x += p.dx;
-        p.y += p.dy;
-        p.alpha += p.dAlpha;
-        if (p.alpha > 0.65 || p.alpha < 0.08) p.dAlpha *= -1;
-        if (p.x < 0) p.x = canvas.width;
-        if (p.x > canvas.width) p.x = 0;
-        if (p.y < 0) p.y = canvas.height;
-        if (p.y > canvas.height) p.y = 0;
-
-        ctx.beginPath();
-        ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
-        ctx.fillStyle = `rgba(212, 175, 55, ${p.alpha})`;
-        ctx.fill();
-      });
-      animId = requestAnimationFrame(draw);
-    };
-    draw();
-
-    return () => {
-      cancelAnimationFrame(animId);
-      window.removeEventListener('resize', resize);
-    };
-  }, []);
-
-  return (
-    <canvas
-      ref={canvasRef}
-      className="hero-particles"
-    />
-  );
-}
 
 /* ─── useScrollReveal ────────────────────────────────────────────────────── */
 function useScrollReveal() {
@@ -263,7 +202,7 @@ export default function App() {
     confetti({
       particleCount: 100, spread: 85,
       origin: { y: 0.75 },
-      colors: ['#ffd000', '#d4af37', '#ffffff', '#25d366'],
+      colors: ['#a855f7', '#c084fc', '#e9d5ff', '#ffffff', '#25d366'],
     });
   }, []);
 
@@ -374,15 +313,17 @@ export default function App() {
 
           {/* Stories pill, TikTok & WhatsApp CTA */}
           <div className="nav-actions">
-            <button
-              onClick={() => { playTick(); setStories({ open: true, idx: 0 }); }}
+            <a
+              href="https://instagram.com/krono.ibg?exln=MWFndzM0MjlrN3k0OA%3D%3D"
+              target="_blank"
+              rel="noopener noreferrer"
+              onClick={playTick}
               className="btn-stories-nav"
-              title="Ver Stories @krono.ibg"
+              title="Abrir Instagram @krono.ibg"
             >
-              <span className="live-dot" />
               <IgIcon style={{ width: 14, height: 14 }} />
               <span>Stories</span>
-            </button>
+            </a>
 
             <a
               href="https://www.tiktok.com/@kronos.ibg?_r=1&_t=ZS-9AOvpsNWBao"
@@ -415,15 +356,34 @@ export default function App() {
             </a>
           </div>
         </div>
+
+        {/* Mobile Quick Category Navigation Strip */}
+        <div className="mobile-nav-strip">
+          {[
+            ['relojes', '⌚ Relojes'],
+            ['combos',  '💼 Combos'],
+            ['incluye', '🎁 Incluye'],
+            ['fotos',   '📸 Fotos'],
+            ['pedido',  '⚡ Pedir'],
+          ].map(([tabId, label]) => (
+            <button
+              key={tabId}
+              onClick={() => {
+                playTick();
+                setActiveStoreTab(tabId);
+                document.getElementById('store-views')?.scrollIntoView({ behavior: 'smooth' });
+              }}
+              className={`mob-nav-pill ${activeStoreTab === tabId ? 'active' : ''}`}
+            >
+              {label}
+            </button>
+          ))}
+        </div>
       </header>
 
       <main>
         {/* ── 4. HERO SECTION ─────────────────────────────────────────────── */}
         <section className="hero" id="hero">
-          <GoldParticles />
-          <div className="hero-glow-r" />
-          <div className="hero-glow-l" />
-
           <div className="container hero-grid">
             {/* Left Content */}
             <div>
@@ -447,7 +407,7 @@ export default function App() {
                 <div>
                   <div className="offer-label">PRECIO LANZAMIENTO ESPECIAL</div>
                   <div className="price-row">
-                    <span className="price-now">$85.000 <small style={{ fontSize: '1rem', color: '#ffd000' }}>COP</small></span>
+                    <span className="price-now">$85.000 <small style={{ fontSize: '1rem', color: 'var(--purple-lt)' }}>COP</small></span>
                     <span className="price-was">$160.000</span>
                     <span className="save-tag">47% OFF</span>
                   </div>
@@ -460,7 +420,7 @@ export default function App() {
                     [Tag, 'Etiquetas oficiales de la marca'],
                   ].map(([Icon, text], i) => (
                     <div key={i} className="inc-row">
-                      <Icon className="w-4 h-4 text-[#ffd000] shrink-0" />
+                      <Icon className="w-4 h-4 text-[var(--purple-lt)] shrink-0" />
                       <span>{text}</span>
                     </div>
                   ))}
@@ -488,7 +448,7 @@ export default function App() {
                   }}
                   className="btn-ghost"
                 >
-                  <TrendingUp className="w-5 h-5 text-[#dfb86c]" />
+                  <TrendingUp className="w-5 h-5 text-[var(--purple-lt)]" />
                   Combos Mayoristas
                 </button>
                 <button
@@ -499,7 +459,7 @@ export default function App() {
                   }}
                   className="btn-ghost"
                 >
-                  <Camera className="w-5 h-5 text-[#dfb86c]" />
+                  <Camera className="w-5 h-5 text-[var(--purple-lt)]" />
                   Fotos Reales
                 </button>
               </div>
@@ -512,7 +472,7 @@ export default function App() {
                   [Star,   <><strong>+500</strong> Clientes Satisfechos</>],
                 ].map(([Icon, text], i) => (
                   <div key={i} className="trust-item">
-                    <Icon className="w-4 h-4 text-[#ffd000] shrink-0" />
+                    <Icon className="w-4 h-4 text-[var(--purple-lt)] shrink-0" />
                     <span>{text}</span>
                   </div>
                 ))}
@@ -552,10 +512,10 @@ export default function App() {
               {BENEFITS.map((b, i) => (
                 <div key={i} className="benefit-item sr d1">
                   <div className="benefit-icon">
-                    {b.icon === 'Truck' && <Truck className="w-5 h-5 text-[#dfb86c]" />}
-                    {b.icon === 'Gift' && <Gift className="w-5 h-5 text-[#dfb86c]" />}
-                    {b.icon === 'Phone' && <Phone className="w-5 h-5 text-[#dfb86c]" />}
-                    {b.icon === 'ShieldCheck' && <ShieldCheck className="w-5 h-5 text-[#dfb86c]" />}
+                    {b.icon === 'Truck' && <Truck className="w-5 h-5 text-[var(--purple-lt)]" />}
+                    {b.icon === 'Gift' && <Gift className="w-5 h-5 text-[var(--purple-lt)]" />}
+                    {b.icon === 'Phone' && <Phone className="w-5 h-5 text-[var(--purple-lt)]" />}
+                    {b.icon === 'ShieldCheck' && <ShieldCheck className="w-5 h-5 text-[var(--purple-lt)]" />}
                   </div>
                   <div className="benefit-text">
                     <h4>{b.title}</h4>
@@ -584,7 +544,7 @@ export default function App() {
                   onClick={() => { playTick(); setActiveStoreTab(tab.id); }}
                   className={`store-tab-btn ${activeStoreTab === tab.id ? 'active' : ''}`}
                 >
-                  <tab.icon className="w-4 h-4 text-[#dfb86c]" />
+                  <tab.icon className="w-4 h-4 text-[var(--purple-lt)]" />
                   <span>{tab.label}</span>
                 </button>
               ))}
@@ -639,7 +599,7 @@ export default function App() {
                       <ul className="prod-specs">
                         {p.specs.slice(0, 2).map((s, si) => (
                           <li key={si}>
-                            <CheckCircle2 className="w-3.5 h-3.5 text-[#dfb86c] shrink-0 mt-0.5" />
+                            <CheckCircle2 className="w-3.5 h-3.5 text-[var(--purple-lt)] shrink-0 mt-0.5" />
                             <span>{s}</span>
                           </li>
                         ))}
@@ -649,7 +609,7 @@ export default function App() {
                         <div>
                           <span className="p-label">Precio Combo</span>
                           <div style={{ display: 'flex', alignItems: 'baseline', gap: 6 }}>
-                            <span className="p-now">${fmt(p.price)} <small style={{ fontSize: '.75rem', color: 'var(--gold-lt)' }}>COP</small></span>
+                            <span className="p-now">${fmt(p.price)} <small style={{ fontSize: '.75rem', color: 'var(--purple-lt)' }}>COP</small></span>
                             <span className="p-was">${fmt(p.oldPrice)}</span>
                           </div>
                           <span className="p-save">Ahorras ${fmt(p.savings)} COP (-{p.discountPct}%)</span>
@@ -682,7 +642,7 @@ export default function App() {
               </div>
 
               {/* Quick switch to wholesale */}
-              <div style={{ marginTop: '2.5rem', textAlign: 'center', background: 'rgba(223,184,108,0.06)', border: '1px dashed rgba(223,184,108,0.3)', borderRadius: 14, padding: '1.25rem' }}>
+              <div style={{ marginTop: '2.5rem', textAlign: 'center', background: 'rgba(168,85,247,0.06)', border: '1px dashed rgba(168,85,247,0.3)', borderRadius: 14, padding: '1.25rem' }}>
                 <p style={{ margin: 0, fontSize: '.95rem', color: '#f1f5f9' }}>
                   💼 <strong>¿Deseas comprar por lote para negocio o reventa?</strong> Precios especiales desde <strong>$70.000 COP</strong> por reloj.
                 </p>
@@ -720,7 +680,7 @@ export default function App() {
 
                     <div className="emp-head">
                       <div className="emp-icon">
-                        <TrendingUp className="w-6 h-6 text-[#dfb86c]" />
+                        <TrendingUp className="w-6 h-6 text-[var(--purple-lt)]" />
                       </div>
                       <h3 className="emp-name">{combo.name}</h3>
                       <p className="emp-desc">{combo.subtitle}</p>
@@ -729,7 +689,7 @@ export default function App() {
                     <div className="emp-pricing">
                       <div className="emp-price-was">${fmt(combo.oldPriceTotal)} COP</div>
                       <div className="emp-price-now">
-                        ${fmt(combo.priceTotal)} <small style={{ fontSize: '.9rem', color: 'var(--gold-lt)' }}>COP</small>
+                        ${fmt(combo.priceTotal)} <small style={{ fontSize: '.9rem', color: 'var(--purple-lt)' }}>COP</small>
                       </div>
                       <div className="emp-price-unit">
                         A solo <strong>${fmt(combo.pricePerUnit)} COP</strong> por reloj con estuche y pila
@@ -746,7 +706,7 @@ export default function App() {
                       <h5>¿Qué incluye este lote?</h5>
                       {combo.includes.map((inc, ii) => (
                         <div key={ii} className="emp-item-row">
-                          <Check className="w-4 h-4 text-[#dfb86c] shrink-0" />
+                          <Check className="w-4 h-4 text-[var(--purple-lt)] shrink-0" />
                           <span>{inc}</span>
                         </div>
                       ))}
@@ -816,7 +776,7 @@ export default function App() {
                   <div key={n} className={`combo-card sr d${i + 1}`}>
                     <span className="cc-num">{n}</span>
                     <div className="cc-icon">
-                      <Icon className="w-5 h-5 text-[#dfb86c]" />
+                      <Icon className="w-5 h-5 text-[var(--purple-lt)]" />
                     </div>
                     <h3 className="cc-title">{title}</h3>
                     <p className="cc-desc">{desc}</p>
@@ -844,7 +804,7 @@ export default function App() {
               </div>
 
               <div className="proof-banner sr">
-                <ShieldCheck className="w-5 h-5 text-[#dfb86c] shrink-0" />
+                <ShieldCheck className="w-5 h-5 text-[var(--purple-lt)] shrink-0" />
                 <span>Lo que ves en estas fotos reales es exactamente lo que llegará a la puerta de tu casa.</span>
               </div>
 
@@ -983,7 +943,7 @@ export default function App() {
                   <div className="summary-box">
                     <div className="sum-title">
                       <span>Resumen del Pedido</span>
-                      <Crown className="w-5 h-5 text-[#ffd000]" />
+                      <Crown className="w-5 h-5 text-[var(--purple-lt)]" />
                     </div>
 
                     <div className="sum-rows">
@@ -1005,7 +965,7 @@ export default function App() {
                       </div>
                       <div className="sum-row">
                         <span>Entrega:</span>
-                        <span style={{ color: '#fbe282', fontWeight: 700, fontSize: '.84rem' }}>
+                        <span style={{ color: 'var(--purple-lt)', fontWeight: 700, fontSize: '.84rem' }}>
                           {location === 'ibague' ? 'Contra Entrega Ibagué' : 'Envío Nacional'}
                         </span>
                       </div>
@@ -1065,7 +1025,7 @@ export default function App() {
               <div className="ship-box hi sr-l">
                 <span className="ship-corner">📍 Entrega Local</span>
                 <h3 className="ship-title">
-                  <MapPin className="w-6 h-6 text-[#ffd000]" />
+                  <MapPin className="w-6 h-6 text-[var(--purple-lt)]" />
                   En Ibagué (Tolima)
                 </h3>
                 <p className="ship-desc">Atención directa y prioritaria dentro de la ciudad musical.</p>
@@ -1083,7 +1043,7 @@ export default function App() {
               <div className="ship-box sr-r">
                 <span className="ship-corner">🇨🇴 Envíos Colombia</span>
                 <h3 className="ship-title">
-                  <Truck className="w-6 h-6 text-[#ffd000]" />
+                  <Truck className="w-6 h-6 text-[var(--purple-lt)]" />
                   Resto de Colombia
                 </h3>
                 <p className="ship-desc">Despachos asegurados con Interrapidísimo o Envía (3 a 5 días hábiles).</p>
@@ -1105,7 +1065,7 @@ export default function App() {
               <div className="payment-chips">
                 {PAYMENT_METHODS.map((pm, i) => (
                   <div key={i} className="p-chip">
-                    <CheckCircle2 className="w-4 h-4 text-[#ffd000]" />
+                    <CheckCircle2 className="w-4 h-4 text-[var(--purple-lt)]" />
                     <span><strong>{pm.name}:</strong> {pm.desc}</span>
                   </div>
                 ))}
@@ -1130,7 +1090,7 @@ export default function App() {
                 <div key={i} className={`testi-card sr d${i + 1}`}>
                   <div className="stars">
                     {Array.from({ length: t.rating }).map((_, si) => (
-                      <Star key={si} className="w-4 h-4 fill-[#ffd000] text-[#ffd000]" />
+                      <Star key={si} size={18} fill="#f59e0b" color="#f59e0b" />
                     ))}
                   </div>
                   <p className="testi-text">"{t.text}"</p>
@@ -1281,13 +1241,13 @@ export default function App() {
               <h4 className="footer-h">Contacto Directo</h4>
               <div className="footer-contact">
                 <div className="fc-item">
-                  <Phone className="w-4 h-4 text-[#ffd000] shrink-0" />
+                  <Phone className="w-4 h-4 text-[var(--purple-lt)] shrink-0" />
                   <a href="https://wa.me/573193620748" target="_blank" rel="noopener noreferrer">
                     WhatsApp: +57 319 3620748
                   </a>
                 </div>
                 <div className="fc-item">
-                  <IgIcon style={{ width: 14, height: 14, color: '#fbe282' }} />
+                  <IgIcon style={{ width: 14, height: 14, color: 'var(--purple-lt)' }} />
                   <a href="https://instagram.com/krono.ibg?exln=MWFndzM0MjlrN3k0OA%3D%3D" target="_blank" rel="noopener noreferrer">
                     Instagram: @krono.ibg
                   </a>
@@ -1299,7 +1259,7 @@ export default function App() {
                   </a>
                 </div>
                 <div className="fc-item">
-                  <MapPin className="w-4 h-4 text-[#ffd000] shrink-0" />
+                  <MapPin className="w-4 h-4 text-[var(--purple-lt)] shrink-0" />
                   <span>Ibagué, Tolima, Colombia</span>
                 </div>
               </div>
