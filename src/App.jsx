@@ -103,6 +103,7 @@ export default function App() {
   const [customerAddr, setCustomerAddr]      = useState('');
   const [activeFilter, setActiveFilter]      = useState('all');
   const [activeStoreTab, setActiveStoreTab]  = useState('relojes'); // 'relojes' | 'combos' | 'incluye' | 'fotos' | 'pedido' | 'todo'
+  const [openAccordion, setOpenAccordion]    = useState('subaqua'); // accordion brand category
   const [lightbox, setLightbox]              = useState({ open: false, img: '', title: '' });
   const [stories, setStories]               = useState({ open: false, idx: 0 });
   const [activeFaq, setActiveFaq]            = useState(0);
@@ -157,7 +158,7 @@ export default function App() {
 
   /* Custom WhatsApp link for Order Builder */
   const waLink = useCallback(() => {
-    let msg  = `¡Hola Juan! 👋 Vengo de la web oficial de Krono (@krono.ibg) y deseo ordenar mi combo:\n\n`;
+    let msg  = `¡Hola! 👋 Vengo de la web oficial de Krono (@krono.ibg) y deseo ordenar mi combo:\n\n`;
     msg += `👑 *Modelo Elegido:* ${selectedModel.name}\n`;
     msg += `📦 *Cantidad:* ${qty} kit(s)\n`;
     msg += `🎁 *Obsequios Incluidos:* Estuche Rígido de Lujo + Pila de Repuesto Sellada\n`;
@@ -171,13 +172,13 @@ export default function App() {
 
   /* Direct 1-Click WhatsApp link for a specific product */
   const directProductWa = (product) => {
-    const text = `¡Hola Juan! 👋 Deseo comprar en 1 Clic el combo:\n\n👑 *${product.name}*\n💰 *Precio Promo:* $${fmt(product.price)} COP (Ahorro de $${fmt(product.savings)} COP)\n🎁 *Incluye:* Reloj + Estuche Rígido + Pila de Repuesto GRATIS\n\n¿Tienes disponibilidad inmediata para despacho?`;
+    const text = `¡Hola! 👋 Quiero comprar en 1 Clic:\n\n👑 *${product.name}*\n💰 *Precio:* $${fmt(product.price)} COP (Ahorro $${fmt(product.savings)} COP)\n🎁 *Incluye:* Reloj + Estuche Rígido + Pila GRATIS\n\n¿Tienes disponibilidad para despacho inmediato?`;
     return `https://wa.me/573193620748?text=${encodeURIComponent(text)}`;
   };
 
   /* Direct WhatsApp link for Entrepreneur Combo */
   const directComboWa = (combo) => {
-    const text = `¡Hola Juan! 👋 Me interesa el combo mayorista para revender:\n\n💼 *${combo.name}*\n📦 *Unidades:* ${combo.units} Relojes + Estuches + Pilas de repuesto\n💰 *Inversión Total:* $${fmt(combo.priceTotal)} COP ($${fmt(combo.pricePerUnit)} COP / unidad)\n📈 *Ganancia Estimada:* $${fmt(combo.estimatedProfit)} COP\n\n¿Cómo coordinamos el pago y envío de las referencias?`;
+    const text = `¡Hola! 👋 Me interesa el combo para revender:\n\n💼 *${combo.name}*\n📦 *Unidades:* ${combo.units} Relojes + Estuches + Pilas\n💰 *Inversión:* $${fmt(combo.priceTotal)} COP ($${fmt(combo.pricePerUnit)} COP / unidad)\n📈 *Ganancia Estimada:* +$${fmt(combo.estimatedProfit)} COP\n\n¿Cómo coordinamos?`;
     return `https://wa.me/573193620748?text=${encodeURIComponent(text)}`;
   };
 
@@ -233,16 +234,16 @@ export default function App() {
       <div className="promo-marquee">
         <div className="marquee-track">
           {[
-            '🇨🇴 Envíos Contra Entrega en Ibagué el Mismo Día',
-            '⚡ Despachos a Todo Colombia (3 a 5 Días Hábiles vía Interrapidísimo)',
-            '🎁 Combo Completo por $85.000 COP con Estuche Rígido + Pila de Repuesto Gratis',
-            '📞 Línea WhatsApp Directa: 319 3620748 (Atención Juan)',
-            '💼 Combos Emprendedor y Mayoristas: Gana hasta 60% de Margen de Reventa',
-            '🇨🇴 Envíos Contra Entrega en Ibagué el Mismo Día',
-            '⚡ Despachos a Todo Colombia (3 a 5 Días Hábiles vía Interrapidísimo)',
-            '🎁 Combo Completo por $85.000 COP con Estuche Rígido + Pila de Repuesto Gratis',
-            '📞 Línea WhatsApp Directa: 319 3620748 (Atención Juan)',
-            '💼 Combos Emprendedor y Mayoristas: Gana hasta 60% de Margen de Reventa',
+            '🇨🇴 Pago Contra Entrega en Ibagué — Entrega el Mismo Día',
+            '⚡ Despachos a Todo Colombia en 3 a 5 Días Hábiles vía Interrapidísimo',
+            '🎁 Combo $85.000 COP: Reloj + Estuche Rígido + Pila de Repuesto Gratis',
+            '📞 WhatsApp Directo: 319 3620748 — Asesor en Línea Ahora',
+            '💼 Combos Emprendedor: Revende y Gana hasta 60% de Margen',
+            '🇨🇴 Pago Contra Entrega en Ibagué — Entrega el Mismo Día',
+            '⚡ Despachos a Todo Colombia en 3 a 5 Días Hábiles vía Interrapidísimo',
+            '🎁 Combo $85.000 COP: Reloj + Estuche Rígido + Pila de Repuesto Gratis',
+            '📞 WhatsApp Directo: 319 3620748 — Asesor en Línea Ahora',
+            '💼 Combos Emprendedor: Revende y Gana hasta 60% de Margen',
           ].map((item, i) => (
             <div key={i} className="marquee-item">
               <Sparkles className="w-3.5 h-3.5 text-[#ffd000] inline" />
@@ -343,11 +344,11 @@ export default function App() {
 
             <div className="online-chip">
               <span className="pulse" />
-              <span className="hidden sm:inline">Juan en Línea</span>
+              <span className="hidden sm:inline">Asesor en Línea</span>
             </div>
 
             <a
-              href="https://wa.me/573193620748?text=Hola%20Juan%20deseo%20informacion%20de%20los%20relojes%20Krono"
+              href="https://wa.me/573193620748?text=Hola%20deseo%20informacion%20de%20los%20relojes%20Krono"
               target="_blank" rel="noopener noreferrer"
               onClick={playTick}
               className="btn-wa-header"
@@ -389,28 +390,27 @@ export default function App() {
             <div>
               <div className="hero-eyebrow sr d1">
                 <ShieldCheck className="w-4 h-4" />
-                Relojería Urbana de Alta Presencia · Ibagué & Colombia
+                <span>🇨🇴 Ibagué &amp; Colombia · Pago Contra Entrega</span>
               </div>
 
               <h1 className="hero-h1 sr d2">
-                El Poder y la Elegancia <br />
-                que <span className="g">te Distinguen.</span>
+                Relojes que <span className="g">Imponen Presencia.</span>
               </h1>
 
               <p className="hero-p sr d2">
-                Relojes imponentes <strong>tipo Invicta</strong> en Ibagué y Colombia. 
-                Tu combo de <strong>$85.000 COP</strong> incluye estuche de lujo y pila sellada gratis. ¡Pago contra entrega!
+                Estilo Invicta a precio directo. <strong>Solo $85.000 COP</strong> con estuche + pila gratis. ¡Sin pagar nada antes!
               </p>
 
-              {/* Price Hero Box */}
+              {/* Price Hero Box compact */}
               <div className="price-hero-box sr d3">
                 <div>
-                  <div className="offer-label">PRECIO LANZAMIENTO ESPECIAL</div>
+                  <div className="offer-label">⚡ OFERTA POR TIEMPO LIMITADO</div>
                   <div className="price-row">
                     <span className="price-now">$85.000 <small style={{ fontSize: '1rem', color: 'var(--purple-lt)' }}>COP</small></span>
                     <span className="price-was">$160.000</span>
                     <span className="save-tag">47% OFF</span>
                   </div>
+                  <div style={{ fontSize: '.78rem', color: '#86efac', fontWeight: 700, marginTop: 6 }}>✅ Ahorra $75.000 COP hoy mismo</div>
                 </div>
                 <div className="includes-list">
                   {[
@@ -483,8 +483,8 @@ export default function App() {
             <div className="watch-visual sr-r d2">
               <div className="watch-frame">
                 <img
-                  src="/assets/img/hero_watch_luxury.jpg"
-                  alt="Reloj Krono Subaqua Gold King — Tipo Invicta"
+                  src="/assets/img/watch_invicta_gold_subaqua_real.png"
+                  alt="Reloj Krono Subaqua Gold King — Real Foto"
                 />
                 <div className="float-tag ft1">
                   <div className="fi"><BatteryCharging className="w-4 h-4" /></div>
@@ -552,111 +552,132 @@ export default function App() {
           </div>
         </div>
 
-        {/* ── 9. PRODUCT CATALOG (Cards con calidad, precio tachado & WhatsApp 1-Click) */}
-        {(activeStoreTab === 'relojes' || activeStoreTab === 'todo') && (
-          <section className="sec" id="catalog">
-            <div className="container">
-              <div className="sec-head sr">
-                <span className="sec-tag">CATÁLOGO EXCLUSIVO</span>
-                <h2 className="sec-h2">Elige el Modelo que Define tu Estilo</h2>
-                <p className="sec-p">
-                  Todos los modelos incluyen el combo promocional de{' '}
-                  <strong>$85.000 COP</strong> con estuche rígido y pila de repuesto incluida.
-                </p>
-              </div>
 
-              {/* Filter tabs */}
-              <div className="filter-row sr">
-                {filterTabs.map(tab => (
-                  <button
-                    key={tab.id}
-                    onClick={() => { playTick(); setActiveFilter(tab.id); }}
-                    className={`f-btn ${activeFilter === tab.id ? 'active' : ''}`}
-                  >
-                    {tab.label}
-                  </button>
-                ))}
-              </div>
+        {/* ── 9. CATÁLOGO ACORDEÓN — Solo Línea Caballero */}
+        {(activeStoreTab === 'relojes' || activeStoreTab === 'todo') && (() => {
+          const brandGroups = [
+            {
+              id: 'subaqua',
+              emoji: '👑',
+              label: 'Subaqua Gold',
+              subtitle: 'Bisel dorado · Gold King · El más vendido',
+              products: PRODUCTS.filter(p =>
+                (p.id.includes('subaqua') || p.id.includes('gold') || p.name.toLowerCase().includes('subaqua'))
+                && p.gender !== 'dama' && p.gender !== 'pareja'
+              )
+            },
+            {
+              id: 'bolt',
+              emoji: '⚡',
+              label: 'Bolt & Zeus Magnum',
+              subtitle: 'Números gigantes · Caja 54mm · Máxima presencia',
+              products: PRODUCTS.filter(p =>
+                p.id.includes('bolt') || p.id.includes('zeus')
+              )
+            },
+            {
+              id: 'skeleton',
+              emoji: '🔩',
+              label: 'Skeleton Cyber',
+              subtitle: 'Maquinaria visible · Mecánico esqueletado',
+              products: PRODUCTS.filter(p => p.id.includes('skeleton'))
+            },
+            {
+              id: 'stealth',
+              emoji: '🌑',
+              label: 'Stealth & Sport',
+              subtitle: 'Negro táctico · Rojo sport · Look agresivo',
+              products: PRODUCTS.filter(p =>
+                p.id.includes('stealth') || p.id.includes('venom') || p.id.includes('red')
+              )
+            }
+          ].filter(g => g.products.length > 0);
 
-              {/* Products Grid */}
-              <div className="products-grid">
-                {filteredProducts.map((p, i) => (
-                  <article key={p.id} className={`prod-card sr d${(i % 3) + 1}`}>
-                    <div className="prod-img">
-                      <img src={p.image} alt={p.name} loading="lazy" />
-                      <span className="p-badge">{p.badge}</span>
-                      <span className="p-stock">{p.stock}</span>
-                      {/* Quality Tier (SP Company inspiration) */}
-                      <span className={`quality-tier ${p.tierClass}`}>
-                        <Award className="w-3 h-3" /> {p.tier}
-                      </span>
-                    </div>
+          return (
+            <section className="sec catalog-sec" id="catalog">
+              <div className="container">
+                <div className="sec-head sec-head-sm sr">
+                  <span className="sec-tag">⌚ CATÁLOGO CABALLERO</span>
+                  <h2 className="sec-h2">Todo a <span style={{ color: '#f59e0b' }}>$85.000 COP</span></h2>
+                  <p className="sec-p-sm">🎁 Reloj + Estuche + Pila · <strong>Pago Contra Entrega</strong></p>
+                </div>
 
-                    <div className="prod-body">
-                      <span className="prod-line">{p.series}</span>
-                      <h3 className="prod-name">{p.name}</h3>
-
-                      <ul className="prod-specs">
-                        {p.specs.slice(0, 2).map((s, si) => (
-                          <li key={si}>
-                            <CheckCircle2 className="w-3.5 h-3.5 text-[var(--purple-lt)] shrink-0 mt-0.5" />
-                            <span>{s}</span>
-                          </li>
-                        ))}
-                      </ul>
-
-                      <div className="prod-footer">
-                        <div>
-                          <span className="p-label">Precio Combo</span>
-                          <div style={{ display: 'flex', alignItems: 'baseline', gap: 6 }}>
-                            <span className="p-now">${fmt(p.price)} <small style={{ fontSize: '.75rem', color: 'var(--purple-lt)' }}>COP</small></span>
-                            <span className="p-was">${fmt(p.oldPrice)}</span>
+                <div className="catalog-accordion">
+                  {brandGroups.map((group) => {
+                    const isOpen = openAccordion === group.id;
+                    return (
+                      <div key={group.id} className={`acc-group ${isOpen ? 'open' : ''}`}>
+                        <button
+                          className="acc-header"
+                          onClick={() => { playTick(); setOpenAccordion(isOpen ? null : group.id); }}
+                          aria-expanded={isOpen}
+                        >
+                          <div className="acc-header-inner">
+                            <span className="acc-title">
+                              <span className="acc-emoji">{group.emoji}</span> {group.label}
+                            </span>
+                            <span className="acc-sub">{group.subtitle}</span>
                           </div>
-                          <span className="p-save">Ahorras ${fmt(p.savings)} COP (-{p.discountPct}%)</span>
+                          <div className="acc-meta">
+                            <span className="acc-count">{group.products.length} modelos</span>
+                            <ChevronDown className={`acc-chevron w-5 h-5 ${isOpen ? 'rotated' : ''}`} />
+                          </div>
+                        </button>
+
+                        <div className="acc-body">
+                          <div className="prod-list">
+                            {group.products.map((p) => (
+                              <article key={p.id} className="prod-card-h">
+                                <div className="pch-img">
+                                  <img src={p.image} alt={p.name} loading="lazy" />
+                                  <span className="p-badge">{p.badge}</span>
+                                </div>
+                                <div className="pch-body">
+                                  <div className="pch-top">
+                                    <h3 className="pch-name">{p.name}</h3>
+                                    <span className="p-stock-inline">{p.stock}</span>
+                                  </div>
+                                  <p className="pch-spec">{p.specs[0]}</p>
+                                  <div className="pch-price">
+                                    <div className="pch-price-main">
+                                      <span className="pch-before">Antes <s>${fmt(p.oldPrice)}</s></span>
+                                      <span className="pch-now">${fmt(p.price)} <small>COP</small></span>
+                                    </div>
+                                    <span className="pch-save">🔥 Ahorras ${fmt(p.savings)} ({p.discountPct}% OFF)</span>
+                                  </div>
+                                  <div className="pch-ctas">
+                                    <a
+                                      href={directProductWa(p)}
+                                      target="_blank" rel="noopener noreferrer"
+                                      onClick={playChime}
+                                      className="btn-wa-product pch-wa"
+                                    >
+                                      <MessageCircle className="w-4 h-4" /> ¡Lo Quiero!
+                                    </a>
+                                    <button className="pch-detail" onClick={() => selectAndScroll(p)}>
+                                      Pedido <ArrowRight className="w-3.5 h-3.5" />
+                                    </button>
+                                  </div>
+                                </div>
+                              </article>
+                            ))}
+                          </div>
                         </div>
                       </div>
+                    );
+                  })}
+                </div>
 
-                      {/* Direct 1-Click WhatsApp CTA (Strategic conversion element) */}
-                      <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
-                        <a
-                          href={directProductWa(p)}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          onClick={playChime}
-                          className="btn-wa-product"
-                        >
-                          <MessageCircle className="w-4 h-4" />
-                          Comprar en 1 Clic por WhatsApp
-                        </a>
-                        <button
-                          className="btn-ghost"
-                          style={{ padding: '9px 14px', fontSize: '.82rem' }}
-                          onClick={() => selectAndScroll(p)}
-                        >
-                          Personalizar en Pedido <ArrowRight className="w-3.5 h-3.5" />
-                        </button>
-                      </div>
-                    </div>
-                  </article>
-                ))}
+                <div className="wholesale-nudge sr">
+                  <span>💼 <strong>¿Vas a revender?</strong> Desde <strong>$64K/reloj</strong> · hasta <strong style={{ color: '#4ade80' }}>60% de margen</strong></span>
+                  <button onClick={() => { playTick(); setActiveStoreTab('combos'); document.getElementById('store-views')?.scrollIntoView({ behavior: 'smooth' }); }} className="btn-nudge">
+                    Ver Combos <ArrowRight className="w-4 h-4" />
+                  </button>
+                </div>
               </div>
-
-              {/* Quick switch to wholesale */}
-              <div style={{ marginTop: '2.5rem', textAlign: 'center', background: 'rgba(168,85,247,0.06)', border: '1px dashed rgba(168,85,247,0.3)', borderRadius: 14, padding: '1.25rem' }}>
-                <p style={{ margin: 0, fontSize: '.95rem', color: '#f1f5f9' }}>
-                  💼 <strong>¿Deseas comprar por lote para negocio o reventa?</strong> Precios especiales desde <strong>$70.000 COP</strong> por reloj.
-                </p>
-                <button 
-                  onClick={() => { playTick(); setActiveStoreTab('combos'); document.getElementById('store-views')?.scrollIntoView({ behavior: 'smooth' }); }}
-                  className="btn-ghost" 
-                  style={{ marginTop: 12, display: 'inline-flex', alignItems: 'center', gap: 6 }}
-                >
-                  Ver Combos Mayoristas <ArrowRight className="w-4 h-4" />
-                </button>
-              </div>
-            </div>
-          </section>
-        )}
+            </section>
+          );
+        })()}
 
         {/* ── 10. COMBOS EMPRENDEDOR & MAYORISTA ─────────────────────────── */}
         {(activeStoreTab === 'combos' || activeStoreTab === 'todo') && (
@@ -999,7 +1020,7 @@ export default function App() {
                       className="wa-link"
                     >
                       <Phone className="w-5 h-5" />
-                      Enviar Pedido a Juan (WhatsApp)
+                      ¡Quiero mi Reloj! Enviar por WhatsApp
                     </a>
                   </div>
                 </div>
@@ -1177,8 +1198,8 @@ export default function App() {
           <div className="container">
             <div className="sec-head sr">
               <span className="sec-tag">DUDAS FRECUENTES</span>
-              <h2 className="sec-h2">Preguntas Habituales</h2>
-              <p className="sec-p">Todo lo que necesitas saber antes de confirmar tu pedido con Juan.</p>
+              <h2 className="sec-h2">Preguntas Frecuentes</h2>
+              <p className="sec-p">Todo lo que necesitas saber antes de confirmar tu pedido.</p>
             </div>
 
             <div className="faq-list">
@@ -1217,7 +1238,7 @@ export default function App() {
               </a>
               <p>
                 Especialistas en relojería robusta y elegante tipo Invicta en Ibagué, Tolima y
-                despachos garantizados a todo Colombia. Atendido directamente por Juan y socio.
+                despachos garantizados a todo Colombia. Atención directa y personalizada.
               </p>
             </div>
 
@@ -1277,10 +1298,10 @@ export default function App() {
       {/* WhatsApp bubble */}
       <div className="fab-wa">
         <div className="fab-tooltip">
-          ¿Preguntas? Chatea con Juan (319 3620748)
+          ¿Preguntas? Chatea con nuestro Asesor (319 3620748)
         </div>
         <a
-          href="https://wa.me/573193620748?text=Hola%20Juan%20deseo%20ordenar%20mi%20reloj%20Krono"
+          href="https://wa.me/573193620748?text=Hola%20deseo%20ordenar%20mi%20reloj%20Krono"
           target="_blank" rel="noopener noreferrer"
           onClick={playTick}
           className="fab-btn"
@@ -1312,7 +1333,7 @@ export default function App() {
       {/* Live buyer notification */}
       {buyerToast.buyer && (
         <div className={`buyer-toast ${buyerToast.show ? 'show' : ''}`}>
-          <img src="/assets/img/hero_watch_luxury.jpg" alt="Reloj" className="bt-thumb" />
+          <img src="/assets/img/watch_invicta_gold_subaqua_real.png" alt="Reloj" className="bt-thumb" />
           <div className="bt-info">
             <p>
               <strong>{buyerToast.buyer.name}</strong> en {buyerToast.buyer.city} acaba de pedir <em>{buyerToast.buyer.watch}</em>
