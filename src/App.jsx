@@ -103,6 +103,7 @@ export default function App() {
   const [activeStoreTab, setActiveStoreTab]      = useState('relojes'); // 'relojes' | 'quienes' | 'combos' | 'envios' | 'incluye' | 'pedido' | 'todo'
   const [openAccordion, setOpenAccordion]        = useState('invicta'); // 'invicta' | 'rolex'
   const [lightbox, setLightbox]                  = useState({ open: false, img: '', title: '' });
+  const [boltMediaMode, setBoltMediaMode]        = useState('photo'); // 'photo' | 'video' for Invicta Bolt Silver
   const [openFaqs, setOpenFaqs]                  = useState({ 0: true, 1: false, 2: false }); // Multiple or toggle FAQ items
   const [buyerToast, setBuyerToast]              = useState({ show: false, buyer: null });
   const [modelToast, setModelToast]              = useState({ show: false, name: '' });
@@ -346,45 +347,14 @@ export default function App() {
         />
       </div>
 
-      {/* ── 1. PROMO MARQUEE BANNER ───────────────────────────────────────── */}
-      <div className="promo-marquee">
-        <div className="marquee-track">
-          {[
-            '🇨🇴 PAGO CONTRA ENTREGA EN IBAGUÉ — ENTREGA EL MISMO DÍA',
-            '⚡ DESPACHOS A TODO COLOMBIA VÍA INTER RAPIDÍSIMO & DHL',
-            '🎁 COMBO $85.000 COP: RELOJ + ESTUCHE RÍGIDO + PILA GRATIS',
-            '📞 WHATSAPP DIRECTO: 319 3620748 — ASESOR EN LÍNEA AHORA',
-            '💼 COMBOS EMPRENDEDOR: REVENDE Y GANA HASTA 60% DE MARGEN',
-            '🛡️ GARANTÍA REAL DE 90 DÍAS CON INSPECCIÓN 1 A 1',
-            '🇨🇴 PAGO CONTRA ENTREGA EN IBAGUÉ — ENTREGA EL MISMO DÍA',
-            '⚡ DESPACHOS A TODO COLOMBIA VÍA INTER RAPIDÍSIMO & DHL',
-            '🎁 COMBO $85.000 COP: RELOJ + ESTUCHE RÍGIDO + PILA GRATIS',
-            '📞 WHATSAPP DIRECTO: 319 3620748 — ASESOR EN LÍNEA AHORA',
-          ].map((item, i) => (
-            <div key={i} className="marquee-item">
-              <Sparkles className="w-3.5 h-3.5 text-[#ffd000] inline" />
-              <span>{item}</span>
-            </div>
-          ))}
-        </div>
-      </div>
-
-      {/* ── 2. URGENCY TICKER (Countdown & offer timer) ───────────────────── */}
-      <div className="urgency-ticker">
-        <span className="ticker-badge urgency-red">
-          <Flame className="w-3.5 h-3.5" /> OFERTA POR TIEMPO LIMITADO
-        </span>
-        <span className="ticker-text">
-          🔥 Kit Completo por solo <strong className="highlight-gold">$85.000 COP</strong> · Estuche + Pila de Repuesto <strong className="highlight-green">GRATIS</strong>
-        </span>
-        <div className="ticker-clock">
-          <Clock className="w-3.5 h-3.5 text-[#ffd700]" />
-          <span>Termina en:&nbsp;</span>
-          <FlipDigit value={String(time.h).padStart(2,'0')} />
-          <span className="sep">:</span>
-          <FlipDigit value={String(time.m).padStart(2,'0')} />
-          <span className="sep">:</span>
-          <FlipDigit value={String(time.s).padStart(2,'0')} />
+      {/* ── LUXURY TOP ANNOUNCEMENT BAR (Clean, prestigious, high conversion) ── */}
+      <div className="luxury-top-bar">
+        <div className="luxury-top-content">
+          <span className="lt-badge">✦ IBAGUÉ &amp; COLOMBIA</span>
+          <span className="lt-text">
+            Despachos Diarios · <strong>Pago Contra Entrega</strong> · Kit Completo <strong className="highlight-gold">$85.000 COP</strong> (Reloj + Estuche Rígido + Pila Gratis)
+          </span>
+          <span className="lt-badge highlight-green">Garantía 90 Días</span>
         </div>
       </div>
 
@@ -428,46 +398,48 @@ export default function App() {
 
           {/* Actions & WhatsApp Header */}
           <div className="nav-actions">
+            <a
+              href="https://instagram.com/krono.ibg?exln=MWFndzM0MjlrN3k0OA%3D%3D"
+              target="_blank"
+              rel="noopener noreferrer"
+              onClick={playTick}
+              className="nav-icon-circle ig-btn"
+              title="Instagram @krono.ibg"
+              aria-label="Instagram"
+            >
+              <IgIcon style={{ width: 16, height: 16 }} />
+            </a>
+
+            <a
+              href="https://www.tiktok.com/@kronos.ibg?_r=1&_t=ZS-9AOvpsNWBao"
+              target="_blank"
+              rel="noopener noreferrer"
+              onClick={playTick}
+              className="nav-icon-circle tiktok-btn"
+              title="TikTok @kronos.ibg"
+              aria-label="TikTok"
+            >
+              <TikTokIcon style={{ width: 15, height: 15 }} />
+            </a>
+
             {/* Mobile hamburger — shows accordion nav */}
             <button
               className="mob-hamburger"
               onClick={() => { playTick(); setMobMenuOpen(true); }}
               aria-label="Abrir menú"
             >
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round">
                 <line x1="3" y1="6"  x2="21" y2="6" />
                 <line x1="3" y1="12" x2="21" y2="12" />
                 <line x1="3" y1="18" x2="21" y2="18" />
               </svg>
-              MENÚ
+              <span>MENÚ</span>
             </button>
 
             <a
-              href="https://instagram.com/krono.ibg?exln=MWFndzM0MjlrN3k0OA%3D%3D"
+              href="https://wa.me/573193620748?text=Hola%20deseo%20informacion%20de%20los%20relojes%20Krono"
               target="_blank"
               rel="noopener noreferrer"
-              onClick={playTick}
-              className="btn-stories-nav"
-              title="Abrir Instagram @krono.ibg"
-            >
-              <IgIcon style={{ width: 14, height: 14 }} />
-              <span className="hidden sm:inline">Instagram</span>
-            </a>
-
-            <a
-              href="https://www.tiktok.com/@kronos.ibg?_r=1&_t=ZS-9AOvpsNWBao"
-              target="_blank" rel="noopener noreferrer"
-              onClick={playTick}
-              className="btn-stories-nav tiktok-btn"
-              title="Ver TikTok @kronos.ibg"
-            >
-              <TikTokIcon style={{ width: 13, height: 13 }} />
-              <span className="hidden sm:inline">TikTok</span>
-            </a>
-
-            <a
-              href="https://wa.me/573193620748?text=Hola%20deseo%20informacion%20de%20los%20relojes%20Krono"
-              target="_blank" rel="noopener noreferrer"
               onClick={playTick}
               className="btn-wa-header"
             >
@@ -914,15 +886,92 @@ export default function App() {
                   <span className="bch-price-pill">$85.000 COP c/u</span>
                 </div>
 
+                {/* ── INVICTA SHOWCASE: Video real en vivo de la colección ─── */}
+                <div className="invicta-video-showcase-card sr">
+                  <div>
+                    <span className="bch-badge gold" style={{ marginBottom: 6, display: 'inline-block' }}>🎬 VIDEO REAL EN CAJA OFICIAL</span>
+                    <h3 className="ivs-title">Krono Bolt Phantom Silver — En Vivo desde Bodega</h3>
+                    <p className="ivs-desc">
+                      Mira el reloj que más piden: esfera plateada texturizada, números en relieve gigantes y caja de 54mm.
+                      Grabado en nuestra bodega con caja Invicta original. <strong>Sin filtros, sin edición.</strong>
+                    </p>
+                    <div className="ivs-features">
+                      <span>⚡ 54mm Caja Maciza</span>
+                      <span>💎 Esfera Plateada</span>
+                      <span>🛡️ Garantía 90 Días</span>
+                      <span>📦 Caja Invicta Real</span>
+                    </div>
+                    <div className="ivs-price-row">
+                      <span className="ivs-price">$85.000 <small>COP</small></span>
+                      <span className="ivs-save">53% OFF</span>
+                    </div>
+                    <a
+                      href="https://wa.me/573193620748?text=Hola%20Krono!%20Vi%20el%20video%20del%20Bolt%20Phantom%20Silver%20y%20me%20interesa.%20%C2%BFTiene%20disponibilidad%3F"
+                      target="_blank" rel="noopener noreferrer"
+                      onClick={playChime}
+                      className="btn-wa-emerald"
+                      style={{ width: '100%', justifyContent: 'center', maxWidth: 320 }}
+                    >
+                      <MessageCircle style={{ width: 16, height: 16 }} /> Lo Quiero — WhatsApp Directo
+                    </a>
+                  </div>
+                  <div className="ivs-phone-frame">
+                    <video
+                      src="/assets/img/shipping_video_real.mp4"
+                      autoPlay
+                      muted
+                      loop
+                      playsInline
+                      preload="metadata"
+                      className="ivs-video"
+                    >
+                      Tu navegador no soporta video HTML5.
+                    </video>
+                  </div>
+                </div>
+
                 <div className="prod-list-clean">
-                  {invictaProducts.map((p) => (
+                  {invictaProducts.map((p) => {
+                    const isBolt = p.id === 'krono-bolt-silver-phantom';
+                    return (
                     <article key={p.id} className="prod-card-clean">
-                      <div className="pcc-img-box" onClick={() => setLightbox({ open: true, img: p.image, title: p.name })}>
-                        <img src={p.image} alt={p.name} loading="lazy" />
+                      <div className="pcc-img-box" style={{ position: 'relative' }}>
+                        {/* Photo / Video toggle for Bolt Silver Phantom */}
+                        {isBolt && (
+                          <div className="card-media-toggle">
+                            <button
+                              className={`cmt-btn ${boltMediaMode === 'photo' ? 'active' : ''}`}
+                              onClick={(e) => { e.stopPropagation(); setBoltMediaMode('photo'); }}
+                            >📷 Foto</button>
+                            <button
+                              className={`cmt-btn ${boltMediaMode === 'video' ? 'active' : ''}`}
+                              onClick={(e) => { e.stopPropagation(); setBoltMediaMode('video'); }}
+                            >🎬 Video</button>
+                          </div>
+                        )}
+
+                        {isBolt && boltMediaMode === 'video' ? (
+                          <video
+                            src="/assets/img/shipping_video_real.mp4"
+                            autoPlay muted loop playsInline preload="metadata"
+                            className="pcc-card-video"
+                            style={{ width: '100%', height: '100%', objectFit: 'contain', background: '#000' }}
+                          />
+                        ) : (
+                          <img
+                            src={p.image}
+                            alt={p.name}
+                            loading="lazy"
+                            onClick={() => setLightbox({ open: true, img: p.image, title: p.name })}
+                            style={{ cursor: 'zoom-in' }}
+                          />
+                        )}
                         <span className="pcc-badge-top">{p.badge}</span>
-                        <button className="pcc-zoom-btn" title="Ampliar foto">
-                          <Eye className="w-3.5 h-3.5" />
-                        </button>
+                        {(!isBolt || boltMediaMode === 'photo') && (
+                          <button className="pcc-zoom-btn" title="Ampliar foto" onClick={() => setLightbox({ open: true, img: p.image, title: p.name })}>
+                            <Eye className="w-3.5 h-3.5" />
+                          </button>
+                        )}
                       </div>
 
                       <div className="pcc-content">
@@ -964,7 +1013,8 @@ export default function App() {
                         </div>
                       </div>
                     </article>
-                  ))}
+                    );
+                  })}
                 </div>
               </div>
             )}
@@ -1257,14 +1307,6 @@ export default function App() {
                       >
                         Tu navegador no soporta video HTML5.
                       </video>
-                      <div className="video-verified-badge">
-                        <span className="live-dot" />
-                        <span>VIDEO REAL 100% ORIGINAL</span>
-                      </div>
-                      <div className="video-sound-pill">
-                        <span>🔊 Toca para activar audio</span>
-                        <span className="text-emerald-400 font-bold">@krono.ibg</span>
-                      </div>
                     </div>
                   </div>
                 </div>
