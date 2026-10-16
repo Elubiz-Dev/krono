@@ -354,7 +354,7 @@ export default function App() {
           <span className="lt-text">
             Despachos Diarios · <strong>Pago Contra Entrega</strong> · Kit Completo <strong className="highlight-gold">$85.000 COP</strong> (Reloj + Estuche Rígido + Pila Gratis)
           </span>
-          <span className="lt-badge highlight-green">Garantía 90 Días</span>
+          <span className="lt-badge highlight-green">Garantía 30 Días</span>
         </div>
       </div>
 
@@ -898,7 +898,7 @@ export default function App() {
                     <div className="ivs-features">
                       <span>⚡ 54mm Caja Maciza</span>
                       <span>💎 Esfera Plateada</span>
-                      <span>🛡️ Garantía 90 Días</span>
+                      <span>🛡️ Garantía 30 Días</span>
                       <span>📦 Caja Invicta Real</span>
                     </div>
                     <div className="ivs-price-row">
@@ -1019,7 +1019,7 @@ export default function App() {
               </div>
             )}
 
-            {/* Categoría 2: Colección Rolex Style */}
+            {/* Categoría 2: Colección Rolex Style — AGOTADO */}
             {(activeCatalogTab === 'all' || activeCatalogTab === 'rolex') && (
               <div className="brand-section-block" style={{ marginTop: 40 }}>
                 <div className="brand-category-header rolex-header">
@@ -1028,18 +1028,60 @@ export default function App() {
                     <h3 className="bch-title">Colección Rolex Style (Submariner, Datejust, Day-Date, Daytona)</h3>
                     <p className="bch-sub">Biseles estriados, cerámicos, esferas limpias, pulso Oyster o Jubilee y lupa de fechador de alta distinción.</p>
                   </div>
-                  <span className="bch-price-pill">$85.000 COP c/u</span>
+                  <span className="bch-price-pill" style={{ background: 'rgba(239,68,68,0.15)', borderColor: 'rgba(239,68,68,0.4)', color: '#f87171' }}>🚫 AGOTADO</span>
+                </div>
+
+                {/* AVISO AGOTADO PROMINENTE */}
+                <div style={{
+                  background: 'linear-gradient(135deg, rgba(239,68,68,0.08), rgba(17,24,39,0.95))',
+                  border: '1px solid rgba(239,68,68,0.35)',
+                  borderRadius: 'var(--r3)',
+                  padding: '20px 24px',
+                  marginBottom: 24,
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: 16,
+                  flexWrap: 'wrap',
+                }}>
+                  <span style={{ fontSize: '2rem' }}>🚫</span>
+                  <div style={{ flex: 1 }}>
+                    <p style={{ fontWeight: 900, fontSize: '1rem', color: '#f87171', marginBottom: 4 }}>
+                      Colección Rolex Style — Agotada hasta nuevo aviso
+                    </p>
+                    <p style={{ fontSize: '0.84rem', color: 'var(--t2)', margin: 0 }}>
+                      Estamos reabasteciendo. Escríbenos por WhatsApp para estar en la <strong style={{ color: 'var(--green)' }}>lista de espera prioritaria</strong> y ser el primero en recibir tu pedido cuando llegue el nuevo lote.
+                    </p>
+                  </div>
+                  <a
+                    href="https://wa.me/573193620748?text=Hola%20Krono!%20Me%20interesa%20la%20colecci%C3%B3n%20Rolex%20Style.%20%C2%BFCu%C3%A1ndo%20llega%20el%20nuevo%20lote%3F%20Quiero%20quedar%20en%20lista%20de%20espera."
+                    target="_blank" rel="noopener noreferrer"
+                    onClick={playChime}
+                    className="btn-wa-emerald"
+                    style={{ flexShrink: 0 }}
+                  >
+                    <MessageCircle style={{ width: 16, height: 16 }} /> Lista de Espera
+                  </a>
                 </div>
 
                 <div className="prod-list-clean">
                   {rolexProducts.map((p) => (
-                    <article key={p.id} className="prod-card-clean rolex-card">
-                      <div className="pcc-img-box" onClick={() => setLightbox({ open: true, img: p.image, title: p.name })}>
+                    <article key={p.id} className="prod-card-clean rolex-card" style={{ opacity: 0.55, pointerEvents: 'none', filter: 'grayscale(0.6)' }}>
+                      <div className="pcc-img-box" style={{ position: 'relative' }}>
                         <img src={p.image} alt={p.name} loading="lazy" />
-                        <span className="pcc-badge-top rolex-badge">{p.badge}</span>
-                        <button className="pcc-zoom-btn" title="Ampliar foto">
-                          <Eye className="w-3.5 h-3.5" />
-                        </button>
+                        {/* AGOTADO overlay */}
+                        <div style={{
+                          position: 'absolute', inset: 0,
+                          background: 'rgba(0,0,0,0.55)',
+                          display: 'flex', alignItems: 'center', justifyContent: 'center',
+                          borderRadius: 'inherit',
+                        }}>
+                          <span style={{
+                            background: 'rgba(239,68,68,0.9)',
+                            color: '#fff', fontWeight: 900, fontSize: '0.82rem',
+                            padding: '6px 14px', borderRadius: 'var(--rF)',
+                            letterSpacing: '0.05em',
+                          }}>🚫 AGOTADO</span>
+                        </div>
                       </div>
 
                       <div className="pcc-content">
@@ -1048,35 +1090,20 @@ export default function App() {
                             <span className="pcc-series">{p.series}</span>
                             <h4 className="pcc-name">{p.name}</h4>
                           </div>
-                          <span className="pcc-stock-badge">{p.stock}</span>
+                          <span className="pcc-stock-badge" style={{ background: 'rgba(239,68,68,0.15)', color: '#f87171', borderColor: 'rgba(239,68,68,0.3)' }}>
+                            Agotado
+                          </span>
                         </div>
-
                         <p className="pcc-spec-text">{p.specs[0]}</p>
-
-                        <div className="pcc-pricing">
+                        <div className="pcc-pricing" style={{ opacity: 0.5 }}>
                           <div className="pcc-prices">
                             <span className="pcc-was">Antes <s>${fmt(p.oldPrice)}</s></span>
                             <span className="pcc-now">${fmt(p.price)} <small>COP</small></span>
                           </div>
-                          <span className="pcc-savings-pill">
-                            🔥 Ahorras ${fmt(p.savings)} ({p.discountPct}% OFF)
-                          </span>
                         </div>
-
                         <div className="pcc-actions">
-                          <a
-                            href={directProductWa(p)}
-                            target="_blank" rel="noopener noreferrer"
-                            onClick={playChime}
-                            className="btn-wa-emerald"
-                          >
-                            <MessageCircle className="w-4 h-4" /> ¡Lo Quiero! (WhatsApp)
-                          </a>
-                          <button
-                            className="btn-order-outline"
-                            onClick={() => selectAndScroll(p)}
-                          >
-                            Armar Pedido <ArrowRight className="w-3.5 h-3.5" />
+                          <button className="btn-wa-emerald" disabled style={{ opacity: 0.4, cursor: 'not-allowed' }}>
+                            <MessageCircle className="w-4 h-4" /> No Disponible
                           </button>
                         </div>
                       </div>

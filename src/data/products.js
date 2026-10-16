@@ -218,8 +218,8 @@ export const PRODUCTS = [
     savings: 95000,
     discountPct: 53,
     image: '/assets/img/watch_rolex_submariner_black.jpg',
-    badge: '👑 Ícono Submariner Cerámico',
-    stock: 'Quedan 2 uds',
+    badge: '🚫 AGOTADO — Próximamente',
+    stock: 'AGOTADO hasta nuevo aviso',
     specs: [
       'Bisel giratorio cerámico negro profundo graduado de 60 minutos',
       'Esfera negra azabache con marcadores luminiscentes y lupa cíclope de fecha a las 3',
@@ -242,8 +242,8 @@ export const PRODUCTS = [
     savings: 95000,
     discountPct: 53,
     image: '/assets/img/watch_rolex_datejust_twotone.jpg',
-    badge: '✨ Bisel Estriado Oro & Jubilee',
-    stock: 'Quedan 2 uds',
+    badge: '🚫 AGOTADO — Próximamente',
+    stock: 'AGOTADO hasta nuevo aviso',
     specs: [
       'Bisel estriado icónico facetado bañado en oro amarillo reflectivo',
       'Esfera champagne sunburst con lupa cíclope de aumento sobre el fechador',
@@ -266,8 +266,8 @@ export const PRODUCTS = [
     savings: 100000,
     discountPct: 54,
     image: '/assets/img/watch_rolex_daydate_green.jpg',
-    badge: '💎 Dial Verde Esmeralda Oro',
-    stock: 'Solo 1 unidad',
+    badge: '🚫 AGOTADO — Próximamente',
+    stock: 'AGOTADO hasta nuevo aviso',
     specs: [
       'Radiante dial verde esmeralda con números romanos dorados en alto relieve',
       'Ventana panorámica de día a las 12 y lente de fecha a las 3 en punto',
@@ -290,8 +290,8 @@ export const PRODUCTS = [
     savings: 95000,
     discountPct: 53,
     image: '/assets/img/watch_rolex_daytona_panda.jpg',
-    badge: '🏎️ Panda Dial Blanco & Negro',
-    stock: 'Quedan 2 uds',
+    badge: '🚫 AGOTADO — Próximamente',
+    stock: 'AGOTADO hasta nuevo aviso',
     specs: [
       'Esfera blanca polar con tres subdiales de cronógrafo en contraste negro',
       'Bisel taquimétrico cerámico negro con escala numérica para velocidad',
@@ -350,7 +350,7 @@ export const ENTREPRENEUR_COMBOS = [
       '5 Estuches rígidos amarillos de lujo individuales',
       '5 Pilas de repuesto selladas de fábrica en blíster',
       'Material publicitario digital completo listo para subir',
-      'Garantía directa de 90 días con recambio inmediato',
+      'Garantía directa de 30 días con recambio inmediato',
       'Margen neto estimado de +$200.000 COP al revender a $85.000'
     ]
   },
@@ -397,8 +397,8 @@ export const BENEFITS = [
     icon: 'Phone'
   },
   {
-    title: 'Garantía Krono 90 Días',
-    desc: '3 meses de respaldo en maquinaria cuarzo y pila. Compra con total tranquilidad y respaldo real.',
+    title: 'Garantía Krono 30 Días',
+    desc: '1 mes de respaldo en maquinaria cuarzo y pila. Compra con total tranquilidad y respaldo real.',
     icon: 'ShieldCheck'
   }
 ];
