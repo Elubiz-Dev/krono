@@ -1233,15 +1233,20 @@ export default function App() {
                       <p>Video 100% real de nuestros despachos diarios — embalaje, guías y entrega a transportadora</p>
                     </div>
                   </div>
-                  {/* VIDEO EMBED — reemplaza el src con tu enlace de YouTube/TikTok/MP4 */}
+                  {/* VIDEO REAL — Despachos desde Ibagué (WhatsApp Video) */}
                   <div className="video-responsive-wrap">
-                    <iframe
-                      src="https://www.youtube.com/embed?list=PLbpi6ZahtOH6Ar_3GPy3workBvC0TFsLz&autoplay=0"
-                      title="Krono Despachos Reales Colombia"
-                      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                      allowFullScreen
-                      loading="lazy"
-                    />
+                    <video
+                      src="/assets/img/shipping_video_real.mp4"
+                      controls
+                      autoPlay
+                      muted
+                      loop
+                      playsInline
+                      preload="metadata"
+                      style={{ objectFit: 'cover' }}
+                    >
+                      Tu navegador no soporta video HTML5.
+                    </video>
                   </div>
                 </div>
                 <p style={{ textAlign: 'center', color: 'var(--t3)', fontSize: '0.78rem', marginTop: 10 }}>
