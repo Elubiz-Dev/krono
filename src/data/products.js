@@ -312,14 +312,14 @@ export const ENTREPRENEUR_COMBOS = [
     name: 'Pack Emprendedor Inicial (Lote x3)',
     subtitle: 'Ideal para arrancar tu negocio de relojería con bajo capital y retorno rápido',
     units: 3,
-    priceTotal: 225000,
-    pricePerUnit: 75000,
-    oldPriceTotal: 480000,
-    savings: 255000,
-    discountPct: 53,
-    estimatedProfit: 135000,
+    priceTotal: 135000,
+    pricePerUnit: 45000,
+    oldPriceTotal: 270000,
+    savings: 135000,
+    discountPct: 50,
+    estimatedProfit: 120000,
     featured: false,
-    ribbon: 'Inicia Hoy',
+    ribbon: '⚡ $45.000 / Reloj',
     badgeColor: 'var(--blue)',
     image: '/assets/img/media_1791997974589.png',
     includes: [
@@ -327,7 +327,7 @@ export const ENTREPRENEUR_COMBOS = [
       '3 Estuches amarillos rígidos acolchados de presentación',
       '3 Pilas de repuesto selladas de fábrica en blíster',
       'Fotos y videos en alta resolución para tus estados de WhatsApp e Instagram',
-      'Asesoría comercial directa para revenderlos a $120.000 COP c/u'
+      'Asesoría comercial directa para revenderlos a $85.000 COP c/u ($40K de ganancia limpia por reloj)'
     ]
   },
   {
@@ -335,14 +335,14 @@ export const ENTREPRENEUR_COMBOS = [
     name: 'Combo Mayorista Pro (Lote x5)',
     subtitle: 'El paquete preferido por revendedores en Ibagué, Cali y Bogotá por su alta rotación',
     units: 5,
-    priceTotal: 345000,
-    pricePerUnit: 69000,
-    oldPriceTotal: 800000,
-    savings: 455000,
-    discountPct: 57,
-    estimatedProfit: 255000,
+    priceTotal: 225000,
+    pricePerUnit: 45000,
+    oldPriceTotal: 450000,
+    savings: 225000,
+    discountPct: 50,
+    estimatedProfit: 200000,
     featured: true,
-    ribbon: '🔥 El Más Rentable',
+    ribbon: '🔥 Top Ventas · $45.000 c/u',
     badgeColor: 'var(--green)',
     image: '/assets/img/media_1791997978060.png',
     includes: [
@@ -351,7 +351,7 @@ export const ENTREPRENEUR_COMBOS = [
       '5 Pilas de repuesto selladas de fábrica en blíster',
       'Material publicitario digital completo listo para subir',
       'Garantía directa de 90 días con recambio inmediato',
-      'Margen neto estimado de $255.000 COP al revender'
+      'Margen neto estimado de +$200.000 COP al revender a $85.000'
     ]
   },
   {
@@ -359,14 +359,14 @@ export const ENTREPRENEUR_COMBOS = [
     name: 'Caja Distribuidor Container (Lote x10)',
     subtitle: 'Precio directo de importación para tiendas, boutiques y distribuidores comerciales',
     units: 10,
-    priceTotal: 640000,
-    pricePerUnit: 64000,
-    oldPriceTotal: 1600000,
-    savings: 960000,
-    discountPct: 60,
-    estimatedProfit: 560000,
+    priceTotal: 450000,
+    pricePerUnit: 45000,
+    oldPriceTotal: 900000,
+    savings: 450000,
+    discountPct: 50,
+    estimatedProfit: 400000,
     featured: false,
-    ribbon: 'Precio Fábrica',
+    ribbon: '🏭 Precio Fábrica · $45.000 c/u',
     badgeColor: 'var(--red)',
     image: '/assets/img/models_stacked.png',
     includes: [
@@ -374,8 +374,8 @@ export const ENTREPRENEUR_COMBOS = [
       '10 Estuches oficiales de protección rígidos',
       '10 Pilas selladas de repuesto de larga vida',
       'Envío Nacional Prioritario GRATIS a cualquier rincón de Colombia',
-      'Precio imbatible de solo $64.000 COP por kit completo',
-      'Margen neto proyectado: más de $560.000 COP limpios'
+      'Precio imbatible de solo $45.000 COP por kit completo',
+      'Margen neto proyectado: más de +$400.000 COP limpios al revender'
     ]
   }
 ];

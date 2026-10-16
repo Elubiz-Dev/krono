@@ -211,12 +211,55 @@ export default function App() {
     setTimeout(() => setModelToast(p => ({ ...p, show: false })), 2200);
   }, []);
 
+  /* Smooth scroll to section with sticky header offset */
+  const scrollToSection = useCallback((sectionId, tabId = null) => {
+    playTick();
+    if (tabId) setActiveStoreTab(tabId);
+    setMobMenuOpen(false);
+    const el = document.getElementById(sectionId);
+    if (el) {
+      const headerOffset = 76;
+      const elementPosition = el.getBoundingClientRect().top;
+      const offsetPosition = elementPosition + window.pageYOffset - headerOffset;
+      window.scrollTo({
+        top: offsetPosition,
+        behavior: 'smooth'
+      });
+    }
+  }, []);
+
   const selectAndScroll = useCallback((product) => {
     selectModel(product);
     setTimeout(() => {
-      document.getElementById('order-builder')?.scrollIntoView({ behavior: 'smooth' });
+      scrollToSection('order-builder', 'pedido');
     }, 100);
-  }, [selectModel]);
+  }, [selectModel, scrollToSection]);
+
+  /* Active section scroll listener */
+  useEffect(() => {
+    const sectionMap = [
+      { id: 'hero', tab: 'relojes' },
+      { id: 'quienes-somos', tab: 'quienes' },
+      { id: 'catalog', tab: 'relojes' },
+      { id: 'emprendedor', tab: 'combos' },
+      { id: 'envios-pais', tab: 'envios' },
+      { id: 'combo-detail', tab: 'incluye' },
+      { id: 'order-builder', tab: 'pedido' },
+      { id: 'faq', tab: 'faq' },
+    ];
+    const onScroll = () => {
+      const scrollPos = window.scrollY + 140;
+      for (let i = sectionMap.length - 1; i >= 0; i--) {
+        const el = document.getElementById(sectionMap[i].id);
+        if (el && el.offsetTop <= scrollPos) {
+          setActiveStoreTab(sectionMap[i].tab);
+          break;
+        }
+      }
+    };
+    window.addEventListener('scroll', onScroll, { passive: true });
+    return () => window.removeEventListener('scroll', onScroll);
+  }, []);
 
   /* Order click with chime and confetti */
   const handleOrder = useCallback(() => {
@@ -359,21 +402,16 @@ export default function App() {
           {/* Desktop Navigation */}
           <nav className="desktop-nav">
             {[
-              ['relojes',  '⌚ Catálogo ($85K)'],
-              ['quienes',  '🏢 Quiénes Somos'],
-              ['combos',   '💼 Combos Emprendedor'],
-              ['envios',   '🚚 Envíos al País'],
-              ['pedido',   '⚡ Pedir Ahora'],
-              ['faq',      '❓ Dudas'],
-            ].map(([tabId, label]) => (
+              ['catalog',        'relojes',  '⌚ Catálogo ($85K)'],
+              ['quienes-somos',  'quienes',  '🏢 Quiénes Somos'],
+              ['emprendedor',    'combos',   '💼 Combos Emprendedor'],
+              ['envios-pais',    'envios',   '🚚 Envíos al País'],
+              ['order-builder',  'pedido',   '⚡ Pedir Ahora'],
+              ['faq',            'faq',      '❓ Dudas'],
+            ].map(([sectionId, tabId, label]) => (
               <button
                 key={tabId}
-                onClick={() => {
-                  playTick();
-                  setActiveStoreTab(tabId);
-                  const targetId = tabId === 'quienes' ? 'quienes-somos' : tabId === 'envios' ? 'envios-pais' : tabId === 'faq' ? 'faq' : 'store-views';
-                  document.getElementById(targetId)?.scrollIntoView({ behavior: 'smooth' });
-                }}
+                onClick={() => scrollToSection(sectionId, tabId)}
                 className={`nav-a ${activeStoreTab === tabId ? 'active' : ''}`}
               >
                 {label}
@@ -420,11 +458,6 @@ export default function App() {
               <span className="hidden sm:inline">TikTok</span>
             </a>
 
-            <div className="online-chip">
-              <span className="pulse-green" />
-              <span className="hidden md:inline text-emerald-400 font-bold">Asesor en Línea</span>
-            </div>
-
             <a
               href="https://wa.me/573193620748?text=Hola%20deseo%20informacion%20de%20los%20relojes%20Krono"
               target="_blank" rel="noopener noreferrer"
@@ -439,21 +472,16 @@ export default function App() {
         {/* Mobile Quick Category Navigation Strip */}
         <div className="mobile-nav-strip">
           {[
-            ['relojes',  '⌚ Catálogo'],
-            ['quienes',  '🏢 Nosotros'],
-            ['combos',   '💼 Emprendedor'],
-            ['envios',   '🚚 Envíos'],
-            ['pedido',   '⚡ Pedir'],
-            ['faq',      '❓ Dudas'],
-          ].map(([tabId, label]) => (
+            ['catalog',        'relojes',  '⌚ Catálogo'],
+            ['quienes-somos',  'quienes',  '🏢 Nosotros'],
+            ['emprendedor',    'combos',   '💼 Emprendedor'],
+            ['envios-pais',    'envios',   '🚚 Envíos'],
+            ['order-builder',  'pedido',   '⚡ Pedir'],
+            ['faq',            'faq',      '❓ Dudas'],
+          ].map(([sectionId, tabId, label]) => (
             <button
               key={tabId}
-              onClick={() => {
-                playTick();
-                setActiveStoreTab(tabId);
-                const targetId = tabId === 'quienes' ? 'quienes-somos' : tabId === 'envios' ? 'envios-pais' : tabId === 'faq' ? 'faq' : 'store-views';
-                document.getElementById(targetId)?.scrollIntoView({ behavior: 'smooth' });
-              }}
+              onClick={() => scrollToSection(sectionId, tabId)}
               className={`mob-nav-pill ${activeStoreTab === tabId ? 'active' : ''}`}
             >
               {label}
@@ -482,10 +510,7 @@ export default function App() {
           <div className="mob-acc-item">
             <button
               className="mob-acc-toggle direct"
-              onClick={() => {
-                playTick(); setMobMenuOpen(false);
-                document.getElementById('hero')?.scrollIntoView({ behavior: 'smooth' });
-              }}
+              onClick={() => scrollToSection('hero', 'relojes')}
             >
               🏠 Inicio
             </button>
@@ -502,20 +527,20 @@ export default function App() {
             </button>
             <div className={`mob-acc-body ${mobAccSection === 'catalogo' ? 'open' : ''}`}>
               <button className="mob-acc-sub" onClick={() => {
-                playTick(); setMobMenuOpen(false); setActiveCatalogTab('all');
-                document.getElementById('store-views')?.scrollIntoView({ behavior: 'smooth' });
+                setActiveCatalogTab('all');
+                scrollToSection('catalog', 'relojes');
               }}>
                 <span className="acc-emoji">⚡</span> Todos los Modelos ({PRODUCTS.length} relojes)
               </button>
               <button className="mob-acc-sub" onClick={() => {
-                playTick(); setMobMenuOpen(false); setActiveCatalogTab('invicta');
-                document.getElementById('store-views')?.scrollIntoView({ behavior: 'smooth' });
+                setActiveCatalogTab('invicta');
+                scrollToSection('catalog', 'relojes');
               }}>
                 <span className="acc-emoji">👑</span> Colección Invicta ({invictaProducts.length} modelos)
               </button>
               <button className="mob-acc-sub" onClick={() => {
-                playTick(); setMobMenuOpen(false); setActiveCatalogTab('rolex');
-                document.getElementById('store-views')?.scrollIntoView({ behavior: 'smooth' });
+                setActiveCatalogTab('rolex');
+                scrollToSection('catalog', 'relojes');
               }}>
                 <span className="acc-emoji">💎</span> Colección Rolex Style ({rolexProducts.length} modelos)
               </button>
@@ -526,10 +551,7 @@ export default function App() {
           <div className="mob-acc-item">
             <button
               className="mob-acc-toggle direct"
-              onClick={() => {
-                playTick(); setMobMenuOpen(false);
-                document.getElementById('quienes-somos')?.scrollIntoView({ behavior: 'smooth' });
-              }}
+              onClick={() => scrollToSection('quienes-somos', 'quienes')}
             >
               🏢 Quiénes Somos
             </button>
@@ -541,27 +563,18 @@ export default function App() {
               className={`mob-acc-toggle ${mobAccSection === 'combos' ? 'expanded' : ''}`}
               onClick={() => { playTick(); setMobAccSection(mobAccSection === 'combos' ? null : 'combos'); }}
             >
-              💼 Combos Emprendedor
+              💼 Combos Emprendedor ($45K c/u)
               <ChevronDown className="w-5 h-5" />
             </button>
             <div className={`mob-acc-body ${mobAccSection === 'combos' ? 'open' : ''}`}>
-              <button className="mob-acc-sub" onClick={() => {
-                playTick(); setMobMenuOpen(false);
-                document.getElementById('emprendedor')?.scrollIntoView({ behavior: 'smooth' });
-              }}>
-                <span className="acc-emoji">📦</span> Pack Inicial x3 — $225.000 COP
+              <button className="mob-acc-sub" onClick={() => scrollToSection('emprendedor', 'combos')}>
+                <span className="acc-emoji">📦</span> Pack Inicial x3 — $135.000 COP ($45K c/u)
               </button>
-              <button className="mob-acc-sub" onClick={() => {
-                playTick(); setMobMenuOpen(false);
-                document.getElementById('emprendedor')?.scrollIntoView({ behavior: 'smooth' });
-              }}>
-                <span className="acc-emoji">🔥</span> Combo Pro x5 — $345.000 COP
+              <button className="mob-acc-sub" onClick={() => scrollToSection('emprendedor', 'combos')}>
+                <span className="acc-emoji">🔥</span> Combo Pro x5 — $225.000 COP ($45K c/u)
               </button>
-              <button className="mob-acc-sub" onClick={() => {
-                playTick(); setMobMenuOpen(false);
-                document.getElementById('emprendedor')?.scrollIntoView({ behavior: 'smooth' });
-              }}>
-                <span className="acc-emoji">🏭</span> Lote x10 — $640.000 COP (Precio Fábrica)
+              <button className="mob-acc-sub" onClick={() => scrollToSection('emprendedor', 'combos')}>
+                <span className="acc-emoji">🏭</span> Lote x10 — $450.000 COP (Precio Fábrica $45K c/u)
               </button>
             </div>
           </div>
@@ -576,22 +589,13 @@ export default function App() {
               <ChevronDown className="w-5 h-5" />
             </button>
             <div className={`mob-acc-body ${mobAccSection === 'envios' ? 'open' : ''}`}>
-              <button className="mob-acc-sub" onClick={() => {
-                playTick(); setMobMenuOpen(false);
-                document.getElementById('envios-pais')?.scrollIntoView({ behavior: 'smooth' });
-              }}>
+              <button className="mob-acc-sub" onClick={() => scrollToSection('envios-pais', 'envios')}>
                 <span className="acc-emoji">📍</span> Ibagué — Entrega Hoy Mismo
               </button>
-              <button className="mob-acc-sub" onClick={() => {
-                playTick(); setMobMenuOpen(false);
-                document.getElementById('envios-pais')?.scrollIntoView({ behavior: 'smooth' });
-              }}>
+              <button className="mob-acc-sub" onClick={() => scrollToSection('envios-pais', 'envios')}>
                 <span className="acc-emoji">🇨🇴</span> Nacional — Inter Rapidísimo & DHL
               </button>
-              <button className="mob-acc-sub" onClick={() => {
-                playTick(); setMobMenuOpen(false);
-                document.getElementById('envios-pais')?.scrollIntoView({ behavior: 'smooth' });
-              }}>
+              <button className="mob-acc-sub" onClick={() => scrollToSection('envios-pais', 'envios')}>
                 <span className="acc-emoji">📋</span> Ver Comprobantes de Envío Reales
               </button>
             </div>
@@ -699,33 +703,21 @@ export default function App() {
               {/* CTAs with vibrant Emerald Green and Urgency */}
               <div className="cta-row sr d3">
                 <button
-                  onClick={() => {
-                    playTick();
-                    setActiveStoreTab('pedido');
-                    document.getElementById('store-views')?.scrollIntoView({ behavior: 'smooth' });
-                  }}
+                  onClick={() => scrollToSection('order-builder', 'pedido')}
                   className="btn-cta-emerald"
                 >
                   <ShoppingBag className="w-5 h-5" />
                   Pedir Contra Entrega ($85K)
                 </button>
                 <button
-                  onClick={() => {
-                    playTick();
-                    setActiveStoreTab('combos');
-                    document.getElementById('store-views')?.scrollIntoView({ behavior: 'smooth' });
-                  }}
+                  onClick={() => scrollToSection('emprendedor', 'combos')}
                   className="btn-ghost-gold"
                 >
                   <TrendingUp className="w-5 h-5 text-amber-400" />
-                  Combos Emprendedor
+                  Combos Emprendedor ($45K)
                 </button>
                 <button
-                  onClick={() => {
-                    playTick();
-                    setActiveStoreTab('envios');
-                    document.getElementById('envios-pais')?.scrollIntoView({ behavior: 'smooth' });
-                  }}
+                  onClick={() => scrollToSection('envios-pais', 'envios')}
                   className="btn-ghost-white"
                 >
                   <Truck className="w-5 h-5 text-emerald-400" />
@@ -845,17 +837,17 @@ export default function App() {
           <div className="container">
             <div className="store-tabs-wrap">
               {[
-                { id: 'relojes', icon: Clock, label: '⌚ Relojes ($85K)' },
-                { id: 'combos',  icon: TrendingUp, label: '💼 Combos Emprendedor' },
-                { id: 'envios',  icon: Truck, label: '🚚 Envíos al País' },
-                { id: 'quienes', icon: Award, label: '🏢 Quiénes Somos' },
-                { id: 'incluye', icon: Gift, label: '🎁 ¿Qué Incluye?' },
-                { id: 'pedido',  icon: ShoppingBag, label: '⚡ Pedir Ahora' },
-                { id: 'faq',     icon: HelpCircle, label: '❓ Preguntas' },
+                { id: 'relojes', sectionId: 'catalog',       icon: Clock, label: '⌚ Relojes ($85K)' },
+                { id: 'combos',  sectionId: 'emprendedor',   icon: TrendingUp, label: '💼 Combos ($45K)' },
+                { id: 'envios',  sectionId: 'envios-pais',   icon: Truck, label: '🚚 Envíos al País' },
+                { id: 'quienes', sectionId: 'quienes-somos', icon: Award, label: '🏢 Quiénes Somos' },
+                { id: 'incluye', sectionId: 'combo-detail',  icon: Gift, label: '🎁 ¿Qué Incluye?' },
+                { id: 'pedido',  sectionId: 'order-builder', icon: ShoppingBag, label: '⚡ Pedir Ahora' },
+                { id: 'faq',     sectionId: 'faq',           icon: HelpCircle, label: '❓ Preguntas' },
               ].map(tab => (
                 <button
                   key={tab.id}
-                  onClick={() => { playTick(); setActiveStoreTab(tab.id); }}
+                  onClick={() => scrollToSection(tab.sectionId, tab.id)}
                   className={`store-tab-btn ${activeStoreTab === tab.id ? 'active' : ''}`}
                 >
                   <tab.icon className="w-4 h-4 shrink-0" />
@@ -1233,20 +1225,36 @@ export default function App() {
                       <p>Video 100% real de nuestros despachos diarios — embalaje, guías y entrega a transportadora</p>
                     </div>
                   </div>
-                  {/* VIDEO REAL — Despachos desde Ibagué (WhatsApp Video) */}
-                  <div className="video-responsive-wrap">
-                    <video
-                      src="/assets/img/shipping_video_real.mp4"
-                      controls
-                      autoPlay
-                      muted
-                      loop
-                      playsInline
-                      preload="metadata"
-                      style={{ objectFit: 'cover' }}
-                    >
-                      Tu navegador no soporta video HTML5.
-                    </video>
+                  {/* VIDEO REAL — Despachos desde Ibagué (Formato Smartphone 9:16) */}
+                  <div className="shipping-phone-mockup">
+                    <div className="phone-island-top">
+                      <span>Krono Ibagué</span>
+                      <div className="phone-pill-cam">
+                        <div className="phone-cam-dot" />
+                      </div>
+                      <span>4G 🔋</span>
+                    </div>
+                    <div className="video-vertical-wrap">
+                      <video
+                        src="/assets/img/shipping_video_real.mp4"
+                        controls
+                        autoPlay
+                        muted
+                        loop
+                        playsInline
+                        preload="metadata"
+                      >
+                        Tu navegador no soporta video HTML5.
+                      </video>
+                      <div className="video-verified-badge">
+                        <span className="live-dot" />
+                        <span>VIDEO REAL 100% ORIGINAL</span>
+                      </div>
+                      <div className="video-sound-pill">
+                        <span>🔊 Toca para activar audio</span>
+                        <span className="text-emerald-400 font-bold">@krono.ibg</span>
+                      </div>
+                    </div>
                   </div>
                 </div>
                 <p style={{ textAlign: 'center', color: 'var(--t3)', fontSize: '0.78rem', marginTop: 10 }}>
@@ -1699,16 +1707,17 @@ export default function App() {
       {/* ── 17. FLOATING ELEMENTS & MOBILE BAR ────────────────────────────── */}
 
       {/* WhatsApp bubble */}
+      {/* WhatsApp bubble with clean online badge */}
       <div className="fab-wa">
         <div className="fab-tooltip">
-          ¿Preguntas? Chatea con nuestro Asesor (319 3620748)
+          🟢 Asesor en Línea · WhatsApp 319 3620748
         </div>
         <a
           href="https://wa.me/573193620748?text=Hola%20deseo%20ordenar%20mi%20reloj%20Krono"
           target="_blank" rel="noopener noreferrer"
           onClick={playTick}
           className="fab-btn-emerald"
-          aria-label="Abrir WhatsApp"
+          aria-label="Abrir WhatsApp Krono"
         >
           <Phone className="w-6 h-6 text-white" />
         </a>
@@ -1721,14 +1730,13 @@ export default function App() {
             <span className="lbl">Kit Completo</span>
             <span className="val text-emerald-400 font-extrabold">$85.000 COP</span>
           </div>
-          <a
-            href="#order-builder"
-            onClick={playTick}
+          <button
+            onClick={() => scrollToSection('order-builder', 'pedido')}
             className="ms-btn-emerald"
           >
             <ShoppingBag className="w-4 h-4" />
             Pedir Contra Entrega
-          </a>
+          </button>
         </div>
       </div>
 
