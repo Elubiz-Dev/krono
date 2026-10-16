@@ -235,7 +235,7 @@ export default function App() {
     }, 100);
   }, [selectModel, scrollToSection]);
 
-  /* Active section scroll listener */
+  /* Active section scroll listener with RAF throttling to prevent UI jank */
   useEffect(() => {
     const sectionMap = [
       { id: 'hero', tab: 'relojes' },
@@ -247,14 +247,21 @@ export default function App() {
       { id: 'order-builder', tab: 'pedido' },
       { id: 'faq', tab: 'faq' },
     ];
+    let ticking = false;
     const onScroll = () => {
-      const scrollPos = window.scrollY + 140;
-      for (let i = sectionMap.length - 1; i >= 0; i--) {
-        const el = document.getElementById(sectionMap[i].id);
-        if (el && el.offsetTop <= scrollPos) {
-          setActiveStoreTab(sectionMap[i].tab);
-          break;
-        }
+      if (!ticking) {
+        window.requestAnimationFrame(() => {
+          const scrollPos = window.scrollY + 140;
+          for (let i = sectionMap.length - 1; i >= 0; i--) {
+            const el = document.getElementById(sectionMap[i].id);
+            if (el && el.offsetTop <= scrollPos) {
+              setActiveStoreTab(prev => (prev !== sectionMap[i].tab ? sectionMap[i].tab : prev));
+              break;
+            }
+          }
+          ticking = false;
+        });
+        ticking = true;
       }
     };
     window.addEventListener('scroll', onScroll, { passive: true });
@@ -747,6 +754,8 @@ export default function App() {
                   src="/assets/img/watch_invicta_gold_subaqua_real.png"
                   alt="Reloj Krono Subaqua Gold Master — Foto 100% Real"
                   className="hero-watch-img"
+                  fetchPriority="high"
+                  decoding="async"
                 />
                 <div className="float-tag ft1">
                   <div className="fi green-fi"><BatteryCharging className="w-4 h-4 text-emerald-400" /></div>
@@ -1058,6 +1067,8 @@ export default function App() {
                   <img
                     src="/assets/img/media_1791997978060.png"
                     alt="Stock real de Invicta con estuches amarillos y pilas"
+                    loading="lazy"
+                    decoding="async"
                   />
                 </div>
                 <div className="ebb-info">
@@ -1339,7 +1350,7 @@ export default function App() {
                             className={`model-opt-card ${selectedModel.id === watch.id ? 'sel' : ''}`}
                             onClick={() => selectModel(watch)}
                           >
-                            <img src={watch.image} alt={watch.name} className="model-thumb-clean" />
+                            <img src={watch.image} alt={watch.name} className="model-thumb-clean" loading="lazy" decoding="async" />
                             <div className="mo-info">
                               <h5>{watch.name}</h5>
                               <span className="mo-price">${fmt(watch.price)} COP</span>
@@ -1404,6 +1415,9 @@ export default function App() {
                         placeholder="Tu Nombre Completo"
                         value={customerName}
                         onChange={e => setCustomerName(e.target.value)}
+                        maxLength={80}
+                        autoComplete="name"
+                        aria-label="Tu Nombre Completo"
                         className="field-dark"
                         style={{ marginBottom: 10 }}
                       />
@@ -1412,6 +1426,9 @@ export default function App() {
                         placeholder="Dirección y Barrio en Ibagué / Tu Ciudad"
                         value={customerAddr}
                         onChange={e => setCustomerAddr(e.target.value)}
+                        maxLength={120}
+                        autoComplete="street-address"
+                        aria-label="Dirección y Barrio para despacho"
                         className="field-dark"
                       />
                     </div>
