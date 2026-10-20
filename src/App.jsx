@@ -113,27 +113,7 @@ export default function App() {
   const [mobMenuOpen, setMobMenuOpen]            = useState(false);
   const [mobAccSection, setMobAccSection]        = useState(null); // which section is expanded
 
-  /* 5-SECOND GLASS LOGO INTRO STATE */
-  const [showGlassIntro, setShowGlassIntro]      = useState(true);
-  const [glassSecondsLeft, setGlassSecondsLeft]  = useState(5);
-
   useScrollReveal();
-
-  /* 5-Second Glass Splash Timer */
-  useEffect(() => {
-    const interval = setInterval(() => {
-      setGlassSecondsLeft(prev => {
-        if (prev <= 1) {
-          clearInterval(interval);
-          setShowGlassIntro(false);
-          return 0;
-        }
-        return prev - 1;
-      });
-    }, 1000);
-
-    return () => clearInterval(interval);
-  }, []);
 
   /* Countdown offer timer */
   useEffect(() => {
@@ -295,48 +275,6 @@ export default function App() {
   return (
     <div className="min-h-screen relative">
 
-      {/* ── 0. INTRO GLASSWATERMARK OVERLAY (5 SECONDS) ─────────────────── */}
-      {showGlassIntro && (
-        <div className="glass-intro-overlay" onClick={() => setShowGlassIntro(false)}>
-          <div className="glass-intro-card" onClick={e => e.stopPropagation()}>
-            {/* Close / Skip button */}
-            <button
-              className="glass-skip-btn"
-              onClick={() => { playTick(); setShowGlassIntro(false); }}
-              title="Saltar Intro y ver la web"
-            >
-              <span>Saltar</span> <X className="w-3.5 h-3.5" />
-            </button>
-
-            {/* Glowing metallic logo with rotating aura */}
-            <div className="glass-logo-wrap">
-              <div className="glass-orbit-ring" />
-              <div className="glass-glow-core" />
-              <img
-                src="/assets/img/krono_k_metallic.png"
-                alt="Krono Blade K Logo"
-                className="glass-logo-img"
-              />
-            </div>
-
-            <div className="glass-brand-title">K R O N O</div>
-            <div className="glass-brand-sub">RELOJERÍA DE MÁXIMA PRESENCIA</div>
-            <div className="glass-brand-badges">
-              <span>👑 Estilo Invicta &amp; Rolex</span>
-              <span>🇨🇴 Ibagué · Envíos Nacionales</span>
-              <span>⚡ Pago Contra Entrega</span>
-            </div>
-
-            {/* 5-second progress bar */}
-            <div className="glass-progress-bar-wrap">
-              <div className="glass-progress-bar-fill" />
-            </div>
-            <div className="glass-countdown-text">
-              Accediendo al catálogo oficial en <strong>{glassSecondsLeft}s</strong>...
-            </div>
-          </div>
-        </div>
-      )}
 
       {/* ── AMBIENT GLASS BACKGROUND WATERMARK (Persistent luxury feel) ─── */}
       <div className="ambient-watermark-bg" aria-hidden="true">
@@ -547,7 +485,7 @@ export default function App() {
             </button>
             <div className={`mob-acc-body ${mobAccSection === 'combos' ? 'open' : ''}`}>
               <button className="mob-acc-sub" onClick={() => scrollToSection('emprendedor', 'combos')}>
-                <span className="acc-emoji">📦</span> Pack Inicial x3 — $135.000 COP ($45K c/u)
+                <span className="acc-emoji">📦</span> Pack Inicial x4 — $180.000 COP ($45K c/u)
               </button>
               <button className="mob-acc-sub" onClick={() => scrollToSection('emprendedor', 'combos')}>
                 <span className="acc-emoji">🔥</span> Combo Pro x5 — $225.000 COP ($45K c/u)

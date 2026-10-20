@@ -142,8 +142,8 @@ export const PRODUCTS = [
     savings: 80000,
     discountPct: 48,
     image: '/assets/img/watch_invicta_skeleton_silver.png',
-    badge: '💎 Mecánico Visor',
-    stock: 'Quedan 3 uds',
+    badge: '⚠️ ¡Última Unidad!',
+    stock: 'Solo 1 unidad',
     specs: [
       'Bisel de acero plateado pulido con textura deportiva e índices grabados',
       'Esfera esqueletada futurista que exhibe el corazón y balance mecánico',
@@ -308,24 +308,24 @@ export const PRODUCTS = [
    ───────────────────────────────────────────────────────────────────────── */
 export const ENTREPRENEUR_COMBOS = [
   {
-    id: 'lote-emprendedor-3',
-    name: 'Pack Emprendedor Inicial (Lote x3)',
+    id: 'lote-emprendedor-4',
+    name: 'Pack Emprendedor Inicial (Lote x4)',
     subtitle: 'Ideal para arrancar tu negocio de relojería con bajo capital y retorno rápido',
-    units: 3,
-    priceTotal: 135000,
+    units: 4,
+    priceTotal: 180000,
     pricePerUnit: 45000,
-    oldPriceTotal: 270000,
-    savings: 135000,
-    discountPct: 50,
-    estimatedProfit: 120000,
+    oldPriceTotal: 340000,
+    savings: 160000,
+    discountPct: 47,
+    estimatedProfit: 160000,
     featured: false,
     ribbon: '⚡ $45.000 / Reloj',
     badgeColor: 'var(--blue)',
     image: '/assets/img/media_1791997974589.png',
     includes: [
-      '3 Relojes tipo Invicta a elección (Subaqua, Bolt, Skeleton)',
-      '3 Estuches amarillos rígidos acolchados de presentación',
-      '3 Pilas de repuesto selladas de fábrica en blíster',
+      '4 Relojes tipo Invicta a elección (Subaqua, Bolt, Skeleton)',
+      '4 Estuches amarillos rígidos acolchados de presentación',
+      '4 Pilas de repuesto selladas de fábrica en blíster',
       'Fotos y videos en alta resolución para tus estados de WhatsApp e Instagram',
       'Asesoría comercial directa para revenderlos a $85.000 COP c/u ($40K de ganancia limpia por reloj)'
     ]
