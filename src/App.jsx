@@ -96,14 +96,14 @@ export default function App() {
   /* State */
   const [selectedModel, setSelectedModel]       = useState(PRODUCTS[0]);
   const [qty, setQty]                            = useState(1);
-  const [location, setLocation]                  = useState('ibague');
+  const [location, setLocation]                  = useState('contraentrega'); // 'contraentrega' | 'transferencia'
   const [customerName, setCustomerName]          = useState('');
   const [customerAddr, setCustomerAddr]          = useState('');
   const [activeCatalogTab, setActiveCatalogTab]  = useState('all'); // 'all' | 'invicta' | 'rolex'
+  const [selectedBrand, setSelectedBrand]        = useState(null);  // null = grid, 'invicta' | 'rolex' | 'coming-rm' = detail
   const [activeStoreTab, setActiveStoreTab]      = useState('relojes'); // 'relojes' | 'quienes' | 'combos' | 'envios' | 'incluye' | 'pedido' | 'todo'
   const [openAccordion, setOpenAccordion]        = useState('invicta'); // 'invicta' | 'rolex'
   const [lightbox, setLightbox]                  = useState({ open: false, img: '', title: '' });
-  const [boltMediaMode, setBoltMediaMode]        = useState('photo'); // 'photo' | 'video' for Invicta Bolt Silver
   const [openFaqs, setOpenFaqs]                  = useState({ 0: true, 1: false, 2: false }); // Multiple or toggle FAQ items
   const [buyerToast, setBuyerToast]              = useState({ show: false, buyer: null });
   const [modelToast, setModelToast]              = useState({ show: false, name: '' });
@@ -132,12 +132,12 @@ export default function App() {
   /* Live Buyer notifications loop */
   useEffect(() => {
     const buyers = [
-      { name: 'Camilo R.',    city: 'Ibagué (Cádiz)',     watch: 'Krono Subaqua Gold Master' },
-      { name: 'Andrés M.',    city: 'Ibagué (El Vergel)', watch: 'Krono Datejust Two-Tone Gold' },
-      { name: 'Mateo G.',     city: 'Ibagué (Jordán)',    watch: 'Combo Emprendedor x5 Pro' },
-      { name: 'Sebastián V.', city: 'Bogotá D.C.',        watch: 'Krono Oyster Submariner Black' },
-      { name: 'David P.',     city: 'Cali (Valle)',       watch: 'Krono Ghost Skeleton Cyber' },
-      { name: 'Alejandro T.', city: 'Medellín',           watch: 'Pack Emprendedor x3 Inicial' },
+      { name: 'Camilo R.',    city: 'Bogotá D.C.',        watch: 'Krono Subaqua Gold Master' },
+      { name: 'Andrés M.',    city: 'Medellín',           watch: 'Krono Bolt Phantom Silver' },
+      { name: 'Mateo G.',     city: 'Cali (Valle)',       watch: 'Combo Mayorista x5 Pro' },
+      { name: 'Sebastián V.', city: 'Barranquilla',       watch: 'Krono Ghost Skeleton Cyber' },
+      { name: 'David P.',     city: 'Bucaramanga',        watch: 'Krono Subaqua Reserve White' },
+      { name: 'Alejandro T.', city: 'Pereira (Eje C.)',   watch: 'Pack Emprendedor x4 Inicial' },
     ];
     let i = 0;
     const show = () => {
@@ -164,10 +164,10 @@ export default function App() {
     msg += `👑 *Modelo Elegido:* ${selectedModel.name} (${selectedModel.brand})\n`;
     msg += `📦 *Cantidad:* ${qty} kit(s)\n`;
     msg += `🎁 *Obsequios Incluidos:* Estuche Rígido Oficial + Batería Sellada GRATIS\n`;
-    msg += `📍 *Destino:* ${location === 'ibague' ? 'Ibagué (Tolima) — Pago Contra Entrega Inmediato' : 'Resto de Colombia — Envío Nacional Asegurado'}\n`;
+    msg += `💳 *Forma de Pago:* ${location === 'contraentrega' ? 'Pago Contra Entrega en la Puerta' : 'Transferencia Directa (Nequi/Daviplata/Bancolombia)'}\n`;
     msg += `💰 *Total a Cancelar:* $${fmt(subtotal)} COP\n`;
     if (customerName.trim()) msg += `👤 *Cliente:* ${customerName.trim()}\n`;
-    if (customerAddr.trim()) msg += `🏠 *Dirección/Barrio:* ${customerAddr.trim()}\n`;
+    if (customerAddr.trim()) msg += `🏠 *Ciudad y Dirección:* ${customerAddr.trim()}\n`;
     msg += `\n¿Me confirmas disponibilidad del modelo para coordinar el despacho hoy mismo? ¡Muchas gracias!`;
     return `https://wa.me/573193620748?text=${encodeURIComponent(msg)}`;
   }, [selectedModel, qty, location, customerName, customerAddr, subtotal]);
@@ -197,6 +197,17 @@ export default function App() {
     playTick();
     if (tabId) setActiveStoreTab(tabId);
     setMobMenuOpen(false);
+
+    if (sectionId === 'emprendedor') {
+      setSelectedBrand('emprendedores');
+      sectionId = 'catalog';
+    } else if (sectionId === 'combo-detail' || sectionId === 'combos') {
+      setSelectedBrand('combos');
+      sectionId = 'catalog';
+    } else if (sectionId === 'catalog' && (!tabId || tabId === 'relojes')) {
+      setSelectedBrand(null);
+    }
+
     const el = document.getElementById(sectionId);
     if (el) {
       const headerOffset = 76;
@@ -220,11 +231,9 @@ export default function App() {
   useEffect(() => {
     const sectionMap = [
       { id: 'hero', tab: 'relojes' },
-      { id: 'quienes-somos', tab: 'quienes' },
+      { id: 'quienes-somos', tab: 'relojes' },
       { id: 'catalog', tab: 'relojes' },
-      { id: 'emprendedor', tab: 'combos' },
       { id: 'envios-pais', tab: 'envios' },
-      { id: 'combo-detail', tab: 'incluye' },
       { id: 'order-builder', tab: 'pedido' },
       { id: 'faq', tab: 'faq' },
     ];
@@ -272,6 +281,77 @@ export default function App() {
   const invictaProducts = PRODUCTS.filter(p => p.category === 'invicta');
   const rolexProducts   = PRODUCTS.filter(p => p.category === 'rolex');
 
+  /* Las 4 categorías principales con sus fotos de portada oficiales */
+  const CATEGORIES = [
+    {
+      id: 'rolex',
+      name: 'Rolex',
+      badge: 'Colección de Lujo',
+      badgeClass: 'green',
+      subtitle: 'Rolex Style · Submariner, Datejust & Daytona',
+      img: '/assets/img/cat_cover_rolex.jpg',
+      ctaText: 'Ver Rolex →',
+    },
+    {
+      id: 'invicta',
+      name: 'Invicta',
+      badge: 'Máxima Presencia',
+      badgeClass: 'gold',
+      subtitle: 'Subaqua, Bolt & Skeleton',
+      img: '/assets/img/cat_cover_invicta.jpg',
+      ctaText: 'Ver Invicta →',
+    },
+    {
+      id: 'combos',
+      name: 'Combos',
+      badge: 'Kit Completo',
+      badgeClass: 'blue',
+      subtitle: 'Reloj + Estuche Rígido + Pila de Repuesto Gratis',
+      img: '/assets/img/cat_cover_combos.jpg',
+      ctaText: 'Ver Qué Incluye →',
+    },
+    {
+      id: 'emprendedores',
+      name: 'Emprendedores',
+      badge: 'Línea Mayorista',
+      badgeClass: 'amber',
+      subtitle: 'Lotes desde 4 unidades con hasta 60% margen',
+      img: '/assets/img/cat_cover_emprendedores.jpg',
+      ctaText: 'Ver Precios Mayoristas →',
+    },
+  ];
+
+  /* Manejo de clic en marca/categoría: filtra o traslada al usuario a la sección */
+  const handleSelectBrand = (brandId) => {
+    playTick();
+    if (brandId === 'combos') {
+      scrollToSection('combo-detail', 'incluye');
+      return;
+    }
+    if (brandId === 'emprendedores') {
+      scrollToSection('emprendedor', 'combos');
+      return;
+    }
+    setActiveCatalogTab(brandId);
+    setTimeout(() => {
+      let targetId = 'catalog-products';
+      if (brandId === 'invicta') targetId = 'brand-section-invicta';
+      else if (brandId === 'rolex') targetId = 'brand-section-rolex';
+      else if (brandId.startsWith('coming-')) targetId = 'brand-section-coming';
+
+      const el = document.getElementById(targetId) || document.getElementById('catalog-products');
+      if (el) {
+        const headerOffset = 85;
+        const elementPosition = el.getBoundingClientRect().top;
+        const offsetPosition = elementPosition + window.pageYOffset - headerOffset;
+        window.scrollTo({
+          top: offsetPosition,
+          behavior: 'smooth'
+        });
+      }
+    }, 100);
+  };
+
   return (
     <div className="min-h-screen relative">
 
@@ -288,9 +368,9 @@ export default function App() {
       {/* ── LUXURY TOP ANNOUNCEMENT BAR (Clean, prestigious, high conversion) ── */}
       <div className="luxury-top-bar">
         <div className="luxury-top-content">
-          <span className="lt-badge">✦ IBAGUÉ &amp; COLOMBIA</span>
+          <span className="lt-badge">✦ COLOMBIA · PAGO CONTRA ENTREGA</span>
           <span className="lt-text">
-            Despachos Diarios · <strong>Pago Contra Entrega</strong> · Kit Completo <strong className="highlight-gold">$85.000 COP</strong> (Reloj + Estuche Rígido + Pila Gratis)
+            Despachos Diarios · <strong>Pago Contra Entrega en tu Puerta</strong> · Kit Completo (Reloj + Estuche Rígido + Pila Gratis)
           </span>
           <span className="lt-badge highlight-green">Garantía 30 Días</span>
         </div>
@@ -317,9 +397,8 @@ export default function App() {
           {/* Desktop Navigation */}
           <nav className="desktop-nav">
             {[
-              ['catalog',        'relojes',  '⌚ Catálogo ($85K)'],
-              ['quienes-somos',  'quienes',  '🏢 Quiénes Somos'],
-              ['emprendedor',    'combos',   '💼 Combos Emprendedor'],
+              ['catalog',        'relojes',  '⌚ Catálogo'],
+              ['emprendedor',    'combos',   '💼 Emprendedor ($45K)'],
               ['envios-pais',    'envios',   '🚚 Envíos al País'],
               ['order-builder',  'pedido',   '⚡ Pedir Ahora'],
               ['faq',            'faq',      '❓ Dudas'],
@@ -390,8 +469,7 @@ export default function App() {
         <div className="mobile-nav-strip">
           {[
             ['catalog',        'relojes',  '⌚ Catálogo'],
-            ['quienes-somos',  'quienes',  '🏢 Nosotros'],
-            ['emprendedor',    'combos',   '💼 Emprendedor'],
+            ['emprendedor',    'combos',   '💼 Mayorista'],
             ['envios-pais',    'envios',   '🚚 Envíos'],
             ['order-builder',  'pedido',   '⚡ Pedir'],
             ['faq',            'faq',      '❓ Dudas'],
@@ -439,27 +517,39 @@ export default function App() {
               className={`mob-acc-toggle ${mobAccSection === 'catalogo' ? 'expanded' : ''}`}
               onClick={() => { playTick(); setMobAccSection(mobAccSection === 'catalogo' ? null : 'catalogo'); }}
             >
-              ⌚ Catálogo ($85K)
+              ⌚ Catálogo de Colecciones
               <ChevronDown className="w-5 h-5" />
             </button>
             <div className={`mob-acc-body ${mobAccSection === 'catalogo' ? 'open' : ''}`}>
               <button className="mob-acc-sub" onClick={() => {
-                setActiveCatalogTab('all');
+                setSelectedBrand('rolex');
                 scrollToSection('catalog', 'relojes');
               }}>
-                <span className="acc-emoji">⚡</span> Todos los Modelos ({PRODUCTS.length} relojes)
+                <span className="acc-emoji">💎</span> Rolex Style ({rolexProducts.length} modelos)
               </button>
               <button className="mob-acc-sub" onClick={() => {
-                setActiveCatalogTab('invicta');
+                setSelectedBrand('invicta');
                 scrollToSection('catalog', 'relojes');
               }}>
                 <span className="acc-emoji">👑</span> Colección Invicta ({invictaProducts.length} modelos)
               </button>
               <button className="mob-acc-sub" onClick={() => {
-                setActiveCatalogTab('rolex');
+                setSelectedBrand('combos');
                 scrollToSection('catalog', 'relojes');
               }}>
-                <span className="acc-emoji">💎</span> Colección Rolex Style ({rolexProducts.length} modelos)
+                <span className="acc-emoji">🎁</span> Combos &amp; Kits Completos
+              </button>
+              <button className="mob-acc-sub" onClick={() => {
+                setSelectedBrand('emprendedores');
+                scrollToSection('catalog', 'relojes');
+              }}>
+                <span className="acc-emoji">💼</span> Emprendedores (Mayoristas)
+              </button>
+              <button className="mob-acc-sub" onClick={() => {
+                setSelectedBrand(null);
+                scrollToSection('catalog', 'relojes');
+              }}>
+                <span className="acc-emoji">⚡</span> Ver Todas las Categorías
               </button>
             </div>
           </div>
@@ -507,13 +597,13 @@ export default function App() {
             </button>
             <div className={`mob-acc-body ${mobAccSection === 'envios' ? 'open' : ''}`}>
               <button className="mob-acc-sub" onClick={() => scrollToSection('envios-pais', 'envios')}>
-                <span className="acc-emoji">📍</span> Ibagué — Entrega Hoy Mismo
+                <span className="acc-emoji">📦</span> Pago Contra Entrega en tu Puerta
               </button>
               <button className="mob-acc-sub" onClick={() => scrollToSection('envios-pais', 'envios')}>
-                <span className="acc-emoji">🇨🇴</span> Nacional — Inter Rapidísimo & DHL
+                <span className="acc-emoji">🇨🇴</span> Cobertura Nacional — Inter Rapidísimo &amp; DHL
               </button>
               <button className="mob-acc-sub" onClick={() => scrollToSection('envios-pais', 'envios')}>
-                <span className="acc-emoji">📋</span> Ver Comprobantes de Envío Reales
+                <span className="acc-emoji">📋</span> Comprobantes de Envío Reales
               </button>
             </div>
           </div>
@@ -528,7 +618,7 @@ export default function App() {
               }}
               style={{ color: 'var(--green)', fontWeight: 900 }}
             >
-              ⚡ Pedir Ahora ($85.000 COP)
+              ⚡ Pedir Ahora
             </button>
           </div>
 
@@ -575,7 +665,7 @@ export default function App() {
             <div>
               <div className="hero-eyebrow sr d1">
                 <ShieldCheck className="w-4 h-4 text-emerald-400" />
-                <span>🇨🇴 Ibagué &amp; Colombia · <strong className="text-emerald-400">PAGO CONTRA ENTREGA</strong></span>
+                <span>🇨🇴 COLOMBIA · <strong className="text-emerald-400">PAGO CONTRA ENTREGA ASEGURADO</strong></span>
               </div>
 
               <h1 className="hero-h1 sr d2">
@@ -620,34 +710,27 @@ export default function App() {
               {/* CTAs with vibrant Emerald Green and Urgency */}
               <div className="cta-row sr d3">
                 <button
-                  onClick={() => scrollToSection('order-builder', 'pedido')}
+                  onClick={() => scrollToSection('catalog', 'relojes')}
                   className="btn-cta-emerald"
                 >
                   <ShoppingBag className="w-5 h-5" />
-                  Pedir Contra Entrega ($85K)
+                  Ver Catálogo de Relojes
                 </button>
                 <button
                   onClick={() => scrollToSection('emprendedor', 'combos')}
                   className="btn-ghost-gold"
                 >
                   <TrendingUp className="w-5 h-5 text-amber-400" />
-                  Combos Emprendedor ($45K)
-                </button>
-                <button
-                  onClick={() => scrollToSection('envios-pais', 'envios')}
-                  className="btn-ghost-white"
-                >
-                  <Truck className="w-5 h-5 text-emerald-400" />
-                  Envíos al País
+                  Combos Mayorista ($45K)
                 </button>
               </div>
 
               {/* Trust badges */}
               <div className="trust-row sr d4">
                 {[
-                  [MapPin, <><strong>Ibagué:</strong> Pago Contra Entrega Inmediato</>],
-                  [Truck,  <><strong>Colombia:</strong> Envíos Rápidos Inter Rapidísimo</>],
-                  [Star,   <><strong>+500</strong> Clientes Satisfechos</>],
+                  [Truck,  <><strong>Pago Contra Entrega:</strong> Pagas en efectivo al recibir</>],
+                  [ShieldCheck, <><strong>Despachos Diarios:</strong> Inter Rapidísimo &amp; DHL Asegurado</>],
+                  [Star,   <><strong>+500</strong> Clientes Satisfechos en Colombia</>],
                 ].map(([Icon, text], i) => (
                   <div key={i} className="trust-item">
                     <Icon className="w-4 h-4 text-emerald-400 shrink-0" />
@@ -686,83 +769,52 @@ export default function App() {
           </div>
         </section>
 
-        {/* ── 5. SECCIÓN: QUIÉNES SOMOS CORTO (TRANSPARENCIA & CONFIANZA) ──── */}
-        <section className="sec quienes-sec" id="quienes-somos">
+        {/* ── 5. BARRA DE CONFIANZA & SEGURIDAD (Compacta, Alto Impacto) ──── */}
+        <section className="trust-strip-bar" id="quienes-somos">
           <div className="container">
-            <div className="quienes-card sr">
-              <div className="quienes-header">
-                <span className="badge-tag-emerald">🏢 SOBRE KRONO RELOJERÍA</span>
-                <h2 className="quienes-h2">
-                  Relojería de Alto Perfil <span className="highlight-gold">Sin Intermediarios</span>
-                </h2>
-                <p className="quienes-p">
-                  En <strong>Krono (@krono.ibg)</strong> nacimos en <strong>Ibagué, Tolima</strong>, con un propósito directo: poner en tu muñeca piezas imponentes inspiradas en la robustez de <em>Invicta</em> y la distinción de <em>Rolex</em>, sin cobrarte los sobreprecios de centros comerciales. Despachamos directamente desde nuestra bodega local a todo Colombia.
-                </p>
+            <div className="trust-strip-grid">
+              <div className="ts-item sr d1">
+                <div className="ts-icon gold"><ShieldCheck className="w-5 h-5 text-amber-400" /></div>
+                <div>
+                  <h4>Inspección 1 a 1</h4>
+                  <p>Revisado antes de despachar · Garantía 30 días</p>
+                </div>
               </div>
-
-              <div className="quienes-grid">
-                <div className="q-item">
-                  <div className="q-icon-box gold">
-                    <ShieldCheck className="w-6 h-6 text-amber-400" />
-                  </div>
-                  <h4>Inspección 1 a 1 con Guantes</h4>
-                  <p>Antes de salir, cada reloj es probado minuciosamente, se verifica el sello hermético y se embala protegido.</p>
+              <div className="ts-item sr d2">
+                <div className="ts-icon green"><CreditCard className="w-5 h-5 text-emerald-400" /></div>
+                <div>
+                  <h4>Pago Contra Entrega</h4>
+                  <p>Pagas al recibir en mano · Cero riesgo en Colombia</p>
                 </div>
-
-                <div className="q-item">
-                  <div className="q-icon-box green">
-                    <CreditCard className="w-6 h-6 text-emerald-400" />
-                  </div>
-                  <h4>Pago Contra Entrega Cero Riesgo</h4>
-                  <p>No arriesgas tu dinero por internet. En Ibagué y a nivel nacional pagas al recibir y verificar tu producto.</p>
+              </div>
+              <div className="ts-item sr d3">
+                <div className="ts-icon blue"><Truck className="w-5 h-5 text-sky-400" /></div>
+                <div>
+                  <h4>Despachos Diarios</h4>
+                  <p>Inter Rapidísimo & DHL · Guía oficial 24/7</p>
                 </div>
-
-                <div className="q-item">
-                  <div className="q-icon-box blue">
-                    <Truck className="w-6 h-6 text-sky-400" />
-                  </div>
-                  <h4>Despachos Diarios con Guía</h4>
-                  <p>Alianzas directas con Inter Rapidísimo, DHL y Servientrega con guía de rastreo en tiempo real.</p>
+              </div>
+              <div className="ts-item sr d4">
+                <div className="ts-icon amber"><Gift className="w-5 h-5 text-amber-400" /></div>
+                <div>
+                  <h4>Kit Completo Incluido</h4>
+                  <p>Reloj + Estuche Rígido + Batería Gratis</p>
                 </div>
               </div>
             </div>
           </div>
         </section>
 
-        {/* ── 6. BENEFITS BAR ─────────────────────────────────────────────── */}
-        <section className="benefits-bar" id="beneficios">
-          <div className="container">
-            <div className="benefits-grid">
-              {BENEFITS.map((b, i) => (
-                <div key={i} className="benefit-item sr d1">
-                  <div className="benefit-icon">
-                    {b.icon === 'Truck' && <Truck className="w-5 h-5 text-emerald-400" />}
-                    {b.icon === 'Gift' && <Gift className="w-5 h-5 text-amber-400" />}
-                    {b.icon === 'Phone' && <Phone className="w-5 h-5 text-emerald-400" />}
-                    {b.icon === 'ShieldCheck' && <ShieldCheck className="w-5 h-5 text-sky-400" />}
-                  </div>
-                  <div className="benefit-text">
-                    <h4>{b.title}</h4>
-                    <p>{b.desc}</p>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
-        </section>
-
-        {/* ── 7. SEGMENTED CONTROL / TABS DE NAVEGACIÓN ───────────────────── */}
+        {/* ── 6. SEGMENTED CONTROL / TABS DE NAVEGACIÓN COMPACTOS ─────────── */}
         <div className="store-nav-sticky" id="store-views">
           <div className="container">
             <div className="store-tabs-wrap">
               {[
-                { id: 'relojes', sectionId: 'catalog',       icon: Clock, label: '⌚ Relojes ($85K)' },
-                { id: 'combos',  sectionId: 'emprendedor',   icon: TrendingUp, label: '💼 Combos ($45K)' },
+                { id: 'relojes', sectionId: 'catalog',       icon: Clock, label: '⌚ Catálogo' },
+                { id: 'combos',  sectionId: 'emprendedor',   icon: TrendingUp, label: '💼 Emprendedor ($45K)' },
                 { id: 'envios',  sectionId: 'envios-pais',   icon: Truck, label: '🚚 Envíos al País' },
-                { id: 'quienes', sectionId: 'quienes-somos', icon: Award, label: '🏢 Quiénes Somos' },
-                { id: 'incluye', sectionId: 'combo-detail',  icon: Gift, label: '🎁 ¿Qué Incluye?' },
                 { id: 'pedido',  sectionId: 'order-builder', icon: ShoppingBag, label: '⚡ Pedir Ahora' },
-                { id: 'faq',     sectionId: 'faq',           icon: HelpCircle, label: '❓ Preguntas' },
+                { id: 'faq',     sectionId: 'faq',           icon: HelpCircle, label: '❓ Dudas' },
               ].map(tab => (
                 <button
                   key={tab.id}
@@ -777,556 +829,466 @@ export default function App() {
           </div>
         </div>
 
-        {/* ── 8. CATÁLOGO CON CATEGORÍAS ROLEX & INVICTA ──────────────────── */}
+        {/* ── 8. CATÁLOGO CON CATEGORÍAS ────────────────────────────────── */}
         <section className="sec catalog-sec" id="catalog">
           <div className="container">
             <div className="sec-head sr">
-              <span className="badge-tag-emerald">⌚ CATÁLOGO EXCLUSIVO 2026</span>
+              <span className="badge-tag-emerald">⌚ CATÁLOGO KRONO</span>
               <h2 className="sec-h2">
-                Cualquier Modelo a solo <span className="highlight-gold">$85.000 COP</span>
+                {selectedBrand ? (
+                  selectedBrand === 'rolex' ? '💎 Colección Rolex Style' :
+                  selectedBrand === 'invicta' ? '👑 Colección Invicta' :
+                  selectedBrand === 'combos' ? '🎁 Combos & Kits de Lujo' :
+                  selectedBrand === 'emprendedores' ? '💼 Línea Emprendedor & Mayorista' : 'Catálogo'
+                ) : 'Selecciona una Categoría'}
               </h2>
-              <p className="sec-p">
-                🎁 Incluye <strong>Reloj + Estuche Rígido + Batería Sellada Gratis</strong>. Pago Contra Entrega en Ibagué y Envíos a todo Colombia.
+              <p className="sec-p" style={{ fontSize: '0.95rem', marginTop: 4 }}>
+                {selectedBrand ? (
+                  selectedBrand === 'rolex' ? 'Submariner, Datejust, Day-Date & Daytona con estuche rígido y pila sellada gratis' :
+                  selectedBrand === 'invicta' ? 'Cajas macizas de 50mm - 54mm, biseles dentados y pulso reforzado' :
+                  selectedBrand === 'combos' ? 'Todo lo que incluye tu compra: Reloj a elección + Estuche Rígido + Pila Gratis' :
+                  'Lotes mayoristas desde 4 unidades con estuches rígidos, pilas y hasta 60% de margen'
+                ) : 'Toca cualquier categoría para ver los modelos y paquetes disponibles'}
               </p>
-
-              {/* Brand Tabs Filter */}
-              <div className="brand-filter-pill-row">
-                <button
-                  onClick={() => { playTick(); setActiveCatalogTab('all'); }}
-                  className={`brand-pill ${activeCatalogTab === 'all' ? 'active' : ''}`}
-                >
-                  ⚡ Todos los Modelos ({PRODUCTS.length})
-                </button>
-                <button
-                  onClick={() => { playTick(); setActiveCatalogTab('invicta'); }}
-                  className={`brand-pill ${activeCatalogTab === 'invicta' ? 'active' : ''}`}
-                >
-                  👑 Colección Invicta ({invictaProducts.length})
-                </button>
-                <button
-                  onClick={() => { playTick(); setActiveCatalogTab('rolex'); }}
-                  className={`brand-pill ${activeCatalogTab === 'rolex' ? 'active' : ''}`}
-                >
-                  💎 Colección Rolex Style ({rolexProducts.length})
-                </button>
-              </div>
             </div>
 
-            {/* Categoría 1: Colección Invicta */}
-            {(activeCatalogTab === 'all' || activeCatalogTab === 'invicta') && (
-              <div className="brand-section-block">
-                <div className="brand-category-header">
-                  <div className="bch-left">
-                    <span className="bch-badge gold">👑 FUERZA &amp; PRESENCIA PESADA</span>
-                    <h3 className="bch-title">Colección Invicta (Subaqua, Bolt &amp; Skeleton)</h3>
-                    <p className="bch-sub">Cajas de 50mm - 54mm, biseles dentados, tornillería perimetral y pulso de silicona vulcanizada.</p>
-                  </div>
-                  <span className="bch-price-pill">$85.000 COP c/u</span>
-                </div>
-
-                {/* ── INVICTA SHOWCASE: Video real en vivo de la colección ─── */}
-                <div className="invicta-video-showcase-card sr">
-                  <div>
-                    <span className="bch-badge gold" style={{ marginBottom: 6, display: 'inline-block' }}>🎬 VIDEO REAL EN CAJA OFICIAL</span>
-                    <h3 className="ivs-title">Krono Bolt Phantom Silver — En Vivo desde Bodega</h3>
-                    <p className="ivs-desc">
-                      Mira el reloj que más piden: esfera plateada texturizada, números en relieve gigantes y caja de 54mm.
-                      Grabado en nuestra bodega con caja Invicta original. <strong>Sin filtros, sin edición.</strong>
-                    </p>
-                    <div className="ivs-features">
-                      <span>⚡ 54mm Caja Maciza</span>
-                      <span>💎 Esfera Plateada</span>
-                      <span>🛡️ Garantía 30 Días</span>
-                      <span>📦 Caja Invicta Real</span>
-                    </div>
-                    <div className="ivs-price-row">
-                      <span className="ivs-price">$85.000 <small>COP</small></span>
-                      <span className="ivs-save">53% OFF</span>
-                    </div>
-                    <a
-                      href="https://wa.me/573193620748?text=Hola%20Krono!%20Vi%20el%20video%20del%20Bolt%20Phantom%20Silver%20y%20me%20interesa.%20%C2%BFTiene%20disponibilidad%3F"
-                      target="_blank" rel="noopener noreferrer"
-                      onClick={playChime}
-                      className="btn-wa-emerald"
-                      style={{ width: '100%', justifyContent: 'center', maxWidth: 320 }}
-                    >
-                      <MessageCircle style={{ width: 16, height: 16 }} /> Lo Quiero — WhatsApp Directo
-                    </a>
-                  </div>
-                  <div className="ivs-phone-frame">
-                    <video
-                      src="/assets/img/shipping_video_real.mp4"
-                      autoPlay
-                      muted
-                      loop
-                      playsInline
-                      preload="metadata"
-                      className="ivs-video"
-                    >
-                      Tu navegador no soporta video HTML5.
-                    </video>
-                  </div>
-                </div>
-
-                <div className="prod-list-clean">
-                  {invictaProducts.map((p) => {
-                    const isBolt = p.id === 'krono-bolt-silver-phantom';
-                    return (
-                    <article key={p.id} className="prod-card-clean">
-                      <div className="pcc-img-box" style={{ position: 'relative' }}>
-                        {/* Photo / Video toggle for Bolt Silver Phantom */}
-                        {isBolt && (
-                          <div className="card-media-toggle">
-                            <button
-                              className={`cmt-btn ${boltMediaMode === 'photo' ? 'active' : ''}`}
-                              onClick={(e) => { e.stopPropagation(); setBoltMediaMode('photo'); }}
-                            >📷 Foto</button>
-                            <button
-                              className={`cmt-btn ${boltMediaMode === 'video' ? 'active' : ''}`}
-                              onClick={(e) => { e.stopPropagation(); setBoltMediaMode('video'); }}
-                            >🎬 Video</button>
-                          </div>
-                        )}
-
-                        {isBolt && boltMediaMode === 'video' ? (
-                          <video
-                            src="/assets/img/shipping_video_real.mp4"
-                            autoPlay muted loop playsInline preload="metadata"
-                            className="pcc-card-video"
-                            style={{ width: '100%', height: '100%', objectFit: 'contain', background: '#000' }}
-                          />
-                        ) : (
-                          <img
-                            src={p.image}
-                            alt={p.name}
-                            loading="lazy"
-                            onClick={() => setLightbox({ open: true, img: p.image, title: p.name })}
-                            style={{ cursor: 'zoom-in' }}
-                          />
-                        )}
-                        <span className="pcc-badge-top">{p.badge}</span>
-                        {(!isBolt || boltMediaMode === 'photo') && (
-                          <button className="pcc-zoom-btn" title="Ampliar foto" onClick={() => setLightbox({ open: true, img: p.image, title: p.name })}>
-                            <Eye className="w-3.5 h-3.5" />
-                          </button>
-                        )}
-                      </div>
-
-                      <div className="pcc-content">
-                        <div className="pcc-header">
-                          <div>
-                            <span className="pcc-series">{p.series}</span>
-                            <h4 className="pcc-name">{p.name}</h4>
-                          </div>
-                          <span className="pcc-stock-badge">{p.stock}</span>
-                        </div>
-
-                        <p className="pcc-spec-text">{p.specs[0]}</p>
-
-                        <div className="pcc-pricing">
-                          <div className="pcc-prices">
-                            <span className="pcc-was">Antes <s>${fmt(p.oldPrice)}</s></span>
-                            <span className="pcc-now">${fmt(p.price)} <small>COP</small></span>
-                          </div>
-                          <span className="pcc-savings-pill">
-                            🔥 Ahorras ${fmt(p.savings)} ({p.discountPct}% OFF)
-                          </span>
-                        </div>
-
-                        <div className="pcc-actions">
-                          <a
-                            href={directProductWa(p)}
-                            target="_blank" rel="noopener noreferrer"
-                            onClick={playChime}
-                            className="btn-wa-emerald"
-                          >
-                            <MessageCircle className="w-4 h-4" /> ¡Lo Quiero! (WhatsApp)
-                          </a>
-                          <button
-                            className="btn-order-outline"
-                            onClick={() => selectAndScroll(p)}
-                          >
-                            Armar Pedido <ArrowRight className="w-3.5 h-3.5" />
-                          </button>
-                        </div>
-                      </div>
-                    </article>
-                    );
-                  })}
-                </div>
-              </div>
-            )}
-
-            {/* Categoría 2: Colección Rolex Style — AGOTADO */}
-            {(activeCatalogTab === 'all' || activeCatalogTab === 'rolex') && (
-              <div className="brand-section-block" style={{ marginTop: 40 }}>
-                <div className="brand-category-header rolex-header">
-                  <div className="bch-left">
-                    <span className="bch-badge green">💎 PRESTIGIO &amp; ELEGANCIA CLÁSICA</span>
-                    <h3 className="bch-title">Colección Rolex Style (Submariner, Datejust, Day-Date, Daytona)</h3>
-                    <p className="bch-sub">Biseles estriados, cerámicos, esferas limpias, pulso Oyster o Jubilee y lupa de fechador de alta distinción.</p>
-                  </div>
-                  <span className="bch-price-pill" style={{ background: 'rgba(239,68,68,0.15)', borderColor: 'rgba(239,68,68,0.4)', color: '#f87171' }}>🚫 AGOTADO</span>
-                </div>
-
-                {/* AVISO AGOTADO PROMINENTE */}
-                <div style={{
-                  background: 'linear-gradient(135deg, rgba(239,68,68,0.08), rgba(17,24,39,0.95))',
-                  border: '1px solid rgba(239,68,68,0.35)',
-                  borderRadius: 'var(--r3)',
-                  padding: '20px 24px',
-                  marginBottom: 24,
-                  display: 'flex',
-                  alignItems: 'center',
-                  gap: 16,
-                  flexWrap: 'wrap',
-                }}>
-                  <span style={{ fontSize: '2rem' }}>🚫</span>
-                  <div style={{ flex: 1 }}>
-                    <p style={{ fontWeight: 900, fontSize: '1rem', color: '#f87171', marginBottom: 4 }}>
-                      Colección Rolex Style — Agotada hasta nuevo aviso
-                    </p>
-                    <p style={{ fontSize: '0.84rem', color: 'var(--t2)', margin: 0 }}>
-                      Estamos reabasteciendo. Escríbenos por WhatsApp para estar en la <strong style={{ color: 'var(--green)' }}>lista de espera prioritaria</strong> y ser el primero en recibir tu pedido cuando llegue el nuevo lote.
-                    </p>
-                  </div>
-                  <a
-                    href="https://wa.me/573193620748?text=Hola%20Krono!%20Me%20interesa%20la%20colecci%C3%B3n%20Rolex%20Style.%20%C2%BFCu%C3%A1ndo%20llega%20el%20nuevo%20lote%3F%20Quiero%20quedar%20en%20lista%20de%20espera."
-                    target="_blank" rel="noopener noreferrer"
-                    onClick={playChime}
-                    className="btn-wa-emerald"
-                    style={{ flexShrink: 0 }}
-                  >
-                    <MessageCircle style={{ width: 16, height: 16 }} /> Lista de Espera
-                  </a>
-                </div>
-
-                <div className="prod-list-clean">
-                  {rolexProducts.map((p) => (
-                    <article key={p.id} className="prod-card-clean rolex-card" style={{ opacity: 0.55, pointerEvents: 'none', filter: 'grayscale(0.6)' }}>
-                      <div className="pcc-img-box" style={{ position: 'relative' }}>
-                        <img src={p.image} alt={p.name} loading="lazy" />
-                        {/* AGOTADO overlay */}
-                        <div style={{
-                          position: 'absolute', inset: 0,
-                          background: 'rgba(0,0,0,0.55)',
-                          display: 'flex', alignItems: 'center', justifyContent: 'center',
-                          borderRadius: 'inherit',
-                        }}>
-                          <span style={{
-                            background: 'rgba(239,68,68,0.9)',
-                            color: '#fff', fontWeight: 900, fontSize: '0.82rem',
-                            padding: '6px 14px', borderRadius: 'var(--rF)',
-                            letterSpacing: '0.05em',
-                          }}>🚫 AGOTADO</span>
-                        </div>
-                      </div>
-
-                      <div className="pcc-content">
-                        <div className="pcc-header">
-                          <div>
-                            <span className="pcc-series">{p.series}</span>
-                            <h4 className="pcc-name">{p.name}</h4>
-                          </div>
-                          <span className="pcc-stock-badge" style={{ background: 'rgba(239,68,68,0.15)', color: '#f87171', borderColor: 'rgba(239,68,68,0.3)' }}>
-                            Agotado
-                          </span>
-                        </div>
-                        <p className="pcc-spec-text">{p.specs[0]}</p>
-                        <div className="pcc-pricing" style={{ opacity: 0.5 }}>
-                          <div className="pcc-prices">
-                            <span className="pcc-was">Antes <s>${fmt(p.oldPrice)}</s></span>
-                            <span className="pcc-now">${fmt(p.price)} <small>COP</small></span>
-                          </div>
-                        </div>
-                        <div className="pcc-actions">
-                          <button className="btn-wa-emerald" disabled style={{ opacity: 0.4, cursor: 'not-allowed' }}>
-                            <MessageCircle className="w-4 h-4" /> No Disponible
-                          </button>
-                        </div>
-                      </div>
-                    </article>
-                  ))}
-                </div>
-              </div>
-            )}
-
-            {/* Wholesale Nudge */}
-            <div className="wholesale-nudge sr">
-              <span>💼 <strong>¿Deseas comprar por lote para revender?</strong> Precios mayoristas desde <strong>$64.000 COP/reloj</strong> · hasta <strong className="text-emerald-400">60% de margen</strong></span>
-              <a
-                href="#emprendedor"
-                onClick={playTick}
-                className="btn-nudge-emerald"
-              >
-                Ver Combos Emprendedor <ArrowRight className="w-4 h-4" />
-              </a>
-            </div>
-          </div>
-        </section>
-
-        {/* ── 9. COMBOS EMPRENDEDOR & MAYORISTA ───────────────────────────── */}
-        <section className="sec emprendedor-section" id="emprendedor">
-            <div className="container">
-              <div className="sec-head sr">
-                <span className="badge-tag-emerald">💼 LÍNEA EMPRENDEDOR &amp; MAYORISTA</span>
-                <h2 className="sec-h2">Combos Emprendedor: Gana Dinero Vendiendo Krono</h2>
-                <p className="sec-p">
-                  Armamos lotes especiales con los <strong>modelos Invicta reales</strong> que tenemos en bodega con sus <strong>cajas amarillas rígidas</strong> y <strong>baterías selladas</strong> incluidas. Obtén hasta un <strong>60% de ganancia</strong> directa.
-                </p>
-              </div>
-
-              {/* Visual Showcase Banner with Real Photo */}
-              <div className="emp-banner-box sr">
-                <div className="ebb-img">
-                  <img
-                    src="/assets/img/media_1791997978060.png"
-                    alt="Stock real de Invicta con estuches amarillos y pilas"
-                    loading="lazy"
-                    decoding="async"
-                  />
-                </div>
-                <div className="ebb-info">
-                  <span className="badge-red-fire">🔥 FOTO 100% REAL DE NUESTRO STOCK</span>
-                  <h3>Kits Listos con Estuches Amarillos de Lujo &amp; Baterías</h3>
-                  <p>
-                    Así recibirás tu lote: cada reloj dentro de su caja amarilla rígida oficial, con almohadilla de protección, etiqueta de la marca y pila de repuesto sellada de obsequio.
-                  </p>
-                  <div className="ebb-features">
-                    <span>✅ Listos para entrega inmediata</span>
-                    <span>✅ Fotos en HD para tus redes</span>
-                    <span>✅ Asesoría comercial personalizada</span>
-                  </div>
-                </div>
-              </div>
-
-              <div className="emp-grid">
-                {ENTREPRENEUR_COMBOS.map((combo, i) => (
+            {/* ══════════════════════════════════════════════════════════
+                PASO 1: LAS 4 PORTADAS PRINCIPALES
+                Rolex, Invicta, Combos, Emprendedores
+                Se muestra cuando selectedBrand === null
+            ══════════════════════════════════════════════════════════ */}
+            {!selectedBrand && (
+              <div className="category-cover-grid sr" id="catalog-categories">
+                {CATEGORIES.map((cat) => (
                   <div
-                    key={combo.id}
-                    className={`emp-card ${combo.featured ? 'featured' : ''} sr d${i + 1}`}
+                    key={cat.id}
+                    className="cat-cover-card"
+                    onClick={() => {
+                      playTick();
+                      setSelectedBrand(cat.id);
+                      setTimeout(() => {
+                        const el = document.getElementById('catalog');
+                        if (el) {
+                          const off = el.getBoundingClientRect().top + window.pageYOffset - 80;
+                          window.scrollTo({ top: off, behavior: 'smooth' });
+                        }
+                      }, 50);
+                    }}
                   >
-                    <span className="emp-ribbon">{combo.ribbon}</span>
-
-                    <div className="emp-head">
-                      <div className="emp-icon">
-                        <TrendingUp className="w-6 h-6 text-emerald-400" />
-                      </div>
-                      <h3 className="emp-name">{combo.name}</h3>
-                      <p className="emp-desc">{combo.subtitle}</p>
+                    <div className="cat-cover-img-wrap">
+                      <img src={cat.img} alt={cat.name} loading="lazy" />
+                      <span className={`cat-cover-badge ${cat.badgeClass}`}>{cat.badge}</span>
                     </div>
-
-                    <div className="emp-pricing">
-                      <div className="emp-price-was">${fmt(combo.oldPriceTotal)} COP</div>
-                      <div className="emp-price-now">
-                        ${fmt(combo.priceTotal)} <small className="emp-curr">COP</small>
+                    <div className="cat-cover-info">
+                      <h3 className="cat-cover-title">{cat.name}</h3>
+                      <p className="cat-cover-sub">{cat.subtitle}</p>
+                      <div className="cat-cover-cta-btn">
+                        <span>{cat.ctaText}</span>
+                        <ArrowRight className="w-4 h-4" />
                       </div>
-                      <div className="emp-price-unit">
-                        A solo <strong className="text-emerald-400">${fmt(combo.pricePerUnit)} COP</strong> por reloj con estuche y pila
-                      </div>
-                      <span className="emp-save-badge">
-                        Ahorras ${fmt(combo.savings)} COP · {combo.discountPct}% OFF
-                      </span>
-                      <div className="emp-profit-callout">
-                        📈 Ganancia estimada para ti: <strong>+${fmt(combo.estimatedProfit)} COP</strong>
-                      </div>
-                    </div>
-
-                    <div className="emp-includes">
-                      <h5>¿Qué incluye este lote?</h5>
-                      {combo.includes.map((inc, ii) => (
-                        <div key={ii} className="emp-item-row">
-                          <Check className="w-4 h-4 text-emerald-400 shrink-0" />
-                          <span>{inc}</span>
-                        </div>
-                      ))}
-                    </div>
-
-                    <div className="emp-footer">
-                      <a
-                        href={directComboWa(combo)}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        onClick={playChime}
-                        className="btn-cta-emerald w-full"
-                      >
-                        <ShoppingBag className="w-4 h-4" />
-                        Pedir {combo.name} por WhatsApp
-                      </a>
                     </div>
                   </div>
                 ))}
               </div>
+            )}
 
-              {/* Quick switch to individual watches */}
-              <div className="switch-to-single sr">
-                <p>
-                  ⌚ <strong>¿Solo buscas 1 reloj para uso personal?</strong> Llévatelo en combo completo por solo <strong>$85.000 COP</strong>.
-                </p>
-                <button 
-                  onClick={() => { playTick(); setActiveStoreTab('relojes'); document.getElementById('store-views')?.scrollIntoView({ behavior: 'smooth' }); }}
-                  className="btn-ghost-gold" 
+            {/* ══════════════════════════════════════════════════════════
+                PASO 2: PANTALLA DE LA CATEGORÍA SELECCIONADA
+                Se muestra cuando selectedBrand !== null
+            ══════════════════════════════════════════════════════════ */}
+            {selectedBrand && (
+              <div id="catalog-brand-detail" style={{ scrollMarginTop: 90 }}>
+
+                {/* Botón Volver a Categorías */}
+                <button
+                  className="catalog-back-btn sr"
+                  onClick={() => {
+                    playTick();
+                    setSelectedBrand(null);
+                    setTimeout(() => {
+                      const el = document.getElementById('catalog');
+                      if (el) el.scrollIntoView({ behavior: 'smooth' });
+                    }, 60);
+                  }}
                 >
-                  Ver Catálogo Individual ($85K) <ArrowRight className="w-4 h-4" />
+                  ← Volver a Categorías
                 </button>
+
+                {/* ─── 1. ROLEX STYLE ─── */}
+                {selectedBrand === 'rolex' && (
+                  <div className="brand-section-block" id="brand-section-rolex">
+                    <div className="brand-category-header rolex-header">
+                      <div className="bch-left">
+                        <span className="bch-badge green">💎 PRESTIGIO &amp; ELEGANCIA CLÁSICA</span>
+                        <h3 className="bch-title">Rolex Style — Submariner, Datejust, Day-Date, Daytona</h3>
+                        <p className="bch-sub">Biseles estriados, cerámicos, esferas limpias, pulso Oyster o Jubilee.</p>
+                      </div>
+                      <span className="bch-price-pill" style={{ background: 'rgba(239,68,68,0.15)', borderColor: 'rgba(239,68,68,0.4)', color: '#f87171' }}>
+                        ⏳ REABASTECIENDO
+                      </span>
+                    </div>
+
+                    {/* Rolex Waitlist Banner Card */}
+                    <div className="rolex-waitlist-card sr">
+                      <div className="rwc-left">
+                        <div className="rwc-badge-row">
+                          <span className="badge-tag-red">🚫 LOTE AGOTADO EN BODEGA</span>
+                          <span className="badge-tag-emerald">🚢 NUEVO LOTE EN CAMINO 2026</span>
+                        </div>
+                        <h4>Aparta tu Rolex Style — Precio Congelado</h4>
+                        <p>
+                          La colección se agotó en tiempo récord. El nuevo lote viene a Colombia con estuche rígido oficial y pila sellada gratis. <strong>No pagas nada por adelantado</strong>: aparta tu cupo prioritario y te notificamos primero al llegar.
+                        </p>
+                        <div className="rwc-actions">
+                          <a
+                            href="https://wa.me/573193620748?text=Hola%20Krono!%20Deseo%20estar%20en%20la%20lista%20de%20espera%20prioritaria%20para%20la%20colecci%C3%B3n%20Rolex%20Style."
+                            target="_blank" rel="noopener noreferrer"
+                            onClick={playChime}
+                            className="btn-wa-emerald"
+                            style={{ width: 'auto', padding: '10px 18px' }}
+                          >
+                            <MessageCircle className="w-4 h-4" /> Apartar en Lista de Espera
+                          </a>
+                          <button
+                            onClick={() => { setSelectedBrand('invicta'); }}
+                            className="btn-order-outline"
+                            style={{ width: 'auto', padding: '10px 18px', color: '#fff' }}
+                          >
+                            Ver Invicta Disponibles →
+                          </button>
+                        </div>
+                      </div>
+
+                      <div className="rwc-models-strip">
+                        <span className="rwc-strip-label">Modelos del próximo lote:</span>
+                        <div className="rwc-models-grid">
+                          {rolexProducts.map(p => (
+                            <div
+                              key={p.id}
+                              className="rwc-model-mini"
+                              onClick={() => setLightbox({ open: true, img: p.image, title: `${p.name} (Próximo Lote)` })}
+                              title="Clic para ver referencia"
+                            >
+                              <img src={p.image} alt={p.name} loading="lazy" />
+                              <span>{p.name.replace('Krono ', '')}</span>
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                )}
+
+                {/* ─── 2. INVICTA ─── */}
+                {selectedBrand === 'invicta' && (
+                  <div className="brand-section-block" id="brand-section-invicta">
+                    <div className="brand-category-header">
+                      <div className="bch-left">
+                        <span className="bch-badge gold">👑 FUERZA &amp; PRESENCIA PESADA</span>
+                        <h3 className="bch-title">Colección Invicta — Subaqua, Bolt &amp; Skeleton</h3>
+                        <p className="bch-sub">Cajas de 50–54mm, biseles dentados, tornillería perimetral y pulso de silicona vulcanizada.</p>
+                      </div>
+                      <span className="bch-price-pill">Kit Completo — Consulta precio</span>
+                    </div>
+
+                    <div className="prod-list-clean">
+                      {invictaProducts.map((p) => (
+                        <article key={p.id} className="prod-card-clean">
+                          <div className="pcc-img-box" style={{ position: 'relative' }}>
+                            <img
+                              src={p.image}
+                              alt={p.name}
+                              loading="lazy"
+                              onClick={() => setLightbox({ open: true, img: p.image, title: p.name })}
+                              style={{ cursor: 'pointer' }}
+                            />
+                            {p.stockBadge && (
+                              <span className="pcc-stock-badge">{p.stockBadge}</span>
+                            )}
+                          </div>
+                          <div className="pcc-body">
+                            <span className="pcc-series">{p.series}</span>
+                            <h4 className="pcc-name">{p.name}</h4>
+                            <p className="pcc-desc">{p.desc}</p>
+                            <div className="pcc-specs-tags">
+                              <span>⚙ {p.machinery}</span>
+                              <span>📏 {p.caseSize}</span>
+                            </div>
+                            <div className="pcc-bottom-bar">
+                              <span className="pcc-kit-tag">🎁 Incluye Estuche + Pila Gratis</span>
+                              <div className="pcc-btns">
+                                <a
+                                  href={`https://wa.me/573193620748?text=${encodeURIComponent(`¡Hola Krono! 👋 Deseo consultar precio y ordenar el reloj:
+
+⌚ *${p.name}*
+🏷️ *Serie:* ${p.series}
+🎁 *Incluye:* Estuche Rígido + Pila Sellada Gratis
+
+¿Tienen disponibilidad para envío contra entrega?`)}`}
+                                  target="_blank"
+                                  rel="noopener noreferrer"
+                                  onClick={playChime}
+                                  className="btn-order-wa-pill"
+                                >
+                                  <MessageCircle className="w-4 h-4 text-emerald-400" /> Consultar / Pedir
+                                </a>
+                                <button
+                                  onClick={() => selectAndScroll(p)}
+                                  className="btn-order-outline-mini"
+                                >
+                                  Armar Pedido
+                                </button>
+                              </div>
+                            </div>
+                          </div>
+                        </article>
+                      ))}
+                    </div>
+                  </div>
+                )}
+
+                {/* ─── 3. COMBOS ─── */}
+                {selectedBrand === 'combos' && (
+                  <div className="brand-section-block" id="combo-detail">
+                    <div className="brand-category-header">
+                      <div className="bch-left">
+                        <span className="bch-badge gold">🎁 KIT COMPLETO DE LUJO</span>
+                        <h3 className="bch-title">Combos &amp; Kits Completos Krono</h3>
+                        <p className="bch-sub">Reloj a tu elección + Estuche rígido acolchado oficial + Batería sellada en blíster extra + Garantía 30 días.</p>
+                      </div>
+                      <span className="bch-price-pill">Todo Incluido · Pago Contra Entrega</span>
+                    </div>
+
+                    <div className="combo-strip-grid sr">
+                      <div className="cs-card">
+                        <div className="cs-badge">PIEZA PRINCIPAL</div>
+                        <div className="cs-icon green"><Clock className="w-5 h-5 text-emerald-400" /></div>
+                        <h4>1x Reloj de Alta Presencia</h4>
+                        <p>Caja robusta de 50mm - 54mm, bisel deportivo y pulso reforzado a tu elección.</p>
+                        <span className="cs-val">Valor comercial: $140.000 COP</span>
+                      </div>
+
+                      <div className="cs-card gift">
+                        <div className="cs-badge gold">OBSEQUIO GRATIS</div>
+                        <div className="cs-icon gold"><Box className="w-5 h-5 text-amber-400" /></div>
+                        <h4>Estuche Rígido Oficial</h4>
+                        <p>Caja rígida acolchada de lujo para lucir y proteger tu reloj.</p>
+                        <span className="cs-val free">GRATIS ($0)</span>
+                      </div>
+
+                      <div className="cs-card gift">
+                        <div className="cs-badge gold">OBSEQUIO GRATIS</div>
+                        <div className="cs-icon gold"><BatteryCharging className="w-5 h-5 text-amber-400" /></div>
+                        <h4>Batería Sellada Extra</h4>
+                        <p>Pila sellada en blíster de fábrica para garantizarte años de duración.</p>
+                        <span className="cs-val free">GRATIS ($0)</span>
+                      </div>
+
+                      <div className="cs-card">
+                        <div className="cs-badge blue">TRANSPORTE SEGURO</div>
+                        <div className="cs-icon blue"><ShieldCheck className="w-5 h-5 text-sky-400" /></div>
+                        <h4>Garantía &amp; Entrega</h4>
+                        <p>Inspección 1 a 1, garantía de 30 días y pago contra entrega al recibir.</p>
+                        <span className="cs-val secure">100% SEGURO</span>
+                      </div>
+                    </div>
+
+                    <div className="combo-cta-bridge sr" style={{ marginTop: 24 }}>
+                      <div className="ccb-text">
+                        <span>El combo de lujo más completo de Colombia</span>
+                        <strong className="text-emerald-400">¡Recibe tu reloj listo para usar con estuche y pila gratis!</strong>
+                      </div>
+                      <div style={{ display: 'flex', gap: 12, flexWrap: 'wrap' }}>
+                        <button
+                          onClick={() => {
+                            playTick();
+                            setSelectedBrand('invicta');
+                          }}
+                          className="btn-cta-emerald"
+                          style={{ width: 'auto', padding: '10px 22px' }}
+                        >
+                          <Clock className="w-4 h-4" /> Elegir Reloj para mi Combo →
+                        </button>
+                        <a
+                          href="https://wa.me/573193620748?text=Hola%20Krono!%20Deseo%20informaci%C3%B3n%20sobre%20el%20Combo%20Completo%20(Reloj%20+%20Estuche%20+%20Pila%20Gratis)."
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          onClick={playChime}
+                          className="btn-order-outline"
+                          style={{ width: 'auto', padding: '10px 22px', color: '#fff' }}
+                        >
+                          <MessageCircle className="w-4 h-4 text-emerald-400" /> Pedir Combo por WhatsApp
+                        </a>
+                      </div>
+                    </div>
+                  </div>
+                )}
+
+                {/* ─── 4. EMPRENDEDORES ─── */}
+                {selectedBrand === 'emprendedores' && (
+                  <div className="brand-section-block" id="emprendedor">
+                    <div className="brand-category-header">
+                      <div className="bch-left">
+                        <span className="bch-badge green">💼 LÍNEA EMPRENDEDOR &amp; MAYORISTA</span>
+                        <h3 className="bch-title">Combos Mayoristas: Gana Dinero Vendiendo Krono</h3>
+                        <p className="bch-sub">
+                          Lotes especiales desde 4 unidades con estuches rígidos, pilas selladas y hasta 60% de margen de ganancia limpia.
+                        </p>
+                      </div>
+                      <span className="bch-price-pill" style={{ background: 'rgba(16,185,129,0.15)', borderColor: 'rgba(16,185,129,0.4)', color: '#34d399' }}>
+                        Precios desde $45.000 COP / unidad
+                      </span>
+                    </div>
+
+                    {/* Visual Showcase Banner with the user's orange case photo! */}
+                    <div className="emp-banner-box sr">
+                      <div className="ebb-img">
+                        <img
+                          src="/assets/img/cat_cover_emprendedores.jpg"
+                          alt="Maletín mayorista con relojes Invicta y estuches"
+                          loading="lazy"
+                          decoding="async"
+                        />
+                      </div>
+                      <div className="ebb-info">
+                        <span className="badge-red-fire">🔥 LOTE MAYORISTA REAL</span>
+                        <h3>Kits Listos con Estuches de Lujo &amp; Baterías</h3>
+                        <p>
+                          Así recibirás tu lote: cada reloj dentro de su estuche oficial acolchado, con etiqueta de autenticidad y pila de repuesto sellada de obsequio.
+                        </p>
+                        <div className="ebb-features">
+                          <span>✅ Listos para entrega inmediata a tus clientes</span>
+                          <span>✅ Fotos y videos en HD para tus redes sociales</span>
+                          <span>✅ Asesoría comercial directa 1 a 1 por WhatsApp</span>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div className="emp-grid">
+                      {ENTREPRENEUR_COMBOS.map((combo, i) => (
+                        <div
+                          key={combo.id}
+                          className={`emp-card ${combo.featured ? 'featured' : ''} sr d${i + 1}`}
+                        >
+                          <span className="emp-ribbon">{combo.ribbon}</span>
+
+                          <div className="emp-head">
+                            <div className="emp-icon">
+                              <TrendingUp className="w-6 h-6 text-emerald-400" />
+                            </div>
+                            <h3 className="emp-name">{combo.name}</h3>
+                            <p className="emp-desc">{combo.subtitle}</p>
+                          </div>
+
+                          <div className="emp-pricing">
+                            <div className="emp-price-was">${fmt(combo.oldPriceTotal)} COP</div>
+                            <div className="emp-price-now">
+                              ${fmt(combo.priceTotal)} <small className="emp-curr">COP</small>
+                            </div>
+                            <div className="emp-price-unit">
+                              A solo <strong className="text-emerald-400">${fmt(combo.pricePerUnit)} COP</strong> por reloj con estuche y pila
+                            </div>
+                            <span className="emp-save-badge">
+                              Ahorras ${fmt(combo.savings)} COP · {combo.discountPct}% OFF
+                            </span>
+                            <div className="emp-profit-callout">
+                              📈 Ganancia estimada para ti: <strong>+${fmt(combo.estimatedProfit)} COP</strong>
+                            </div>
+                          </div>
+
+                          <div className="emp-includes">
+                            <h5>¿Qué incluye este lote?</h5>
+                            {combo.includes.map((inc, ii) => (
+                              <div key={ii} className="emp-item-row">
+                                <Check className="w-4 h-4 text-emerald-400 shrink-0" />
+                                <span>{inc}</span>
+                              </div>
+                            ))}
+                          </div>
+
+                          <div className="emp-footer">
+                            <a
+                              href={directComboWa(combo)}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              onClick={playChime}
+                              className="btn-cta-emerald w-full"
+                            >
+                              <ShoppingBag className="w-4 h-4" />
+                              Pedir {combo.name} por WhatsApp
+                            </a>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                )}
               </div>
-            </div>
-          </section>
+            )}
+          </div>
+        </section>
 
         {/* ── 10. SECCIÓN: ENVÍOS AL PAÍS (DESPACHOS REALES COMPROBADOS) ───── */}
         <section className="sec envios-sec" id="envios-pais">
             <div className="container">
               <div className="sec-head sr">
-                <span className="badge-tag-emerald">🚚 TRANSPARENCIA &amp; DESPACHOS DIARIOS</span>
-                <h2 className="sec-h2">Envíos Reales a Todo el País</h2>
+                <span className="badge-tag-emerald">🚚 DESPACHOS DIARIOS A TODA COLOMBIA</span>
+                <h2 className="sec-h2">Comprobantes de Envío Reales</h2>
                 <p className="sec-p">
-                  Aquí no hay promesas vacías: mira los <strong>paquetes sellados</strong>, <strong>guías oficiales de Inter Rapidísimo y DHL</strong> y pedidos despachados directamente por WhatsApp a clientes en toda Colombia.
+                  Envíos asegurados y pago contra entrega en la puerta de tu casa. Cero anticipos: revisa fotos de despachos diarios, embalaje térmico y guías oficiales:
                 </p>
               </div>
 
-              {/* Trust Callout Banner */}
-              <div className="proof-banner-emerald sr">
-                <ShieldCheck className="w-6 h-6 text-emerald-400 shrink-0" />
+              {/* Verified Trust Strip */}
+              <div className="proof-banner-emerald sr" style={{ marginBottom: 20 }}>
+                <ShieldCheck className="w-5 h-5 text-emerald-400 shrink-0" />
                 <div>
-                  <strong>Seguridad Garantizada:</strong> Todos los paquetes viajan asegurados con empaque térmico de protección y número de guía oficial para rastreo 24/7 en tiempo real.
+                  <strong>Compra 100% Segura:</strong> Empaque térmico de protección, número de guía oficial y rastreo 24/7 en tiempo real con <strong>Inter Rapidísimo &amp; DHL</strong>. Pagas al recibir en tu puerta.
                 </div>
               </div>
 
-              {/* Grid de Comprobantes de Envío Reales */}
-              <div className="shipping-proof-grid">
-                {SHIPPING_PROOFS.map((proof, i) => (
+              {/* 4 Clickable Proof Cards (Zoomable 4-Column Grid) */}
+              <div className="shipping-proofs-grid-4 sr">
+                {SHIPPING_PROOFS.slice(0, 4).map((proof) => (
                   <div
                     key={proof.id}
-                    className={`sp-card sr d${(i % 3) + 1}`}
+                    className="shipping-photo-card"
                     onClick={() => {
                       playTick();
                       setLightbox({ open: true, img: proof.image, title: proof.title });
                     }}
+                    title="Clic para ampliar comprobante en alta resolución"
                   >
-                    <div className="sp-img-box">
+                    <div className="spc-img-wrap">
                       <img src={proof.image} alt={proof.title} loading="lazy" />
-                      <span className="sp-badge-tag" style={{ background: proof.badgeColor }}>
+                      <span className="spc-badge" style={{ background: proof.badgeColor }}>
                         {proof.badge}
                       </span>
+                      <span className="spc-zoom-icon"><Eye className="w-4 h-4" /></span>
                     </div>
-                    <div className="sp-body">
-                      <div className="sp-meta-top">
-                        <span className="sp-city"><MapPin className="w-3.5 h-3.5 text-emerald-400 inline" /> {proof.city}</span>
-                        <span className="sp-carrier">{proof.carrier}</span>
-                      </div>
-                      <h4 className="sp-title">{proof.title}</h4>
-                      <p className="sp-desc">{proof.desc}</p>
-                      <button className="sp-expand-link">
-                        <Eye className="w-3.5 h-3.5" /> Ver Comprobante Completo
-                      </button>
+                    <div className="spc-info">
+                      <div className="spc-carrier">{proof.carrier}</div>
+                      <h4 className="spc-title">{proof.title}</h4>
+                      <p className="spc-desc">{proof.desc}</p>
                     </div>
                   </div>
                 ))}
               </div>
 
-              {/* Live Cities Marquee */}
-              <div className="cities-delivered-bar sr">
-                <span className="cd-title">📍 Ciudades con Despachos Confirmados:</span>
+              {/* Cities Coverage Strip */}
+              <div className="cities-delivered-bar sr" style={{ marginTop: 22 }}>
+                <span className="cd-title">📍 Cobertura y despachos confirmados a:</span>
                 <div className="cd-tags">
-                  {['Bogotá D.C.', 'Cali (Valle)', 'Medellín', 'Barranquilla', 'Bucaramanga', 'Ibagué (Local)', 'Pereira', 'Armenia', 'Neiva', 'Pasto', 'Cartagena', 'Cúcuta', 'Villavicencio', 'Santa Marta'].map((c, idx) => (
+                  {['Bogotá D.C.', 'Medellín', 'Cali', 'Barranquilla', 'Bucaramanga', 'Cartagena', 'Pereira', 'Armenia', 'Manizales', 'Neiva', 'Pasto', 'Cúcuta', 'Santa Marta', 'Villavicencio', 'Montería', '+900 Municipios'].map((c, idx) => (
                     <span key={idx} className="cd-tag">✓ {c}</span>
                   ))}
                 </div>
               </div>
 
-              {/* ── VIDEO REAL DE DESPACHOS ──────────────────────────────── */}
-              <div className="shipping-video-block sr">
-                <div className="shipping-video-label">
-                  <Camera className="w-5 h-5 text-emerald-400" />
-                  <span>Video Real: Despachos Diarios desde Ibagué</span>
-                  <span className="badge-live">🔴 REAL</span>
-                </div>
-                <div className="shipping-video-card">
-                  <div className="shipping-video-meta">
-                    <div className="shipping-video-icon">
-                      <Send className="w-5 h-5 text-emerald-400" />
-                    </div>
-                    <div>
-                      <h3>📦 Mira Cómo Despachamos tus Pedidos</h3>
-                      <p>Video 100% real de nuestros despachos diarios — embalaje, guías y entrega a transportadora</p>
-                    </div>
-                  </div>
-                  {/* VIDEO REAL — Despachos desde Ibagué (Formato Smartphone 9:16) */}
-                  <div className="shipping-phone-mockup">
-                    <div className="phone-island-top">
-                      <span>Krono Ibagué</span>
-                      <div className="phone-pill-cam">
-                        <div className="phone-cam-dot" />
-                      </div>
-                      <span>4G 🔋</span>
-                    </div>
-                    <div className="video-vertical-wrap">
-                      <video
-                        src="/assets/img/shipping_video_real.mp4"
-                        controls
-                        autoPlay
-                        muted
-                        loop
-                        playsInline
-                        preload="metadata"
-                      >
-                        Tu navegador no soporta video HTML5.
-                      </video>
-                    </div>
-                  </div>
-                </div>
-                <p style={{ textAlign: 'center', color: 'var(--t3)', fontSize: '0.78rem', marginTop: 10 }}>
-                  ¿Quieres ver más envíos en tiempo real? Síguenos en{' '}
-                  <a href="https://instagram.com/krono.ibg" target="_blank" rel="noopener noreferrer" style={{ color: 'var(--green)' }}>@krono.ibg</a>
-                  {' '}·{' '}
-                  <a href="https://www.tiktok.com/@kronos.ibg" target="_blank" rel="noopener noreferrer" style={{ color: 'var(--green)' }}>@kronos.ibg</a>
-                </p>
-              </div>
-
             </div>
           </section>
 
-        {/* ── 11. DETALLE DEL COMBO $85.000 ────────────────────────────────── */}
-        <section className="sec" id="combo-detail">
-            <div className="container">
-              <div className="sec-head sr">
-                <span className="badge-tag-emerald">KIT COMPLETO $85K</span>
-                <h2 className="sec-h2">¿Qué Recibes por tus $85.000 COP?</h2>
-                <p className="sec-p">
-                  Todo lo necesario en una sola compra. Cero costos ocultos ni cobros sorpresa.
-                </p>
-              </div>
-
-              <div className="combo-grid">
-                {[
-                  { n:'01', Icon: Clock, title:'Reloj de Alta Presencia',
-                    desc:'Caja deportiva robusta de 50mm - 54mm con bisel giratorio y pulso reforzado.',
-                    pill:<><Check className="w-3.5 h-3.5 text-emerald-400" /> Diseño Imponente</> },
-                  { n:'02', Icon: Box, title:'Estuche Rígido de Protección',
-                    desc:'Caja rígida acolchada oficial para guardar y lucir tu reloj con elegancia.',
-                    pill:<><Gift className="w-3.5 h-3.5 text-amber-400" /> Obsequio $0</> },
-                  { n:'03', Icon: BatteryCharging, title:'Batería de Repuesto Sellada',
-                    desc:'Pila sellada en blíster de fábrica para garantizarte años de duración.',
-                    pill:<><Gift className="w-3.5 h-3.5 text-amber-400" /> Obsequio $0</> },
-                  { n:'04', Icon: Tag, title:'Etiquetas y Sellos Oficiales',
-                    desc:'Inspección física previa en Ibagué y certificado de calidad garantizada.',
-                    pill:<><ShieldCheck className="w-3.5 h-3.5 text-sky-400" /> 100% Nuevo</> },
-                ].map(({ n, Icon, title, desc, pill }, i) => (
-                  <div key={n} className={`combo-card sr d${i + 1}`}>
-                    <span className="cc-num">{n}</span>
-                    <div className="cc-icon">
-                      <Icon className="w-5 h-5 text-emerald-400" />
-                    </div>
-                    <h3 className="cc-title">{title}</h3>
-                    <p className="cc-desc">{desc}</p>
-                    <span className="cc-pill">
-                      {pill}
-                    </span>
-                  </div>
-                ))}
-              </div>
-            </div>
-          </section>
+        
 
         {/* ── 12. ORDER BUILDER INTERACTIVO ───────────────────────────────── */}
         <section className="sec order-section" id="order-builder">
@@ -1387,16 +1349,16 @@ export default function App() {
                       </select>
                     </div>
 
-                    {/* Step 3: Location */}
+                    {/* Step 3: Payment Method */}
                     <div className="form-step">
                       <div className="step-label">
                         <span className="step-n">3</span>
-                        ¿Dónde te encuentras?
+                        ¿Cómo prefieres pagar tu pedido?
                       </div>
                       <div className="city-grid">
                         {[
-                          { id: 'ibague',   label: '📍 Ibagué (Tolima)',    sub: 'Pago Contra Entrega Inmediato' },
-                          { id: 'nacional', label: '🇨🇴 Resto de Colombia', sub: 'Envío Nacional Asegurado' },
+                          { id: 'contraentrega', label: '📦 Pago Contra Entrega', sub: 'Pagas en efectivo al recibir en tu puerta' },
+                          { id: 'transferencia', label: '💳 Transferencia Directa', sub: 'Nequi · Daviplata · Bancolombia' },
                         ].map(opt => (
                           <button
                             key={opt.id}
@@ -1430,7 +1392,7 @@ export default function App() {
                       />
                       <input
                         type="text"
-                        placeholder="Dirección y Barrio en Ibagué / Tu Ciudad"
+                        placeholder="Tu Ciudad, Dirección y Barrio para despacho"
                         value={customerAddr}
                         onChange={e => setCustomerAddr(e.target.value)}
                         maxLength={120}
@@ -1467,9 +1429,9 @@ export default function App() {
                           <span className="badge-free">INCLUIDA</span>
                         </div>
                         <div className="sum-row">
-                          <span>Método de Entrega:</span>
+                          <span>Forma de Pago:</span>
                           <span className="text-emerald-400 font-bold">
-                            {location === 'ibague' ? 'Contra Entrega Ibagué' : 'Envío Nacional'}
+                            {location === 'contraentrega' ? 'Contra Entrega en Puerta' : 'Transferencia Directa'}
                           </span>
                         </div>
                         <div className="sum-total-box">
@@ -1479,13 +1441,13 @@ export default function App() {
                       </div>
 
                       <div className="delivery-note-box">
-                        {location === 'ibague' ? (
+                        {location === 'contraentrega' ? (
                           <>
-                            <strong className="text-emerald-400">📍 Contra Entrega en Ibagué:</strong> Entrega hoy mismo o en 24h. No pagas nada por adelantado — cancelas los <strong>${fmt(subtotal)} COP</strong> cuando recibas y verifiques tu kit en tus manos.
+                            <strong className="text-emerald-400">📦 Pago Contra Entrega Garantizado:</strong> Despacho asegurado con guía oficial. Cancelas los <strong>${fmt(subtotal)} COP</strong> en efectivo a la transportadora únicamente al recibir y verificar tu kit en mano.
                           </>
                         ) : (
                           <>
-                            <strong className="text-amber-400">🇨🇴 Envíos a todo Colombia:</strong> Solo abonas el flete (~$15.000 COP) para generar la guía oficial con seguro. Los <strong>${fmt(subtotal)} COP</strong> del reloj los pagas en efectivo a la transportadora al recibir en tu puerta.
+                            <strong className="text-amber-400">💳 Transferencia Directa:</strong> Despacho prioritario el mismo día tras validar tu soporte por Nequi, Daviplata o Bancolombia. Te enviamos foto de tu paquete y guía de rastreo oficial 24/7.
                           </>
                         )}
                       </div>
@@ -1509,14 +1471,37 @@ export default function App() {
           </section>
 
         {/* ── 13. TESTIMONIOS ─────────────────────────────────────────────── */}
-        <section className="sec sec-dark">
+        {/* ── 13. TESTIMONIOS & COMUNIDAD OFICIAL ───────────────────────── */}
+        <section className="sec sec-dark" id="testimonios">
           <div className="container">
-            <div className="sec-head sr">
-              <span className="badge-tag-emerald">OPINIONES COMPROBADAS</span>
+            <div className="sec-head sr" style={{ marginBottom: 20 }}>
+              <span className="badge-tag-emerald">⭐ OPINIONES &amp; COMUNIDAD OFICIAL</span>
               <h2 className="sec-h2">Lo que Dicen Quienes Ya Usan Krono</h2>
               <p className="sec-p">
-                Clientes y emprendedores reales en Ibagué y toda Colombia que confirmaron calidad, rapidez y confianza.
+                Más de 500 compradores satisfechos en toda Colombia. Síguenos y mira las reviews de nuestros clientes:
               </p>
+
+              {/* Social Follow Strip */}
+              <div className="social-follow-strip">
+                <a
+                  href="https://instagram.com/krono.ibg?exln=MWFndzM0MjlrN3k0OA%3D%3D"
+                  target="_blank" rel="noopener noreferrer"
+                  onClick={playTick}
+                  className="social-pill-btn ig"
+                >
+                  <IgIcon style={{ width: 15, height: 15 }} />
+                  <span>Instagram <strong>@krono.ibg</strong></span>
+                </a>
+                <a
+                  href="https://www.tiktok.com/@kronos.ibg?_r=1&_t=ZS-9AOvpsNWBao"
+                  target="_blank" rel="noopener noreferrer"
+                  onClick={playTick}
+                  className="social-pill-btn tt"
+                >
+                  <TikTokIcon style={{ width: 14, height: 14 }} />
+                  <span>TikTok <strong>@kronos.ibg</strong></span>
+                </a>
+              </div>
             </div>
 
             <div className="testi-grid">
@@ -1524,7 +1509,7 @@ export default function App() {
                 <div key={i} className={`testi-card sr d${i + 1}`}>
                   <div className="stars">
                     {Array.from({ length: t.rating }).map((_, si) => (
-                      <Star key={si} size={18} fill="#f59e0b" color="#f59e0b" />
+                      <Star key={si} size={16} fill="#f59e0b" color="#f59e0b" />
                     ))}
                   </div>
                   <p className="testi-text">"{t.text}"</p>
@@ -1539,65 +1524,6 @@ export default function App() {
                   </div>
                 </div>
               ))}
-            </div>
-          </div>
-        </section>
-
-        {/* ── 14. COMUNIDAD OFICIAL (Instagram & TikTok) ──────────────────── */}
-        <section className="container sr" style={{ marginBottom: 60 }} id="redes">
-          <div className="social-community-grid">
-            {/* Instagram Card */}
-            <div className="social-card ig-box">
-              <div>
-                <div className="social-head">
-                  <div className="social-badge-icon ig-bg">
-                    <IgIcon style={{ width: 22, height: 22 }} />
-                  </div>
-                  <div className="social-info">
-                    <h4>Instagram Oficial</h4>
-                    <span>@krono.ibg</span>
-                  </div>
-                </div>
-                <p className="social-p">
-                  Stories diarias con nuevos modelos, fotos reales, videos de los relojes bajo la luz del sol y despachos en Ibagué.
-                </p>
-              </div>
-              <a
-                href="https://instagram.com/krono.ibg?exln=MWFndzM0MjlrN3k0OA%3D%3D"
-                target="_blank" rel="noopener noreferrer"
-                onClick={playTick}
-                className="btn-ig-pill"
-              >
-                <IgIcon style={{ width: 17, height: 17 }} />
-                Seguir en Instagram @krono.ibg
-              </a>
-            </div>
-
-            {/* TikTok Card */}
-            <div className="social-card tt-box">
-              <div>
-                <div className="social-head">
-                  <div className="social-badge-icon tt-bg">
-                    <TikTokIcon style={{ width: 22, height: 22 }} />
-                  </div>
-                  <div className="social-info">
-                    <h4>TikTok Oficial</h4>
-                    <span>@kronos.ibg</span>
-                  </div>
-                </div>
-                <p className="social-p">
-                  Pruebas de peso en muñeca, detalles de la maquinaria, unboxing y promociones exclusivas para nuestra comunidad.
-                </p>
-              </div>
-              <a
-                href="https://www.tiktok.com/@kronos.ibg?_r=1&_t=ZS-9AOvpsNWBao"
-                target="_blank" rel="noopener noreferrer"
-                onClick={playTick}
-                className="btn-tt-pill"
-              >
-                <TikTokIcon style={{ width: 17, height: 17 }} />
-                Seguir en TikTok @kronos.ibg
-              </a>
             </div>
           </div>
         </section>
@@ -1673,7 +1599,7 @@ export default function App() {
                 </div>
               </a>
               <p>
-                Especialistas en relojería robusta tipo Invicta y elegancia Rolex Style en Ibagué, Tolima y despachos con cobro contra entrega garantizados a todo Colombia.
+                Especialistas en relojería robusta tipo Invicta y elegancia Rolex Style con despachos diarios y pago contra entrega garantizado a toda Colombia.
               </p>
             </div>
 
@@ -1716,7 +1642,7 @@ export default function App() {
                 </div>
                 <div className="fc-item">
                   <MapPin className="w-4 h-4 text-emerald-400 shrink-0" />
-                  <span>Ibagué, Tolima, Colombia</span>
+                  <span>Envíos Diarios a Todo Colombia</span>
                 </div>
               </div>
             </div>

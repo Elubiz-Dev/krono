@@ -142,61 +142,13 @@ export const PRODUCTS = [
     savings: 80000,
     discountPct: 48,
     image: '/assets/img/watch_invicta_skeleton_silver.png',
-    badge: '⚠️ ¡Última Unidad!',
+    badge: '⚡ Maquinaria Esqueletada',
     stock: 'Solo 1 unidad',
     specs: [
       'Bisel de acero plateado pulido con textura deportiva e índices grabados',
       'Esfera esqueletada futurista que exhibe el corazón y balance mecánico',
       'Correa deportiva de silicona negra con pasadores de acero y hebilla grabada',
       'Agujas esqueletadas luminiscentes para lectura nocturna',
-      'Incluye estuche rígido de lujo y pila sellada'
-    ]
-  },
-  {
-    id: 'chrono-stealth-black',
-    name: 'Krono Chrono Stealth Black',
-    brand: 'Colección Invicta',
-    category: 'invicta',
-    gender: 'caballero',
-    series: 'Colección Midnight Titan',
-    tier: 'Línea Plus',
-    tierClass: 'tier-plus',
-    price: 85000,
-    oldPrice: 160000,
-    savings: 75000,
-    discountPct: 47,
-    image: '/assets/img/watch_invicta_skeleton_silver.png',
-    badge: '⚡ Edición Limitada',
-    stock: 'Última unidad',
-    specs: [
-      'Acabado negro mate táctico con acentos plateados y dorados',
-      'Cristal mineral resistente a rayones y golpes leves',
-      'Correa ergonómica reforzada anti-sudor',
-      'Elegancia imponente para ocasiones formales o casuales',
-      'Incluye estuche rígido de lujo y pila sellada'
-    ]
-  },
-  {
-    id: 'venom-red-sport',
-    name: 'Krono Venom Red Sport',
-    brand: 'Colección Invicta',
-    category: 'invicta',
-    gender: 'caballero',
-    series: 'Motorsport Performance',
-    tier: 'Línea Plus',
-    tierClass: 'tier-plus',
-    price: 85000,
-    oldPrice: 165000,
-    savings: 80000,
-    discountPct: 48,
-    image: '/assets/img/watch_invicta_skeleton_red.png',
-    badge: '🏎️ Look Rojo Sport',
-    stock: 'Quedan 2 uds',
-    specs: [
-      'Pulso rojo vibrante de silicona de grado médico',
-      'Caja robusta con tornillería perimetral visible',
-      'Dial esqueletado vanguardista de alta tecnología',
-      'Look agresivo e imponente para destacar donde vayas',
       'Incluye estuche rígido de lujo y pila sellada'
     ]
   },
@@ -304,7 +256,7 @@ export const PRODUCTS = [
 
 /* ── COMBOS PARA EMPRENDEDORES & MAYORISTAS ────────────────────────────────
    Armados con los modelos Invicta reales (cajas amarillas + pilas)
-   mostrados en el stock físico de Ibagué
+   mostrados en el stock físico real
    ───────────────────────────────────────────────────────────────────────── */
 export const ENTREPRENEUR_COMBOS = [
   {
@@ -333,7 +285,7 @@ export const ENTREPRENEUR_COMBOS = [
   {
     id: 'lote-negocio-5',
     name: 'Combo Mayorista Pro (Lote x5)',
-    subtitle: 'El paquete preferido por revendedores en Ibagué, Cali y Bogotá por su alta rotación',
+    subtitle: 'El paquete preferido por revendedores a nivel nacional por su alta rotación',
     units: 5,
     priceTotal: 225000,
     pricePerUnit: 45000,
@@ -382,8 +334,8 @@ export const ENTREPRENEUR_COMBOS = [
 
 export const BENEFITS = [
   {
-    title: 'Envíos Garantizados Todo el País',
-    desc: 'Entrega el mismo día en Ibagué con pago contra entrega. A nivel nacional de 3 a 5 días con guía oficial.',
+    title: 'Envíos Asegurados a Todo Colombia',
+    desc: 'Despachos diarios con cobertura nacional y número de guía oficial para rastreo 24/7.',
     icon: 'Truck'
   },
   {
@@ -393,104 +345,64 @@ export const BENEFITS = [
   },
   {
     title: 'Soporte Personalizado 1 a 1',
-    desc: 'Atención directa por WhatsApp con tu Asesor. Te mandamos video y foto de tu reloj antes de embalar.',
+    desc: 'Atención directa por WhatsApp con tu asesor. Te enviamos foto de tu kit antes de embalar.',
     icon: 'Phone'
   },
   {
     title: 'Garantía Krono 30 Días',
-    desc: '1 mes de respaldo en maquinaria cuarzo y pila. Compra con total tranquilidad y respaldo real.',
+    desc: 'Respaldo directo sobre maquinaria y funcionamiento. Compra con total tranquilidad.',
     icon: 'ShieldCheck'
   }
 ];
 
 export const PAYMENT_METHODS = [
-  { name: 'Pago Contra Entrega (Efectivo)', desc: 'Pagas al recibir y verificar en Ibagué o Colombia' },
+  { name: 'Pago Contra Entrega (Efectivo)', desc: 'Pagas al recibir y verificar tu paquete en mano' },
   { name: 'Nequi', desc: 'Transferencia directa al instante sin comisión' },
   { name: 'Daviplata', desc: 'Pago rápido desde tu celular' },
   { name: 'Bancolombia', desc: 'Transferencia o consignación a la mano' }
 ];
 
-/* ── COMPROBANTES DE ENVÍO REALES A TODO EL PAÍS ────────────────────────── */
+/* ── COMPROBANTES DE ENVÍO REALES A TODO EL PAÍS (Fotos 100% Únicas) ─────── */
 export const SHIPPING_PROOFS = [
   {
     id: 0,
-    title: 'Lote de 20+ Pedidos Listos para Despacho',
-    city: 'Ibagué → Colombia',
-    carrier: 'Inter Rapidísimo / DHL / Envía',
-    badge: '🚀 Lote Real Diario',
+    title: 'Lote Diario Listo para Despacho',
+    city: 'Envíos Diarios Nacionales',
+    carrier: 'Inter Rapidísimo / DHL',
+    badge: '🚀 Despachos Masivos',
     badgeColor: '#10b981',
-    desc: 'Así se ve el despacho diario desde nuestra bodega en Ibagué: más de 20 paquetes embalados con empaque negro térmico, guías impresas y listos para la transportadora.',
+    desc: 'Paquetes embalados con empaque térmico de alta seguridad, guías impresas y entrega diaria a la transportadora.',
     image: '/assets/img/shipping_batch_packages.png'
   },
   {
     id: 1,
-    title: 'Despacho Real a Bogotá D.C.',
-    city: 'Bogotá D.C.',
-    carrier: 'Inter Rapidísimo & DHL',
-    badge: '🚚 Enviado a Bogotá 💯',
-    badgeColor: '#ef4444',
-    desc: 'Guía oficial de mensajería con rótulo de rastreo en tiempo real y empaque térmico de seguridad.',
-    image: '/assets/img/shipping_proof_bogota.png'
-  },
-  {
-    id: 2,
-    title: 'Despacho al Valle del Cauca',
-    city: 'Cali / Valle del Cauca',
-    carrier: 'Inter Rapidísimo / Envía',
-    badge: '📦 Se fue para el Valle 🔥',
-    badgeColor: '#f59e0b',
-    desc: 'Paquete asegurado y sellado despachado por WhatsApp para entrega y cobro contra entrega.',
-    image: '/assets/img/shipping_proof_valle.png'
-  },
-  {
-    id: 7,
-    title: 'Paquetes Sellados con Guías Impresas',
-    city: 'Bodega Krono (Ibagué)',
-    carrier: 'Empaque Térmico + Guía Oficial',
+    title: 'Guías Impresas y Rotuladas',
+    city: 'Empaque de Seguridad',
+    carrier: 'Sobres de Alta Protección',
     badge: '📋 Guías Certificadas',
-    badgeColor: '#6366f1',
-    desc: 'Cada paquete lleva guía impresa con código de barras y QR de rastreo. Sellado con cinta de seguridad para que llegue intacto a cualquier rincón de Colombia.',
+    badgeColor: '#3b82f6',
+    desc: 'Cada sobre sellado cuenta con código de barras y QR para rastreo oficial en línea.',
     image: '/assets/img/shipping_labels_ready.png'
   },
   {
+    id: 2,
+    title: 'Entrega Directa con Guía Oficial',
+    city: 'Cobertura Nacional',
+    carrier: 'Inter Rapidísimo Asegurado',
+    badge: '🚚 En Camino a Destino',
+    badgeColor: '#ef4444',
+    desc: 'Paquetes entregados en punto oficial de mensajería con seguro de transporte.',
+    image: '/assets/img/shipping_proof_bogota.png'
+  },
+  {
     id: 3,
-    title: 'Inspección de Calidad Tapa Inoxidable',
-    city: 'Taller Krono (Ibagué)',
-    carrier: 'Control de Calidad 1 a 1',
-    badge: '🛡️ Tapa Acero Grabada',
-    badgeColor: '#10b981',
-    desc: 'Grabado en alto relieve Invicta R05-220 revisado minuciosamente con guante protector.',
-    image: '/assets/img/real_proof_backcase_glove.png'
-  },
-  {
-    id: 4,
-    title: 'Stock Físico Real en Ibagué',
-    city: 'Ibagué (Tolima)',
-    carrier: 'Domicilio Express Mismo Día',
-    badge: '🚨 Entrega Hoy Ibagué',
-    badgeColor: '#10b981',
-    desc: 'Exhibidor con piezas físicas listas para empacar y entregar de inmediato en cualquier barrio.',
-    image: '/assets/img/showcase_box.jpg'
-  },
-  {
-    id: 5,
-    title: 'Cajas Amarillas Oficiales de Lujo',
-    city: 'Bodega de Envíos',
-    carrier: 'Embalaje Rígido',
-    badge: '⭐ Estuches Rígidos',
+    title: 'Pago Contra Entrega a Domicilio',
+    city: 'Ciudades & Municipios',
+    carrier: 'Transportadora Oficial',
+    badge: '📦 Contra Entrega 100%',
     badgeColor: '#f59e0b',
-    desc: 'Cajas de protección acolchadas de alta gama que garantizan que el reloj llegue intacto.',
-    image: '/assets/img/media_1791997978060.png'
-  },
-  {
-    id: 6,
-    title: 'Baterías Selladas en Blíster Gratis',
-    city: 'Kits Listos para Salir',
-    carrier: 'Obsequio Krono',
-    badge: '🔋 Pila Gratis Incluida',
-    badgeColor: '#10b981',
-    desc: 'Pilas de repuesto selladas de fábrica para garantizarte años de duración ininterrumpida.',
-    image: '/assets/img/boxes_and_kits.png'
+    desc: 'Entrega en la puerta de tu casa con pago en efectivo al recibir y verificar tu reloj en mano.',
+    image: '/assets/img/shipping_proof_valle.png'
   }
 ];
 
@@ -499,54 +411,51 @@ export const REAL_PHOTOS = SHIPPING_PROOFS;
 export const TESTIMONIALS = [
   {
     name: 'Carlos Restrepo',
-    city: 'Ibagué (El Vergel)',
+    city: 'Medellín (Antioquia)',
     watch: 'Krono Subaqua Gold Master',
     rating: 5,
-    text: 'El reloj tiene un peso y una presencia tremenda. Se ve súper fino y la caja amarilla le da un toque muy elegante. Me lo entregaron en El Vergel el mismo día y pagué contra entrega al domiciliario. 10 de 10.'
+    text: 'El reloj tiene un peso y una presencia tremenda. Se ve súper fino y la caja amarilla le da un toque muy elegante. Me llegó rápido y pagué contra entrega a la transportadora. 10 de 10.'
   },
   {
     name: 'Felipe Arango',
     city: 'Bogotá D.C.',
-    watch: 'Krono Oyster Submariner Black',
+    watch: 'Krono Bolt Phantom Silver',
     rating: 5,
-    text: 'Sinceramente por $85.000 con estuche y pila de repuesto pensé que era broma, pero llegó impecable a Bogotá por Interrapidísimo. El asesor me mandó la guía rápido y pagué al recibir en la puerta. Muy recomendados.'
+    text: 'Sinceramente por $85.000 con estuche y pila de repuesto pensé que era broma, pero llegó impecable a Bogotá. El asesor me mandó la guía rápido y pagué al recibir en la puerta. Muy recomendados.'
   },
   {
     name: 'Juan Manuel Guzmán',
-    city: 'Ibagué (Centro)',
+    city: 'Cali (Valle)',
     watch: 'Combo Emprendedor x5',
     rating: 5,
-    text: 'Compré el lote x5 para revender entre mis compañeros de trabajo. En menos de una semana los vendí todos a $125.000 cada uno y me gané más de $280.000 limpios. Excelente calidad y soporte del asesor.'
+    text: 'Compré el lote x5 para revender entre mis compañeros. En menos de una semana los vendí todos y me gané más de $200.000 limpios. Excelente calidad y soporte del asesor.'
   }
 ];
 
 export const FAQS = [
   {
-    q: '¿Qué incluye exactamente el precio promocional de $85.000 COP?',
-    a: 'Por solo $85.000 COP recibes el kit completo: 1 reloj a tu elección (Colección Invicta o Rolex Style), 1 estuche rígido de presentación acolchado oficial (GRATIS), 1 batería original de repuesto sellada en blíster (GRATIS) y las etiquetas oficiales. Cero costos ocultos ni cobros sorpresa.'
+    q: '¿Qué incluye exactamente el kit de $85.000 COP?',
+    a: 'Recibes el combo completo: 1 reloj a tu elección, 1 estuche rígido acolchado de lujo (GRATIS), 1 batería sellada de repuesto (GRATIS) y etiquetas de autenticidad. Cero costos ocultos.'
   },
   {
-    q: '¿Cómo funciona el pago contra entrega en Ibagué?',
-    a: 'En Ibagué no pagas absolutamente nada por adelantado. Te comunicas con el Asesor por WhatsApp, nos dices tu dirección y tu modelo favorito, te lo enviamos con nuestro domiciliario de confianza para hoy mismo o en 24h, lo revisas en persona en tus manos y le pagas los $85.000 COP en efectivo o transferencia (Nequi/Daviplata).'
+    q: '¿Cómo funciona el Pago Contra Entrega?',
+    a: 'No pagas nada por adelantado. Te enviamos el paquete con guía oficial y seguro. Lo recibes en tu puerta, verificas tu kit en mano y le cancelas en efectivo a la transportadora.'
   },
   {
-    q: '¿Cómo se maneja el envío al resto de Colombia y cuánto tarda?',
-    a: 'A nivel nacional enviamos con Inter Rapidísimo, DHL o Envía (tarda entre 3 a 5 días hábiles). Solo abonas el valor del flete (~$15.000 COP) para generar la guía oficial con seguro y número de rastreo. El valor de tu reloj ($85.000 COP) lo pagas en efectivo directamente a la transportadora cuando llegue a tu casa.'
+    q: '¿Cómo se maneja el envío a todo Colombia?',
+    a: 'Despachamos por Inter Rapidísimo o DHL con número de guía oficial y rastreo 24/7 en tiempo real hasta tu puerta.'
   },
   {
-    q: '¿Qué garantía tienen los relojes de las colecciones Invicta y Rolex Style?',
-    a: 'Todos nuestros modelos cuentan con 90 días (3 meses) de garantía sobre el mecanismo de cuarzo y la batería. Cada pieza es inspeccionada y probada individualmente con guantes protectores antes de empacar. Si notas cualquier inconformidad de fábrica, te damos soporte directo e inmediato.'
+    q: '¿Qué garantía tienen los relojes?',
+    a: 'Cuentas con 30 días de garantía directa por maquinaria y funcionamiento. Cada pieza es inspeccionada minuciosamente antes de ser empacada.'
   },
   {
-    q: '¿Cómo funcionan los Combos Emprendedor de 3, 5 y 10 unidades para revender?',
-    a: 'Son lotes especiales con precio mayorista preferencial desde $64.000 COP por kit (reloj + estuche + pila). Diseñados para que inicies tu negocio o generes ingresos extras vendiendo a amigos, familiares o en redes sociales a $120.000 - $140.000 COP. Incluyen fotos y videos en alta resolución listos para publicar.'
+    q: '¿Cómo compro al por mayor para revender?',
+    a: 'Tenemos lotes desde 4 unidades a solo $45.000 COP por kit (reloj + estuche rígido + pila). Te brindamos fotos y videos en HD para tus redes y asesoría comercial.'
   },
   {
-    q: '¿Qué métodos de pago reciben para las compras y abonos?',
-    a: 'Aceptamos Efectivo al recibir (contra entrega), Nequi, Daviplata y Bancolombia a la mano. El pago se coordina directamente por WhatsApp de forma rápida, transparente y sin comisiones.'
-  },
-  {
-    q: '¿Puedo pedir fotos o video real de mi reloj antes de que me lo envíen?',
-    a: '¡Totalmente! Escríbenos al WhatsApp 319 3620748 y nuestro asesor te enviará un video corto en alta definición mostrando los detalles, el dial, los biseles y la caja de la pieza exacta que se te enviará.'
+    q: '¿Puedo pedir fotos o video real antes del envío?',
+    a: '¡Totalmente! Escríbenos al WhatsApp 319 3620748 y tu asesor te enviará un video corto en alta definición mostrando los detalles de la pieza exacta que se te enviará.'
   }
 ];
+
