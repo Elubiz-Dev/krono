@@ -1014,31 +1014,18 @@ export default function App() {
                               <span>⚙ {p.machinery}</span>
                               <span>📏 {p.caseSize}</span>
                             </div>
-                            <div className="pcc-bottom-bar">
-                              <span className="pcc-kit-tag">🎁 Incluye Estuche + Pila Gratis</span>
-                              <div className="pcc-btns">
-                                <a
-                                  href={`https://wa.me/573193620748?text=${encodeURIComponent(`¡Hola Krono! 👋 Deseo consultar precio y ordenar el reloj:
-
-⌚ *${p.name}*
-🏷️ *Serie:* ${p.series}
-🎁 *Incluye:* Estuche Rígido + Pila Sellada Gratis
-
-¿Tienen disponibilidad para envío contra entrega?`)}`}
-                                  target="_blank"
-                                  rel="noopener noreferrer"
-                                  onClick={playChime}
-                                  className="btn-order-wa-pill"
-                                >
-                                  <MessageCircle className="w-4 h-4 text-emerald-400" /> Consultar / Pedir
-                                </a>
-                                <button
-                                  onClick={() => selectAndScroll(p)}
-                                  className="btn-order-outline-mini"
-                                >
-                                  Armar Pedido
-                                </button>
-                              </div>
+                            <div className="pcc-bottom-bar" style={{ marginTop: 12 }}>
+                              <span className="pcc-kit-tag">🎁 Incluye Estuche Rígido + Pila Gratis</span>
+                              <a
+                                href={`https://wa.me/573193620748?text=${encodeURIComponent(`¡Hola Krono! 👋 Deseo consultar disponibilidad y precio del modelo:\n\n⌚ *${p.name}*\n🏷️ *Serie:* ${p.series}\n🎁 *Incluye:* Estuche Rígido + Pila Sellada Gratis\n\n¿Tienen disponibilidad para envío contra entrega?`)}`}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                onClick={playChime}
+                                className="btn-wa-emerald w-full"
+                                style={{ marginTop: 8, padding: '10px 14px', fontSize: '0.82rem', fontWeight: 800, borderRadius: 'var(--r1)' }}
+                              >
+                                <MessageCircle className="w-4 h-4" /> Consultar / Pedir por WhatsApp
+                              </a>
                             </div>
                           </div>
                         </article>
