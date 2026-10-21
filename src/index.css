@@ -842,6 +842,54 @@ button, input, select { font-family: inherit; font-size: inherit; border: none; 
    Paso 2: brand detail view   → vuelve con catalog-back-btn
 ───────────────────────────────────────────────────────────────────────────── */
 
+/* ── PANTALLA DEDICADA DE MARCA / PÁGINA ÚNICA ── */
+.dedicated-brand-screen {
+  min-height: 80vh;
+  padding: 40px 0 80px;
+  position: relative;
+  z-index: 10;
+}
+.brand-dedicated-view {
+  animation: fadeIn 0.3s ease;
+}
+.btn-back-header {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: rgba(255, 255, 255, 0.08);
+  border: 1.5px solid rgba(255, 255, 255, 0.18);
+  color: #fff;
+  font-size: 0.88rem;
+  font-weight: 800;
+  padding: 8px 18px;
+  border-radius: var(--rF);
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+.btn-back-header:hover {
+  background: rgba(16, 185, 129, 0.2);
+  border-color: var(--green);
+  color: var(--green);
+  transform: translateX(-3px);
+}
+.btn-wa-header {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: var(--green);
+  color: #000;
+  font-size: 0.82rem;
+  font-weight: 800;
+  padding: 8px 18px;
+  border-radius: var(--rF);
+  text-decoration: none;
+  transition: all 0.2s ease;
+}
+.btn-wa-header:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 14px var(--green-glow);
+}
+
 /* ── Catálogo: volver ── */
 .catalog-back-btn {
   display: inline-flex;
