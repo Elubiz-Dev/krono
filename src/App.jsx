@@ -365,14 +365,10 @@ export default function App() {
         />
       </div>
 
-      {/* ── LUXURY TOP ANNOUNCEMENT BAR (Clean, prestigious, high conversion) ── */}
+      {/* ── LUXURY TOP ANNOUNCEMENT BAR ── */}
       <div className="luxury-top-bar">
         <div className="luxury-top-content">
-          <span className="lt-badge">✦ COLOMBIA · PAGO CONTRA ENTREGA</span>
-          <span className="lt-text">
-            Despachos Diarios · <strong>Pago Contra Entrega en tu Puerta</strong> · Kit Completo (Reloj + Estuche Rígido + Pila Gratis)
-          </span>
-          <span className="lt-badge highlight-green">Garantía 30 Días</span>
+          <span className="lt-badge">✦ PAGO CONTRA ENTREGA</span>
         </div>
       </div>
 
