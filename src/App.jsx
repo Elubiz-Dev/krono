@@ -506,7 +506,7 @@ export default function App() {
     {
       id: 'invicta',
       name: 'INVICTA',
-      img: '/assets/img/cat_cover_invicta.jpg',
+      img: '/assets/img/cat_cover_invicta_v2.jpg',
     },
     {
       id: 'rolex',
@@ -542,7 +542,7 @@ export default function App() {
       badge: 'Máxima Presencia',
       badgeClass: 'gold',
       subtitle: 'Subaqua, Bolt & Skeleton',
-      img: '/assets/img/cat_cover_invicta.jpg',
+      img: '/assets/img/cat_cover_invicta_v2.jpg',
       ctaText: 'Ver Invicta →',
     },
     {
