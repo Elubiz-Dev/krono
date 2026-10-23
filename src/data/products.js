@@ -10,7 +10,7 @@ export const PRODUCTS = [
      ══════════════════════════════════════════════════════════════════════════ */
   {
     id: 'krono-gold-subaqua-real',
-    name: 'Krono Subaqua Gold Master Black Bezel',
+    name: 'Subaqua Gold',
     brand: 'Colección Invicta',
     category: 'invicta',
     gender: 'caballero',
@@ -34,7 +34,7 @@ export const PRODUCTS = [
   },
   {
     id: 'krono-bolt-silver-phantom',
-    name: 'Krono Bolt Phantom Silver Dial',
+    name: 'Bolt Silver',
     brand: 'Colección Invicta',
     category: 'invicta',
     gender: 'caballero',
@@ -58,7 +58,7 @@ export const PRODUCTS = [
   },
   {
     id: 'krono-skeleton-cyber-red',
-    name: 'Krono Ghost Skeleton Cyber Red',
+    name: 'Skeleton Red',
     brand: 'Colección Invicta',
     category: 'invicta',
     gender: 'caballero',
@@ -82,7 +82,7 @@ export const PRODUCTS = [
   },
   {
     id: 'krono-subaqua-gold-white',
-    name: 'Krono Subaqua Reserve Gold & White',
+    name: 'Subaqua White',
     brand: 'Colección Invicta',
     category: 'invicta',
     gender: 'caballero',
@@ -106,7 +106,7 @@ export const PRODUCTS = [
   },
   {
     id: 'krono-bolt-zeus-magnum',
-    name: 'Krono Bolt Zeus Magnum Master Gold',
+    name: 'Bolt Magnum',
     brand: 'Colección Invicta',
     category: 'invicta',
     gender: 'caballero',
@@ -130,7 +130,7 @@ export const PRODUCTS = [
   },
   {
     id: 'krono-skeleton-silver-steel',
-    name: 'Krono Skeleton Silver Steel Cyber',
+    name: 'Skeleton Silver',
     brand: 'Colección Invicta',
     category: 'invicta',
     gender: 'caballero',
@@ -158,7 +158,7 @@ export const PRODUCTS = [
      ══════════════════════════════════════════════════════════════════════════ */
   {
     id: 'krono-rolex-submariner-black',
-    name: 'Krono Oyster Submariner Date Black Dial',
+    name: 'Submariner Black',
     brand: 'Colección Rolex Style',
     category: 'rolex',
     gender: 'caballero',
@@ -182,7 +182,7 @@ export const PRODUCTS = [
   },
   {
     id: 'krono-rolex-datejust-twotone',
-    name: 'Krono Datejust Imperial Two-Tone Gold',
+    name: 'Datejust Two-Tone',
     brand: 'Colección Rolex Style',
     category: 'rolex',
     gender: 'caballero',
@@ -206,7 +206,7 @@ export const PRODUCTS = [
   },
   {
     id: 'krono-rolex-daydate-green',
-    name: 'Krono Day-Date President Gold Emerald',
+    name: 'Day-Date Emerald',
     brand: 'Colección Rolex Style',
     category: 'rolex',
     gender: 'caballero',
@@ -230,7 +230,7 @@ export const PRODUCTS = [
   },
   {
     id: 'krono-rolex-daytona-panda',
-    name: 'Krono Cosmograph Daytona Panda Chrono',
+    name: 'Daytona Panda',
     brand: 'Colección Rolex Style',
     category: 'rolex',
     gender: 'caballero',

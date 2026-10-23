@@ -7,7 +7,7 @@ import {
   Truck, MapPin, Star, Phone, Camera, ChevronDown, ChevronRight, ShoppingBag,
   Zap, Clock, X, Check, ArrowRight, Flame, Sparkles, TrendingUp,
   CreditCard, DollarSign, Award, Layers, MessageCircle, HelpCircle,
-  Package, ExternalLink, RefreshCw, Send, Eye
+  Package, ExternalLink, RefreshCw, Send, Eye, Moon, Sun, RotateCw, Compass, Info
 } from 'lucide-react';
 
 import {
@@ -15,6 +15,8 @@ import {
   SHIPPING_PROOFS, REAL_PHOTOS, TESTIMONIALS, FAQS
 } from './data/products';
 import { playTick, playChime } from './utils/audio';
+
+
 
 /* ─── SVG Instagram ──────────────────────────────────────────────────────── */
 function IgIcon({ className, style }) {
@@ -46,6 +48,20 @@ function TikTokIcon({ className, style }) {
       style={{ width: 16, height: 16, flexShrink: 0, display: 'inline-block', ...style }}
     >
       <path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-5.2 1.74 2.89 2.89 0 0 1 2.31-4.64c.29 0 .58.04.86.12V9.42a6.34 6.34 0 0 0-6.6 6.33 6.34 6.34 0 0 0 6.34 6.34 6.34 6.34 0 0 0 6.34-6.34V9.08a8.16 8.16 0 0 0 4.77 1.52v-3.4a4.85 4.85 0 0 1-1.6-.51z"/>
+    </svg>
+  );
+}
+
+/* ─── SVG WhatsApp ────────────────────────────────────────────────────────── */
+function WhatsAppIcon({ className, style }) {
+  return (
+    <svg
+      className={className}
+      viewBox="0 0 24 24"
+      fill="currentColor"
+      style={{ width: 20, height: 20, flexShrink: 0, display: 'inline-block', ...style }}
+    >
+      <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 0 1-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 0 1-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 0 1 2.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0 0 12.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 0 0 5.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 0 0-3.48-8.413Z"/>
     </svg>
   );
 }
@@ -94,13 +110,24 @@ function useScrollReveal() {
 /* ─── MAIN APP ───────────────────────────────────────────────────────────── */
 export default function App() {
   /* State */
-  const [selectedModel, setSelectedModel]       = useState(PRODUCTS[0]);
-  const [qty, setQty]                            = useState(1);
+  const [cart, setCart] = useState([
+    {
+      id: PRODUCTS[0].id,
+      name: PRODUCTS[0].name,
+      price: PRODUCTS[0].price,
+      brand: PRODUCTS[0].brand,
+      image: PRODUCTS[0].image,
+      category: PRODUCTS[0].category,
+      qty: 1
+    }
+  ]);
+  const [userHasSelectedWatch, setUserHasSelectedWatch] = useState(true);
+  const [orderCategoryTab, setOrderCategoryTab] = useState('invicta'); // 'invicta' | 'rolex' | 'combos'
   const [location, setLocation]                  = useState('contraentrega'); // 'contraentrega' | 'transferencia'
   const [customerName, setCustomerName]          = useState('');
   const [customerAddr, setCustomerAddr]          = useState('');
   const [activeCatalogTab, setActiveCatalogTab]  = useState('all'); // 'all' | 'invicta' | 'rolex'
-  const [selectedBrand, setSelectedBrand]        = useState(null);  // null = grid, 'invicta' | 'rolex' | 'coming-rm' = detail
+  const [selectedBrand, setSelectedBrand]        = useState(null);  // null = grid, 'colecciones' | 'invicta' | 'rolex' | 'combos' | 'emprendedores'
   const [activeStoreTab, setActiveStoreTab]      = useState('relojes'); // 'relojes' | 'quienes' | 'combos' | 'envios' | 'incluye' | 'pedido' | 'todo'
   const [openAccordion, setOpenAccordion]        = useState('invicta'); // 'invicta' | 'rolex'
   const [lightbox, setLightbox]                  = useState({ open: false, img: '', title: '' });
@@ -153,28 +180,103 @@ export default function App() {
   /* Price formatting */
   const fmt = n => n.toLocaleString('es-CO');
 
-  /* Price calculation */
-  let subtotal = selectedModel.price * qty;
-  if (qty === 2 && selectedModel.price === 85000) subtotal = 160000;
-  if (qty === 3 && selectedModel.price === 85000) subtotal = 235000;
+  /* Compatibility alias for components referencing single selected model or total qty */
+  const selectedModel = cart[0] || PRODUCTS[0];
+  const qty = cart.reduce((acc, item) => acc + item.qty, 0);
+  const totalUnits = qty;
 
-  /* Custom WhatsApp link for Order Builder */
+  /* Cart actions */
+  const addToCart = useCallback((product) => {
+    playTick();
+    setCart(prev => {
+      const idx = prev.findIndex(item => item.id === product.id);
+      if (idx >= 0) {
+        const next = [...prev];
+        next[idx] = { ...next[idx], qty: next[idx].qty + 1 };
+        return next;
+      }
+      return [
+        ...prev,
+        {
+          id: product.id,
+          name: product.name,
+          price: product.price,
+          brand: product.brand || 'Krono',
+          image: product.image,
+          category: product.category || 'invicta',
+          qty: 1
+        }
+      ];
+    });
+    setUserHasSelectedWatch(true);
+    setModelToast({ show: true, name: product.name, action: 'add' });
+    setTimeout(() => setModelToast(p => ({ ...p, show: false })), 2200);
+  }, []);
+
+  const updateCartQty = useCallback((productId, delta) => {
+    playTick();
+    setCart(prev => {
+      return prev
+        .map(item => {
+          if (item.id === productId) {
+            const nextQty = item.qty + delta;
+            return nextQty > 0 ? { ...item, qty: nextQty } : null;
+          }
+          return item;
+        })
+        .filter(Boolean);
+    });
+  }, []);
+
+  const removeFromCart = useCallback((productId) => {
+    playTick();
+    setCart(prev => {
+      const target = prev.find(item => item.id === productId);
+      if (target) {
+        setModelToast({ show: true, name: target.name, action: 'remove' });
+        setTimeout(() => setModelToast(p => ({ ...p, show: false })), 2000);
+      }
+      return prev.filter(item => item.id !== productId);
+    });
+  }, []);
+
+  /* Compatibility alias for selectModel */
+  const selectModel = useCallback((product) => {
+    addToCart(product);
+  }, [addToCart]);
+
+  /* Multi-product price & promo calculation */
+  const rawSubtotal = cart.reduce((acc, item) => acc + (item.price * item.qty), 0);
+  const standardWatchesCount = cart
+    .filter(item => item.price === 85000)
+    .reduce((acc, item) => acc + item.qty, 0);
+
+  // Promo 2 x 160k (-10k), 3 x 235k (-20k), 4+ (-10k per additional watch)
+  const discount = standardWatchesCount >= 2 ? (standardWatchesCount - 1) * 10000 : 0;
+  const subtotal = Math.max(0, rawSubtotal - discount);
+
+  /* Custom WhatsApp link for Multi-Product Order Builder */
   const waLink = useCallback(() => {
-    let msg  = `¡Hola Krono! 👋 Vengo de la página web oficial (@krono.ibg) y deseo ordenar mi combo:\n\n`;
-    msg += `👑 *Modelo Elegido:* ${selectedModel.name} (${selectedModel.brand})\n`;
-    msg += `📦 *Cantidad:* ${qty} kit(s)\n`;
-    msg += `🎁 *Obsequios Incluidos:* Estuche Rígido Oficial + Batería Sellada GRATIS\n`;
-    msg += `💳 *Forma de Pago:* ${location === 'contraentrega' ? 'Pago Contra Entrega en la Puerta' : 'Transferencia Directa (Nequi/Daviplata/Bancolombia)'}\n`;
-    msg += `💰 *Total a Cancelar:* $${fmt(subtotal)} COP\n`;
+    let msg  = `¡Hola Krono! 👋 Deseo información y disponibilidad para el siguiente pedido:\n\n`;
+    if (cart.length === 0) {
+      msg += `⌚ Deseo consultar disponibilidad de los modelos para envío con Pago Contra Entrega.\n`;
+    } else {
+      msg += `🛍️ *Modelos Seleccionados:*\n`;
+      cart.forEach((item) => {
+        msg += `• *${item.name}* (${item.qty} ${item.qty === 1 ? 'unidad' : 'unidades'}) — [${item.brand}]\n`;
+      });
+      msg += `\n🎁 *Incluye:* ${totalUnits} Estuche(s) Rígido(s) + ${totalUnits} Batería(s) Sellada(s) Gratis\n`;
+      msg += `💳 *Forma de Pago:* ${location === 'contraentrega' ? 'Pago Contra Entrega en la Puerta' : 'Transferencia Directa'}\n`;
+    }
     if (customerName.trim()) msg += `👤 *Cliente:* ${customerName.trim()}\n`;
-    if (customerAddr.trim()) msg += `🏠 *Ciudad y Dirección:* ${customerAddr.trim()}\n`;
-    msg += `\n¿Me confirmas disponibilidad del modelo para coordinar el despacho hoy mismo? ¡Muchas gracias!`;
+    if (customerAddr.trim()) msg += `📍 *Ciudad y Dirección:* ${customerAddr.trim()}\n`;
+    msg += `\n¿Me confirman disponibilidad y el valor total con envío? ¡Muchas gracias!`;
     return `https://wa.me/573193620748?text=${encodeURIComponent(msg)}`;
-  }, [selectedModel, qty, location, customerName, customerAddr, subtotal]);
+  }, [cart, totalUnits, location, customerName, customerAddr]);
 
   /* Direct 1-Click WhatsApp link for a specific product */
   const directProductWa = (product) => {
-    const text = `¡Hola Krono! 👋 Quiero comprar en 1 Clic con Pago Contra Entrega:\n\n👑 *${product.name}*\n💎 *Línea:* ${product.brand}\n💰 *Precio Oferta:* $${fmt(product.price)} COP (Ahorro: $${fmt(product.savings)} COP)\n🎁 *Incluye:* Reloj + Estuche Rígido + Pila de Repuesto GRATIS\n\n¿Tienes disponibilidad para despacho inmediato a mi ciudad?`;
+    const text = `¡Hola Krono! 👋 Deseo consultar información y disponibilidad de este modelo:\n\n⌚ *${product.name}*\n💎 *Línea:* ${product.brand}\n🎁 *Incluye:* Reloj + Estuche Rígido + Pila de Repuesto Gratis\n📦 *Envío:* Pago Contra Entrega\n\n¿Me confirman el valor con despacho a mi ciudad? ¡Muchas gracias!`;
     return `https://wa.me/573193620748?text=${encodeURIComponent(text)}`;
   };
 
@@ -183,14 +285,6 @@ export default function App() {
     const text = `¡Hola Krono! 👋 Me interesa comprar para revender:\n\n💼 *${combo.name}*\n📦 *Unidades:* ${combo.units} Relojes + ${combo.units} Estuches Rígidos + ${combo.units} Pilas\n💰 *Inversión:* $${fmt(combo.priceTotal)} COP ($${fmt(combo.pricePerUnit)} COP / unidad)\n📈 *Margen Estimado:* +$${fmt(combo.estimatedProfit)} COP de ganancia limpia\n\n¿Cómo coordinamos el despacho y los modelos a elección?`;
     return `https://wa.me/573193620748?text=${encodeURIComponent(text)}`;
   };
-
-  /* Select model + scroll + mini toast */
-  const selectModel = useCallback((product) => {
-    playTick();
-    setSelectedModel(product);
-    setModelToast({ show: true, name: product.name });
-    setTimeout(() => setModelToast(p => ({ ...p, show: false })), 2200);
-  }, []);
 
   /* Smooth scroll to section with sticky header offset */
   const scrollToSection = useCallback((sectionId, tabId = null) => {
@@ -219,6 +313,132 @@ export default function App() {
       });
     }
   }, []);
+
+  /* ── Richard Mille 360 Rolex Submariner State ────────────────────────── */
+  const [rmNightMode, setRmNightMode] = useState(false);
+  const [rmAngle, setRmAngle] = useState(0); // -180 to 180 degrees
+  const [isRmDragging, setIsRmDragging] = useState(false);
+  const [rmActiveTab, setRmActiveTab] = useState('360'); // '360' | 'intro' | 'acabados' | 'ficha'
+  const [rmHotspot, setRmHotspot] = useState(null); // 'bezel' | 'cyclops' | 'crown' | 'bracelet'
+  const [rmModal, setRmModal] = useState(null); // null | 'intro' | 'acabados' | 'ficha'
+
+  const rmDragStartRef = useRef({ clientX: 0, startAngle: 0 });
+  const rmStageRef = useRef(null);
+  const rmTargetAngleRef = useRef(0);
+  const rmCurrentAngleRef = useRef(0);
+  const rmTargetTiltRef = useRef({ x: 0, y: 0 });
+  const rmCurrentTiltRef = useRef({ x: 0, y: 0 });
+  const rmWatchWrapperRef = useRef(null);
+  const rmSheenRef = useRef(null);
+
+  /* Mouse/Touch Drag Handlers for 360 spin */
+  const handleRmDragStart = useCallback((clientX) => {
+    setIsRmDragging(true);
+    rmDragStartRef.current = {
+      clientX,
+      startAngle: rmTargetAngleRef.current
+    };
+  }, []);
+
+  const handleRmDragMove = useCallback((clientX) => {
+    if (!isRmDragging) return;
+    const deltaX = clientX - rmDragStartRef.current.clientX;
+    let newAngle = rmDragStartRef.current.startAngle + deltaX * 0.45;
+    if (newAngle > 180) newAngle -= 360;
+    if (newAngle < -180) newAngle += 360;
+    rmTargetAngleRef.current = newAngle;
+  }, [isRmDragging]);
+
+  const handleRmDragEnd = useCallback(() => {
+    setIsRmDragging(false);
+  }, []);
+
+  /* Mouse Tilt parallax over stage */
+  const handleRmMouseMove = useCallback((e) => {
+    if (isRmDragging) {
+      handleRmDragMove(e.clientX);
+      return;
+    }
+    const stage = rmStageRef.current;
+    if (!stage) return;
+    const rect = stage.getBoundingClientRect();
+    const cx = rect.left + rect.width / 2;
+    const cy = rect.top + rect.height / 2;
+    const tiltY = ((e.clientX - cx) / (rect.width / 2)) * 14;
+    const tiltX = -((e.clientY - cy) / (rect.height / 2)) * 10;
+    rmTargetTiltRef.current = { x: tiltX, y: tiltY };
+  }, [isRmDragging, handleRmDragMove]);
+
+  /* Smooth RAF loop for lerping angle and tilt */
+  useEffect(() => {
+    let raf;
+    const update = () => {
+      rmCurrentAngleRef.current += (rmTargetAngleRef.current - rmCurrentAngleRef.current) * 0.12;
+      rmCurrentTiltRef.current.x += (rmTargetTiltRef.current.x - rmCurrentTiltRef.current.x) * 0.08;
+      rmCurrentTiltRef.current.y += (rmTargetTiltRef.current.y - rmCurrentTiltRef.current.y) * 0.08;
+
+      const angle = rmCurrentAngleRef.current;
+      const tiltX = rmCurrentTiltRef.current.x;
+      const tiltY = rmCurrentTiltRef.current.y;
+
+      if (rmWatchWrapperRef.current) {
+        rmWatchWrapperRef.current.style.transform = `perspective(1200px) rotateY(${angle + tiltY}deg) rotateX(${tiltX}deg)`;
+      }
+      if (rmSheenRef.current) {
+        rmSheenRef.current.style.background = `linear-gradient(${125 + angle}deg, transparent 25%, rgba(255,255,255,0.22) 50%, transparent 75%)`;
+      }
+
+      setRmAngle(Math.round(angle));
+      raf = requestAnimationFrame(update);
+    };
+    raf = requestAnimationFrame(update);
+    return () => cancelAnimationFrame(raf);
+  }, []);
+
+  /* Preload the 4 luxury watch images so angle switching has zero lag */
+  useEffect(() => {
+    const imgs = [
+      '/assets/img/rolex_submariner_rm360.jpg',
+      '/assets/img/rolex_submariner_lume.jpg',
+      '/assets/img/rolex_submariner_45deg.jpg',
+      '/assets/img/rolex_submariner_left45.jpg',
+    ];
+    imgs.forEach(src => {
+      const img = new Image();
+      img.src = src;
+    });
+  }, []);
+
+  /* Robust back navigation for mobile and desktop */
+  const handleBackNavigation = useCallback(() => {
+    playTick();
+    if (selectedBrand === 'colecciones') {
+      setSelectedBrand(null);
+    } else {
+      setSelectedBrand('colecciones');
+    }
+    window.scrollTo({ top: 0, behavior: 'instant' });
+    if (document.documentElement) document.documentElement.scrollTop = 0;
+    if (document.body) document.body.scrollTop = 0;
+  }, [selectedBrand]);
+
+  /* Native phone / browser back button support */
+  useEffect(() => {
+    if (selectedBrand) {
+      window.history.pushState({ brand: selectedBrand }, '');
+    }
+    const onPop = () => {
+      if (selectedBrand) {
+        if (selectedBrand === 'colecciones') {
+          setSelectedBrand(null);
+        } else {
+          setSelectedBrand('colecciones');
+        }
+      }
+    };
+    window.addEventListener('popstate', onPop);
+    return () => window.removeEventListener('popstate', onPop);
+  }, [selectedBrand]);
 
   const selectAndScroll = useCallback((product) => {
     selectModel(product);
@@ -280,6 +500,30 @@ export default function App() {
   /* Filter products by category */
   const invictaProducts = PRODUCTS.filter(p => p.category === 'invicta');
   const rolexProducts   = PRODUCTS.filter(p => p.category === 'rolex');
+
+  /* Las 4 colecciones en formato minimalista de lujo (Sin descripciones, solo foto y nombre) */
+  const COLLECTIONS_LIST = [
+    {
+      id: 'invicta',
+      name: 'INVICTA',
+      img: '/assets/img/cat_cover_invicta.jpg',
+    },
+    {
+      id: 'rolex',
+      name: 'ROLEX',
+      img: '/assets/img/cat_cover_rolex.jpg',
+    },
+    {
+      id: 'combos',
+      name: 'COMBOS',
+      img: '/assets/img/cat_cover_combos.jpg',
+    },
+    {
+      id: 'emprendedores',
+      name: 'EMPRENDEDORES',
+      img: '/assets/img/cat_cover_emprendedores.jpg',
+    },
+  ];
 
   /* Las 4 categorías principales con sus fotos de portada oficiales */
   const CATEGORIES = [
@@ -353,7 +597,7 @@ export default function App() {
   };
 
   return (
-    <div className="min-h-screen relative">
+    <div className={`min-h-screen relative ${userHasSelectedWatch ? 'has-sticky' : ''}`}>
 
 
       {/* ── AMBIENT GLASS BACKGROUND WATERMARK (Persistent luxury feel) ─── */}
@@ -368,30 +612,30 @@ export default function App() {
       {/* ── LUXURY TOP ANNOUNCEMENT BAR ── */}
       <div className="luxury-top-bar">
         <div className="luxury-top-content">
-          <span className="lt-badge">✦ PAGO CONTRA ENTREGA</span>
+          <span className="lt-badge">✦ &nbsp;Bienvenido a Krono &nbsp;✦</span>
         </div>
       </div>
 
       
       {/* ═══════════════════════════════════════════════════════════════
           PANTALLA DEDICADA DE MARCA / COLECCIÓN
-          Se activa cuando selectedBrand !== null (ej. 'invicta', 'rolex', 'combos', 'emprendedores')
-          Muestra ÚNICAMENTE los relojes/modelos de esa marca en una pantalla limpia
+          Se activa cuando selectedBrand !== null (ej. 'colecciones', 'invicta', 'rolex', 'combos', 'emprendedores')
       ═══════════════════════════════════════════════════════════════ */}
       {selectedBrand ? (
         <div>
           {/* Header de la Pantalla Dedicada */}
-          <header className="site-header dedicated-header" style={{ position: 'sticky', top: 0, zIndex: 990, background: 'rgba(9, 12, 18, 0.95)', backdropFilter: 'blur(12px)', borderBottom: '1px solid rgba(255, 255, 255, 0.08)' }}>
-            <div className="container" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '12px 16px' }}>
+          <header className="site-header dedicated-header">
+            <div className="container dedicated-header-inner">
               <button
-                onClick={() => {
-                  playTick();
-                  setSelectedBrand(null);
-                  window.scrollTo({ top: 0, behavior: 'instant' });
-                }}
+                type="button"
+                onClick={handleBackNavigation}
+                onTouchEnd={e => { e.preventDefault(); handleBackNavigation(); }}
                 className="btn-back-header"
+                aria-label="Volver"
               >
-                ← Volver a Categorías
+                <span className="back-arrow">←</span>
+                <span className="back-text-full">{selectedBrand === 'colecciones' ? 'Volver al Inicio' : 'Volver a Colecciones'}</span>
+                <span className="back-text-short">{selectedBrand === 'colecciones' ? 'Inicio' : 'Colección'}</span>
               </button>
 
               <div className="logo-box" onClick={() => { playTick(); setSelectedBrand(null); }} style={{ cursor: 'pointer' }}>
@@ -408,9 +652,12 @@ export default function App() {
                 href="https://wa.me/573193620748?text=Hola%20Krono!%20Deseo%20informaci%C3%B3n%20sobre%20los%20relojes."
                 target="_blank"
                 rel="noopener noreferrer"
+                onClick={playTick}
                 className="btn-wa-header"
+                title="WhatsApp Krono"
+                aria-label="WhatsApp"
               >
-                <MessageCircle className="w-4 h-4" /> Asesor WhatsApp
+                <WhatsAppIcon style={{ width: 22, height: 22 }} />
               </a>
             </div>
           </header>
@@ -418,6 +665,55 @@ export default function App() {
           {/* Contenido de la Pantalla Dedicada */}
           <main className="dedicated-brand-screen">
             <div className="container">
+
+              {/* 0. PANTALLA EXCLUSIVA DE COLECCIONES (Estilo Minimalista: Solo Foto y Nombre) */}
+              {selectedBrand === 'colecciones' && (
+                <div className="brand-dedicated-view collections-screen-view">
+                  <div className="collections-editorial-header">
+                    <div className="collections-monogram">
+                      <img src="/assets/img/krono_k_metallic.png" alt="Krono" />
+                    </div>
+                    <h1 className="collections-main-title">COLECCIONES</h1>
+                  </div>
+
+                  <div className="collections-grid-minimal">
+                    {COLLECTIONS_LIST.map((col) => (
+                      <article
+                        key={col.id}
+                        className="col-minimal-card"
+                        onClick={() => {
+                          playTick();
+                          setSelectedBrand(col.id);
+                          window.scrollTo({ top: 0, behavior: 'instant' });
+                        }}
+                      >
+                        <div className="cmc-img-box">
+                          <img
+                            src={col.img}
+                            alt={col.name}
+                            loading="eager"
+                          />
+                        </div>
+                        <h2 className="cmc-title">{col.name}</h2>
+                        <span className="cmc-explore">Ver Modelos →</span>
+                      </article>
+                    ))}
+                  </div>
+
+                  <div className="collections-wholesale-strip">
+                    <button
+                      onClick={() => {
+                        playTick();
+                        setSelectedBrand('emprendedores');
+                        window.scrollTo({ top: 0, behavior: 'instant' });
+                      }}
+                      className="btn-link-wholesale"
+                    >
+                      💼 ¿Deseas comprar para revender? Ver Catálogo Emprendedores ($45K) →
+                    </button>
+                  </div>
+                </div>
+              )}
 
               {/* 1. COLECCIÓN INVICTA */}
               {selectedBrand === 'invicta' && (
@@ -721,17 +1017,17 @@ export default function App() {
               )}
 
               {/* Botón inferior para volver */}
-              <div style={{ textAlign: 'center', marginTop: 50, paddingTop: 30, borderTop: '1px solid rgba(255,255,255,0.08)' }}>
+              {/* Botón inferior para volver */}
+              <div className="bottom-back-bar">
                 <button
-                  onClick={() => {
-                    playTick();
-                    setSelectedBrand(null);
-                    window.scrollTo({ top: 0, behavior: 'instant' });
-                  }}
-                  className="btn-back-header"
-                  style={{ padding: '12px 28px', fontSize: '0.95rem' }}
+                  type="button"
+                  onClick={handleBackNavigation}
+                  onTouchEnd={e => { e.preventDefault(); handleBackNavigation(); }}
+                  className="btn-back-header large-bottom-back"
+                  aria-label="Volver"
                 >
-                  ← Volver a Todas las Categorías
+                  <span className="back-arrow">←</span>
+                  <span>{selectedBrand === 'colecciones' ? 'Volver al Inicio' : 'Volver a Colecciones'}</span>
                 </button>
               </div>
 
@@ -758,22 +1054,30 @@ export default function App() {
             </div>
             <div>
               <div className="logo-name">KRONO</div>
-              <div className="logo-sub">Presencia &amp; Estilo · @krono.ibg</div>
+              <div className="logo-sub">Presencia &amp; Estilo</div>
             </div>
           </a>
 
           {/* Desktop Navigation */}
           <nav className="desktop-nav">
             {[
-              ['catalog',        'relojes',  '⌚ Catálogo'],
-              ['emprendedor',    'combos',   '💼 Emprendedor ($45K)'],
+              ['coleccion-btn',  'relojes',  '⌚ Colección'],
+              ['emprendedor',    'combos',   '💼 Mayorista'],
               ['envios-pais',    'envios',   '🚚 Envíos al País'],
               ['order-builder',  'pedido',   '⚡ Pedir Ahora'],
               ['faq',            'faq',      '❓ Dudas'],
             ].map(([sectionId, tabId, label]) => (
               <button
                 key={tabId}
-                onClick={() => scrollToSection(sectionId, tabId)}
+                onClick={() => {
+                  if (sectionId === 'coleccion-btn') {
+                    playTick();
+                    setSelectedBrand('colecciones');
+                    window.scrollTo({ top: 0, behavior: 'instant' });
+                  } else {
+                    scrollToSection(sectionId, tabId);
+                  }
+                }}
                 className={`nav-a ${activeStoreTab === tabId ? 'active' : ''}`}
               >
                 {label}
@@ -783,30 +1087,6 @@ export default function App() {
 
           {/* Actions & WhatsApp Header */}
           <div className="nav-actions">
-            <a
-              href="https://instagram.com/krono.ibg?exln=MWFndzM0MjlrN3k0OA%3D%3D"
-              target="_blank"
-              rel="noopener noreferrer"
-              onClick={playTick}
-              className="nav-icon-circle ig-btn"
-              title="Instagram @krono.ibg"
-              aria-label="Instagram"
-            >
-              <IgIcon style={{ width: 16, height: 16 }} />
-            </a>
-
-            <a
-              href="https://www.tiktok.com/@kronos.ibg?_r=1&_t=ZS-9AOvpsNWBao"
-              target="_blank"
-              rel="noopener noreferrer"
-              onClick={playTick}
-              className="nav-icon-circle tiktok-btn"
-              title="TikTok @kronos.ibg"
-              aria-label="TikTok"
-            >
-              <TikTokIcon style={{ width: 15, height: 15 }} />
-            </a>
-
             {/* Mobile hamburger — shows accordion nav */}
             <button
               className="mob-hamburger"
@@ -827,8 +1107,10 @@ export default function App() {
               rel="noopener noreferrer"
               onClick={playTick}
               className="btn-wa-header"
+              title="WhatsApp Krono"
+              aria-label="WhatsApp"
             >
-              <Phone className="w-4 h-4 text-white" /> 319 3620748
+              <WhatsAppIcon style={{ width: 22, height: 22 }} />
             </a>
           </div>
         </div>
@@ -836,7 +1118,7 @@ export default function App() {
         {/* Mobile Quick Category Navigation Strip */}
         <div className="mobile-nav-strip">
           {[
-            ['catalog',        'relojes',  '⌚ Catálogo'],
+            ['coleccion-btn',  'relojes',  '⌚ Colección'],
             ['emprendedor',    'combos',   '💼 Mayorista'],
             ['envios-pais',    'envios',   '🚚 Envíos'],
             ['order-builder',  'pedido',   '⚡ Pedir'],
@@ -844,7 +1126,15 @@ export default function App() {
           ].map(([sectionId, tabId, label]) => (
             <button
               key={tabId}
-              onClick={() => scrollToSection(sectionId, tabId)}
+              onClick={() => {
+                if (sectionId === 'coleccion-btn') {
+                  playTick();
+                  setSelectedBrand('colecciones');
+                  window.scrollTo({ top: 0, behavior: 'instant' });
+                } else {
+                  scrollToSection(sectionId, tabId);
+                }
+              }}
               className={`mob-nav-pill ${activeStoreTab === tabId ? 'active' : ''}`}
             >
               {label}
@@ -879,47 +1169,20 @@ export default function App() {
             </button>
           </div>
 
-          {/* CATÁLOGO — expandable */}
+          {/* COLECCIONES — Pantalla Exclusiva */}
           <div className="mob-acc-item">
             <button
-              className={`mob-acc-toggle ${mobAccSection === 'catalogo' ? 'expanded' : ''}`}
-              onClick={() => { playTick(); setMobAccSection(mobAccSection === 'catalogo' ? null : 'catalogo'); }}
+              className="mob-acc-toggle direct"
+              onClick={() => {
+                playTick();
+                setMobMenuOpen(false);
+                setSelectedBrand('colecciones');
+                window.scrollTo({ top: 0, behavior: 'instant' });
+              }}
+              style={{ color: 'var(--green)', fontWeight: 800 }}
             >
-              ⌚ Catálogo de Colecciones
-              <ChevronDown className="w-5 h-5" />
+              ⌚ Colecciones (Invicta · Rolex · Combos)
             </button>
-            <div className={`mob-acc-body ${mobAccSection === 'catalogo' ? 'open' : ''}`}>
-              <button className="mob-acc-sub" onClick={() => {
-                setSelectedBrand('rolex');
-                scrollToSection('catalog', 'relojes');
-              }}>
-                <span className="acc-emoji">💎</span> Rolex Style ({rolexProducts.length} modelos)
-              </button>
-              <button className="mob-acc-sub" onClick={() => {
-                setSelectedBrand('invicta');
-                scrollToSection('catalog', 'relojes');
-              }}>
-                <span className="acc-emoji">👑</span> Colección Invicta ({invictaProducts.length} modelos)
-              </button>
-              <button className="mob-acc-sub" onClick={() => {
-                setSelectedBrand('combos');
-                scrollToSection('catalog', 'relojes');
-              }}>
-                <span className="acc-emoji">🎁</span> Combos &amp; Kits Completos
-              </button>
-              <button className="mob-acc-sub" onClick={() => {
-                setSelectedBrand('emprendedores');
-                scrollToSection('catalog', 'relojes');
-              }}>
-                <span className="acc-emoji">💼</span> Emprendedores (Mayoristas)
-              </button>
-              <button className="mob-acc-sub" onClick={() => {
-                setSelectedBrand(null);
-                scrollToSection('catalog', 'relojes');
-              }}>
-                <span className="acc-emoji">⚡</span> Ver Todas las Categorías
-              </button>
-            </div>
           </div>
 
           {/* QUIÉNES SOMOS — direct */}
@@ -1012,7 +1275,7 @@ export default function App() {
             onClick={() => { playTick(); setMobMenuOpen(false); }}
             className="mob-acc-soc-btn wa"
           >
-            <Phone className="w-4 h-4" /> WhatsApp
+            <WhatsAppIcon style={{ width: 16, height: 16 }} /> WhatsApp
           </a>
           <a
             href="https://instagram.com/krono.ibg"
@@ -1026,118 +1289,8 @@ export default function App() {
       </div>
 
       <main>
-        {/* ── 4. HERO SECTION ─────────────────────────────────────────────── */}
-        <section className="hero" id="hero">
-          <div className="container hero-grid">
-            {/* Left Content */}
-            <div>
-              <div className="hero-eyebrow sr d1">
-                <ShieldCheck className="w-4 h-4 text-emerald-400" />
-                <span>🇨🇴 COLOMBIA · <strong className="text-emerald-400">PAGO CONTRA ENTREGA ASEGURADO</strong></span>
-              </div>
 
-              <h1 className="hero-h1 sr d2">
-                Relojes que <span className="highlight-gold">Imponen Presencia.</span>
-              </h1>
 
-              <p className="hero-p sr d2">
-                Colección tipo <strong className="text-amber-400">Invicta</strong> y estilo <strong className="text-amber-400">Rolex</strong> a precio directo de importación. Llévate el Kit Completo por solo <strong className="text-emerald-400 text-xl font-black">$85.000 COP</strong> con estuche rígido + pila gratis. <em>¡Sin pagar nada antes!</em>
-              </p>
-
-              {/* Price Hero Box compact with High-Converting Colors */}
-              <div className="price-hero-box sr d3">
-                <div>
-                  <div className="offer-label">
-                    <span className="badge-red-fire">🔥 OFERTA LIMITADA</span>
-                  </div>
-                  <div className="price-row">
-                    <span className="price-now">$85.000 <small className="price-curr">COP</small></span>
-                    <span className="price-was">$175.000</span>
-                    <span className="save-tag-red">51% OFF</span>
-                  </div>
-                  <div className="savings-callout">
-                    ✅ ¡Ahorras <strong className="text-emerald-300">$90.000 COP</strong> comprando hoy!
-                  </div>
-                </div>
-
-                <div className="includes-list">
-                  {[
-                    [CheckCircle2, '1x Reloj Tipo Invicta o Rolex Style'],
-                    [Gift, <><strong>GRATIS:</strong> Estuche Rígido de Protección</>],
-                    [BatteryCharging, <><strong>GRATIS:</strong> Batería Sellada de Repuesto</>],
-                    [Tag, 'Etiquetas y sellos de autenticidad'],
-                  ].map(([Icon, text], i) => (
-                    <div key={i} className="inc-row">
-                      <Icon className="w-4 h-4 text-emerald-400 shrink-0" />
-                      <span>{text}</span>
-                    </div>
-                  ))}
-                </div>
-              </div>
-
-              {/* CTAs with vibrant Emerald Green and Urgency */}
-              <div className="cta-row sr d3">
-                <button
-                  onClick={() => scrollToSection('catalog', 'relojes')}
-                  className="btn-cta-emerald"
-                >
-                  <ShoppingBag className="w-5 h-5" />
-                  Ver Catálogo de Relojes
-                </button>
-                <button
-                  onClick={() => scrollToSection('emprendedor', 'combos')}
-                  className="btn-ghost-gold"
-                >
-                  <TrendingUp className="w-5 h-5 text-amber-400" />
-                  Combos Mayorista ($45K)
-                </button>
-              </div>
-
-              {/* Trust badges */}
-              <div className="trust-row sr d4">
-                {[
-                  [Truck,  <><strong>Pago Contra Entrega:</strong> Pagas en efectivo al recibir</>],
-                  [ShieldCheck, <><strong>Despachos Diarios:</strong> Inter Rapidísimo &amp; DHL Asegurado</>],
-                  [Star,   <><strong>+500</strong> Clientes Satisfechos en Colombia</>],
-                ].map(([Icon, text], i) => (
-                  <div key={i} className="trust-item">
-                    <Icon className="w-4 h-4 text-emerald-400 shrink-0" />
-                    <span>{text}</span>
-                  </div>
-                ))}
-              </div>
-            </div>
-
-            {/* Right Visual: Clean, sharp real photo without purple overlay */}
-            <div className="watch-visual sr-r d2">
-              <div className="watch-frame-clean">
-                <img
-                  src="/assets/img/watch_invicta_gold_subaqua_real.png"
-                  alt="Reloj Krono Subaqua Gold Master — Foto 100% Real"
-                  className="hero-watch-img"
-                  fetchPriority="high"
-                  decoding="async"
-                />
-                <div className="float-tag ft1">
-                  <div className="fi green-fi"><BatteryCharging className="w-4 h-4 text-emerald-400" /></div>
-                  <div className="ft">
-                    <strong className="text-emerald-400">+1 Pila de Regalo</strong>
-                    <span>Sellada de fábrica</span>
-                  </div>
-                </div>
-                <div className="float-tag ft2">
-                  <div className="fi gold-fi"><Box className="w-4 h-4 text-amber-400" /></div>
-                  <div className="ft">
-                    <strong className="text-amber-400">Estuche Rígido</strong>
-                    <span>Presentación amarilla de lujo</span>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </section>
-
-        {/* ── 5. BARRA DE CONFIANZA & SEGURIDAD (Compacta, Alto Impacto) ──── */}
         <section className="trust-strip-bar" id="quienes-somos">
           <div className="container">
             <div className="trust-strip-grid">
@@ -1197,42 +1350,47 @@ export default function App() {
           </div>
         </div>
 
-        {/* ── 8. CATÁLOGO CON CATEGORÍAS ────────────────────────────────── */}
+        {/* ── 8. SECCIÓN COLECCIONES (Estilo Minimalista: Solo Foto y Marca) ─ */}
         <section className="sec catalog-sec" id="catalog">
           <div className="container">
-            <div className="sec-head sr">
-              <span className="badge-tag-emerald">⌚ CATÁLOGO KRONO</span>
-              <h2 className="sec-h2">Selecciona una Categoría</h2>
-              <p className="sec-p" style={{ fontSize: '0.95rem', marginTop: 4 }}>
-                Toca cualquier categoría para ver los modelos y paquetes disponibles
-              </p>
+            <div className="collections-editorial-header sr">
+              <div className="collections-monogram">
+                <img src="/assets/img/krono_k_metallic.png" alt="Krono" />
+              </div>
+              <h2 className="collections-main-title">COLECCIONES</h2>
             </div>
 
-            <div className="category-cover-grid sr" id="catalog-categories">
-              {CATEGORIES.map((cat) => (
-                <div
-                  key={cat.id}
-                  className="cat-cover-card"
+            <div className="collections-grid-minimal sr" id="catalog-categories">
+              {COLLECTIONS_LIST.map((col) => (
+                <article
+                  key={col.id}
+                  className="col-minimal-card"
                   onClick={() => {
                     playTick();
-                    setSelectedBrand(cat.id);
+                    setSelectedBrand(col.id);
                     window.scrollTo({ top: 0, behavior: 'instant' });
                   }}
                 >
-                  <div className="cat-cover-img-wrap">
-                    <img src={cat.img} alt={cat.name} loading="lazy" />
-                    <span className={`cat-cover-badge ${cat.badgeClass}`}>{cat.badge}</span>
+                  <div className="cmc-img-box">
+                    <img src={col.img} alt={col.name} loading="lazy" />
                   </div>
-                  <div className="cat-cover-info">
-                    <h3 className="cat-cover-title">{cat.name}</h3>
-                    <p className="cat-cover-sub">{cat.subtitle}</p>
-                    <div className="cat-cover-cta-btn">
-                      <span>{cat.ctaText}</span>
-                      <ArrowRight className="w-4 h-4" />
-                    </div>
-                  </div>
-                </div>
+                  <h3 className="cmc-title">{col.name}</h3>
+                  <span className="cmc-explore">Ver Modelos →</span>
+                </article>
               ))}
+            </div>
+
+            <div className="collections-wholesale-strip sr" style={{ marginTop: 24, textAlign: 'center' }}>
+              <button
+                onClick={() => {
+                  playTick();
+                  setSelectedBrand('emprendedores');
+                  window.scrollTo({ top: 0, behavior: 'instant' });
+                }}
+                className="btn-link-wholesale"
+              >
+                💼 Ver Catálogo para Emprendedores y Mayoristas →
+              </button>
             </div>
           </div>
         </section>
@@ -1241,7 +1399,7 @@ export default function App() {
         <section className="sec envios-sec" id="envios-pais">
             <div className="container">
               <div className="sec-head sr">
-                <span className="badge-tag-emerald">🚚 DESPACHOS DIARIOS A TODA COLOMBIA</span>
+                <span className="badge-tag-emerald">🚚 ENVÍOS A TODO EL PAÍS</span>
                 <h2 className="sec-h2">Comprobantes de Envío Reales</h2>
                 <p className="sec-p">
                   Envíos asegurados y pago contra entrega en la puerta de tu casa. Cero anticipos: revisa fotos de despachos diarios, embalaje térmico y guías oficiales:
@@ -1284,14 +1442,12 @@ export default function App() {
                 ))}
               </div>
 
-              {/* Cities Coverage Strip */}
-              <div className="cities-delivered-bar sr" style={{ marginTop: 22 }}>
-                <span className="cd-title">📍 Cobertura y despachos confirmados a:</span>
-                <div className="cd-tags">
-                  {['Bogotá D.C.', 'Medellín', 'Cali', 'Barranquilla', 'Bucaramanga', 'Cartagena', 'Pereira', 'Armenia', 'Manizales', 'Neiva', 'Pasto', 'Cúcuta', 'Santa Marta', 'Villavicencio', 'Montería', '+900 Municipios'].map((c, idx) => (
-                    <span key={idx} className="cd-tag">✓ {c}</span>
-                  ))}
-                </div>
+              {/* Envíos a Todo el País */}
+              <div className="proof-banner-emerald sr" style={{ marginTop: 20, justifyContent: 'center', textAlign: 'center' }}>
+                <MapPin className="w-5 h-5 text-emerald-400 shrink-0" />
+                <span style={{ fontSize: '1rem', fontWeight: 800, color: '#fff' }}>
+                  🇨🇴 Envíos a <strong className="text-emerald-400">Todo el País</strong>
+                </span>
               </div>
 
             </div>
@@ -1315,53 +1471,169 @@ export default function App() {
 
                   {/* Form Column */}
                   <div>
-                    {/* Step 1: Model */}
+                    {/* Step 1: Model with Brand Selection Tabs */}
                     <div className="form-step">
                       <div className="step-label">
                         <span className="step-n">1</span>
-                        Selecciona tu Modelo de Reloj:
+                        Selecciona Tus Modelos Favoritos:
                       </div>
+
+                      {/* Hint for combining models */}
+                      <div className="order-multi-hint">
+                        <Sparkles className="w-4 h-4 text-emerald-400 shrink-0" />
+                        <span><strong>¡Arma tu pedido combinado!</strong> Puedes elegir varios modelos de diferentes marcas a la vez en un solo envío.</span>
+                      </div>
+
+                      {/* Tabs de Marcas / Combos */}
+                      <div className="order-brand-tabs">
+                        <button
+                          type="button"
+                          className={`order-brand-tab ${orderCategoryTab === 'invicta' ? 'active' : ''}`}
+                          onClick={() => { playTick(); setOrderCategoryTab('invicta'); }}
+                        >
+                          👑 Invicta
+                        </button>
+                        <button
+                          type="button"
+                          className={`order-brand-tab ${orderCategoryTab === 'rolex' ? 'active' : ''}`}
+                          onClick={() => { playTick(); setOrderCategoryTab('rolex'); }}
+                        >
+                          💎 Rolex Style
+                        </button>
+                        <button
+                          type="button"
+                          className={`order-brand-tab ${orderCategoryTab === 'combos' ? 'active' : ''}`}
+                          onClick={() => { playTick(); setOrderCategoryTab('combos'); }}
+                        >
+                          🎁 Combos
+                        </button>
+                      </div>
+
+                      {/* Lista de Relojes según Marca */}
                       <div className="model-grid-scroll">
-                        {PRODUCTS.map(watch => (
-                          <div
-                            key={watch.id}
-                            className={`model-opt-card ${selectedModel.id === watch.id ? 'sel' : ''}`}
-                            onClick={() => selectModel(watch)}
-                          >
-                            <img src={watch.image} alt={watch.name} className="model-thumb-clean" loading="lazy" decoding="async" />
-                            <div className="mo-info">
-                              <h5>{watch.name}</h5>
-                              <span className="mo-price">${fmt(watch.price)} COP</span>
+                        {(orderCategoryTab === 'combos'
+                          ? ENTREPRENEUR_COMBOS.map(c => ({
+                              id: c.id,
+                              name: `${c.name} (${c.units} Relojes)`,
+                              price: c.priceTotal,
+                              brand: 'Combo Mayorista',
+                              image: '/assets/img/cat_cover_emprendedores.jpg'
+                            }))
+                          : PRODUCTS.filter(p => p.category === orderCategoryTab)
+                        ).map(watch => {
+                          const cartItem = cart.find(i => i.id === watch.id);
+                          const isSelected = !!cartItem;
+                          return (
+                            <div
+                              key={watch.id}
+                              className={`model-opt-card ${isSelected ? 'sel' : ''}`}
+                              onClick={() => {
+                                if (isSelected) {
+                                  removeFromCart(watch.id);
+                                } else {
+                                  addToCart(watch);
+                                }
+                              }}
+                              title={isSelected ? "Haz clic para quitar este modelo del pedido" : "Haz clic para agregar al pedido"}
+                            >
+                              <div className="mo-left">
+                                <img src={watch.image} alt={watch.name} className="model-thumb-clean" loading="lazy" decoding="async" />
+                                <div className="mo-info">
+                                  <h5 title={watch.name}>{watch.name}</h5>
+                                  <div className="mo-meta-row">
+                                    <span className="mo-price text-emerald-400 font-bold">Consultar Precio</span>
+                                    <span className="mo-line-pill">{watch.brand}</span>
+                                    {isSelected && <span className="mo-sel-hint">✓ En pedido</span>}
+                                  </div>
+                                </div>
+                              </div>
+
+                              <div className="mo-actions">
+                                {isSelected ? (
+                                  <div className="mo-qty-control" onClick={e => e.stopPropagation()}>
+                                    <button
+                                      type="button"
+                                      className="mo-qty-btn"
+                                      onClick={() => updateCartQty(watch.id, -1)}
+                                      aria-label="Disminuir cantidad"
+                                      title="Disminuir cantidad"
+                                    >
+                                      -
+                                    </button>
+                                    <span className="mo-qty-val">{cartItem.qty}</span>
+                                    <button
+                                      type="button"
+                                      className="mo-qty-btn"
+                                      onClick={() => updateCartQty(watch.id, 1)}
+                                      aria-label="Aumentar cantidad"
+                                      title="Aumentar cantidad"
+                                    >
+                                      +
+                                    </button>
+                                    <button
+                                      type="button"
+                                      className="mo-del-btn"
+                                      onClick={() => removeFromCart(watch.id)}
+                                      aria-label="Quitar modelo"
+                                      title="Quitar este modelo del pedido"
+                                    >
+                                      ✕
+                                    </button>
+                                  </div>
+                                ) : (
+                                  <button
+                                    type="button"
+                                    className="mo-add-btn"
+                                    onClick={(e) => {
+                                      e.stopPropagation();
+                                      addToCart(watch);
+                                    }}
+                                  >
+                                    + Agregar
+                                  </button>
+                                )}
+                              </div>
                             </div>
-                            {selectedModel.id === watch.id && (
-                              <span className="mo-check-badge">✓</span>
+                          );
+                        })}
+                      </div>
+
+                      {/* Contador total de seleccionados */}
+                      <div className="order-qty-row">
+                        <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+                          <ShoppingBag className="w-4 h-4 text-emerald-400 shrink-0" />
+                          <span className="order-qty-label">
+                            {totalUnits === 0 ? 'Sin modelos seleccionados' : (
+                              <>
+                                Total en pedido: <strong className="text-emerald-400">{totalUnits} {totalUnits === 1 ? 'kit' : 'kits'}</strong>
+                              </>
                             )}
-                          </div>
-                        ))}
+                          </span>
+                        </div>
+                        {cart.length > 0 && (
+                          <button
+                            type="button"
+                            onClick={() => { playTick(); setCart([]); }}
+                            style={{
+                              background: 'none',
+                              border: 'none',
+                              color: '#f87171',
+                              fontSize: '0.75rem',
+                              cursor: 'pointer',
+                              fontWeight: 700,
+                              padding: '4px 8px'
+                            }}
+                          >
+                            Vaciar selección
+                          </button>
+                        )}
                       </div>
                     </div>
 
-                    {/* Step 2: Quantity */}
+                    {/* Step 2: Payment Method */}
                     <div className="form-step">
                       <div className="step-label">
                         <span className="step-n">2</span>
-                        ¿Cuántos Kits Deseas?
-                      </div>
-                      <select
-                        className="field-dark"
-                        value={qty}
-                        onChange={e => { playTick(); setQty(Number(e.target.value)); }}
-                      >
-                        <option value={1}>1 Kit Completo — $85.000 COP</option>
-                        <option value={2}>2 Kits — $160.000 COP (¡Ahorras $10.000 adicionales!)</option>
-                        <option value={3}>3 Kits — $235.000 COP (¡Ahorras $20.000 adicionales!)</option>
-                      </select>
-                    </div>
-
-                    {/* Step 3: Payment Method */}
-                    <div className="form-step">
-                      <div className="step-label">
-                        <span className="step-n">3</span>
                         ¿Cómo prefieres pagar tu pedido?
                       </div>
                       <div className="city-grid">
@@ -1382,11 +1654,11 @@ export default function App() {
                       </div>
                     </div>
 
-                    {/* Step 4: Contact details */}
+                    {/* Step 3: Contact details */}
                     <div className="form-step">
                       <div className="step-label">
-                        <span className="step-n">4</span>
-                        Tus Datos para el Despacho (Opcional):
+                        <span className="step-n">3</span>
+                        Tus Datos para el Despacho:
                       </div>
                       <input
                         type="text"
@@ -1416,21 +1688,75 @@ export default function App() {
                   <div>
                     <div className="summary-box-card">
                       <div className="sum-title">
-                        <span>Resumen de tu Pedido</span>
+                        <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+                          <span>Resumen de tu Pedido</span>
+                          <span className="cart-items-counter-badge">{totalUnits}</span>
+                        </div>
                         <Crown className="w-5 h-5 text-amber-400" />
                       </div>
 
-                      <div className="sum-rows">
-                        <div className="sum-row">
-                          <span style={{ maxWidth: 200 }}>{selectedModel.name} ({qty}x)</span>
-                          <span className="font-bold text-white">${fmt(subtotal)} COP</span>
+                      {/* Lista de productos elegidos en el carrito */}
+                      {cart.length === 0 ? (
+                        <div className="empty-cart-box">
+                          <p style={{ margin: 0 }}>Ningún modelo seleccionado todavía.</p>
+                          <span style={{ fontSize: '0.75rem', color: 'var(--green)', marginTop: 4, display: 'inline-block' }}>
+                            Selecciona tus modelos favoritos en el Paso 1 ↑
+                          </span>
                         </div>
+                      ) : (
+                        <div className="sum-cart-items-list">
+                          {cart.map(item => (
+                            <div key={item.id} className="sum-cart-item-row">
+                              <div className="sci-details">
+                                <img src={item.image} alt={item.name} className="sci-thumb" />
+                                <div className="sci-meta">
+                                  <span className="sci-name" title={item.name}>{item.name}</span>
+                                  <span className="sci-brand">{item.brand}</span>
+                                  <span className="sci-price text-emerald-400 font-bold">A cotizar en WhatsApp</span>
+                                </div>
+                              </div>
+                              <div className="sci-actions">
+                                <div className="sci-qty-pill">
+                                  <button
+                                    type="button"
+                                    className="sci-btn"
+                                    onClick={() => updateCartQty(item.id, -1)}
+                                    aria-label="Menos"
+                                  >
+                                    -
+                                  </button>
+                                  <span className="sci-qty-num">{item.qty}</span>
+                                  <button
+                                    type="button"
+                                    className="sci-btn"
+                                    onClick={() => updateCartQty(item.id, 1)}
+                                    aria-label="Más"
+                                  >
+                                    +
+                                  </button>
+                                </div>
+                                <button
+                                  type="button"
+                                  className="sci-del-btn"
+                                  onClick={() => removeFromCart(item.id)}
+                                  title="Eliminar del pedido"
+                                  aria-label="Eliminar"
+                                >
+                                  <X className="w-3.5 h-3.5" />
+                                </button>
+                              </div>
+                            </div>
+                          ))}
+                        </div>
+                      )}
+
+                      <div className="sum-rows">
                         <div className="sum-row free">
-                          <span>Estuche Rígido Oficial</span>
+                          <span>{totalUnits}x Estuche Rígido Oficial</span>
                           <span className="badge-free">GRATIS</span>
                         </div>
                         <div className="sum-row free">
-                          <span>Batería Sellada de Repuesto</span>
+                          <span>{totalUnits}x Batería Sellada de Repuesto</span>
                           <span className="badge-free">GRATIS</span>
                         </div>
                         <div className="sum-row free">
@@ -1444,21 +1770,13 @@ export default function App() {
                           </span>
                         </div>
                         <div className="sum-total-box">
-                          <span>Total a Cancelar:</span>
-                          <span className="total-val">${fmt(subtotal)} COP</span>
+                          <span>Precio y Promoción:</span>
+                          <span className="total-val text-emerald-400" style={{ fontSize: '1.05rem' }}>A negociar en WhatsApp</span>
                         </div>
                       </div>
 
                       <div className="delivery-note-box">
-                        {location === 'contraentrega' ? (
-                          <>
-                            <strong className="text-emerald-400">📦 Pago Contra Entrega Garantizado:</strong> Despacho asegurado con guía oficial. Cancelas los <strong>${fmt(subtotal)} COP</strong> en efectivo a la transportadora únicamente al recibir y verificar tu kit en mano.
-                          </>
-                        ) : (
-                          <>
-                            <strong className="text-amber-400">💳 Transferencia Directa:</strong> Despacho prioritario el mismo día tras validar tu soporte por Nequi, Daviplata o Bancolombia. Te enviamos foto de tu paquete y guía de rastreo oficial 24/7.
-                          </>
-                        )}
+                        <strong className="text-emerald-400">📦 Envío Contra Entrega Asegurado:</strong> Despachamos a toda Colombia sin anticipos. Te confirmamos el mejor precio negociado y disponibilidad en segundos por WhatsApp.
                       </div>
 
                       <a
@@ -1469,7 +1787,7 @@ export default function App() {
                         className="wa-order-btn"
                       >
                         <MessageCircle className="w-5 h-5" />
-                        ¡Quiero mi Reloj! Enviar por WhatsApp
+                        {totalUnits > 1 ? 'Consultar Precios y Pedir por WhatsApp' : 'Consultar Precio y Pedir por WhatsApp'}
                       </a>
                     </div>
                   </div>
@@ -1582,7 +1900,7 @@ export default function App() {
                 onClick={playTick}
                 className="btn-wa-faq"
               >
-                <Phone className="w-4 h-4" /> Chatear con el Asesor (319 3620748)
+                <WhatsAppIcon style={{ width: 18, height: 18 }} /> Chatear con el Asesor
               </a>
             </div>
           </div>
@@ -1636,7 +1954,7 @@ export default function App() {
               <h4 className="footer-h">Contacto Directo</h4>
               <div className="footer-contact">
                 <div className="fc-item">
-                  <Phone className="w-4 h-4 text-emerald-400 shrink-0" />
+                  <WhatsAppIcon style={{ width: 16, height: 16, color: '#25d366' }} className="shrink-0" />
                   <a href="https://wa.me/573193620748" target="_blank" rel="noopener noreferrer">
                     WhatsApp: +57 319 3620748
                   </a>
@@ -1670,42 +1988,65 @@ export default function App() {
       {/* ── 17. FLOATING ELEMENTS & MOBILE BAR ────────────────────────────── */}
 
       {/* WhatsApp bubble */}
-      {/* WhatsApp bubble with clean online badge */}
-      <div className="fab-wa">
-        <div className="fab-tooltip">
-          🟢 Asesor en Línea · WhatsApp 319 3620748
-        </div>
+      {/* ── FLOATING SOCIAL DOCK (WhatsApp, TikTok, Instagram - Estilo Referencia) ── */}
+      <aside className="floating-social-dock" aria-label="Canales oficiales Krono">
         <a
-          href="https://wa.me/573193620748?text=Hola%20deseo%20ordenar%20mi%20reloj%20Krono"
-          target="_blank" rel="noopener noreferrer"
-          onClick={playTick}
-          className="fab-btn-emerald"
-          aria-label="Abrir WhatsApp Krono"
+          href="https://wa.me/573193620748?text=Hola%20Krono!%20Deseo%20informaci%C3%B3n%20sobre%20las%20colecciones."
+          target="_blank"
+          rel="noopener noreferrer"
+          className="fsd-btn wa"
+          title="WhatsApp Asesor Oficial"
+          aria-label="WhatsApp"
         >
-          <Phone className="w-6 h-6 text-white" />
+          <WhatsAppIcon style={{ width: 22, height: 22 }} />
         </a>
-      </div>
+        <a
+          href="https://www.tiktok.com/@kronos.ibg?_r=1&_t=ZS-9AOvpsNWBao"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="fsd-btn tiktok"
+          title="TikTok Krono"
+          aria-label="TikTok"
+        >
+          <TikTokIcon style={{ width: 18, height: 18 }} />
+        </a>
+        <a
+          href="https://instagram.com/krono.ibg?exln=MWFndzM0MjlrN3k0OA%3D%3D"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="fsd-btn ig"
+          title="Instagram Krono"
+          aria-label="Instagram"
+        >
+          <IgIcon style={{ width: 18, height: 18 }} />
+        </a>
+      </aside>
 
-      {/* Sticky mobile bottom bar */}
-      <div className="mobile-sticky">
-        <div className="ms-inner">
-          <div className="ms-price">
-            <span className="lbl">Kit Completo</span>
-            <span className="val text-emerald-400 font-extrabold">$85.000 COP</span>
+      {/* Sticky mobile bottom bar — ONLY shown when the user has actually selected a watch */}
+      {userHasSelectedWatch && cart.length > 0 && (
+        <div className="mobile-sticky">
+          <div className="ms-inner">
+            <div className="ms-price">
+              <span className="lbl" style={{ maxWidth: 150, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+                {totalUnits} {totalUnits === 1 ? 'Reloj' : 'Relojes'} en pedido
+              </span>
+              <span className="val text-emerald-400 font-extrabold">Cotizar en WhatsApp</span>
+            </div>
+            <button
+              onClick={() => scrollToSection('order-builder', 'pedido')}
+              className="ms-btn-emerald"
+            >
+              <ShoppingBag className="w-4 h-4" />
+              Consultar Pedido
+            </button>
           </div>
-          <button
-            onClick={() => scrollToSection('order-builder', 'pedido')}
-            className="ms-btn-emerald"
-          >
-            <ShoppingBag className="w-4 h-4" />
-            Pedir Contra Entrega
-          </button>
         </div>
-      </div>
+      )}
 
       {/* Model selected mini toast */}
-      <div className={`model-toast ${modelToast.show ? 'show' : ''}`}>
-        ✅ Modelo seleccionado: <strong style={{ marginLeft: 6 }}>{modelToast.name}</strong>
+      <div className={`model-toast ${modelToast.show ? 'show' : ''} ${modelToast.action === 'remove' ? 'toast-removed' : ''}`}>
+        {modelToast.action === 'remove' ? '🗑️ Quitado del pedido: ' : '✅ Modelo agregado: '}
+        <strong style={{ marginLeft: 6 }}>{modelToast.name}</strong>
       </div>
 
       {/* Live buyer notification */}
@@ -1738,12 +2079,14 @@ export default function App() {
             <div className="ov-footer">
               <h4 style={{ color: '#fff', fontWeight: 700, fontSize: '1rem' }}>{lightbox.title}</h4>
               <a
-                href="#order-builder"
+                href={`https://wa.me/573193620748?text=${encodeURIComponent(`¡Hola Krono! 👋 Deseo consultar información y disponibilidad de este modelo:\n\n⌚ *${lightbox.title}*\n🎁 *Incluye:* Estuche Rígido + Batería Sellada Gratis\n📦 *Envío:* Pago Contra Entrega\n\n¿Tienen disponibilidad para envío inmediato? ¡Muchas gracias!`)}`}
+                target="_blank"
+                rel="noopener noreferrer"
                 onClick={() => setLightbox({ open: false, img: '', title: '' })}
                 className="btn-cta-emerald"
                 style={{ padding: '8px 18px', fontSize: '.84rem' }}
               >
-                Pedir este Modelo ($85.000) <ArrowRight className="w-4 h-4" />
+                <MessageCircle className="w-4 h-4" /> Consultar por WhatsApp
               </a>
             </div>
           </div>
