@@ -4154,3 +4154,48 @@ button, input, select { font-family: inherit; font-size: inherit; border: none; 
     padding: 5px 8px;
   }
 }
+
+/* ─── SOLD OUT LUXURY STYLES (COMBOS & EMPRENDEDORES) ─────────────────── */
+.col-minimal-card.sold-out {
+  opacity: 0.92;
+}
+.col-minimal-card.sold-out .cmc-img-box {
+  border-color: rgba(239, 68, 68, 0.35);
+}
+.col-minimal-card.sold-out:hover .cmc-img-box {
+  border-color: rgba(239, 68, 68, 0.7);
+  box-shadow: 0 16px 36px rgba(0, 0, 0, 0.85), 0 0 24px rgba(239, 68, 68, 0.22);
+}
+.col-minimal-card.sold-out .cmc-img-box img {
+  filter: grayscale(0.75) contrast(0.95) brightness(0.68) drop-shadow(0 6px 16px rgba(0, 0, 0, 0.8));
+}
+.cmc-soldout-badge {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  background: linear-gradient(135deg, #ef4444 0%, #b91c1c 100%);
+  color: #ffffff;
+  font-family: var(--fd);
+  font-size: 0.65rem;
+  font-weight: 900;
+  letter-spacing: 1.2px;
+  padding: 4px 10px;
+  border-radius: 999px;
+  box-shadow: 0 4px 14px rgba(239, 68, 68, 0.55), inset 0 1px 0 rgba(255, 255, 255, 0.3);
+  z-index: 5;
+  text-transform: uppercase;
+}
+.col-minimal-card.sold-out .cmc-explore {
+  color: #f87171 !important;
+}
+
+/* Entrepreneur Combos Sold Out */
+.emp-card.sold-out {
+  border-color: rgba(239, 68, 68, 0.35);
+  background: linear-gradient(180deg, rgba(239, 68, 68, 0.04) 0%, rgba(15, 15, 18, 0.95) 100%);
+}
+.emp-card.sold-out .emp-ribbon {
+  background: linear-gradient(135deg, #ef4444 0%, #b91c1c 100%);
+  color: #ffffff;
+}
+

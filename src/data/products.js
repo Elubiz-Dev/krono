@@ -271,8 +271,9 @@ export const ENTREPRENEUR_COMBOS = [
     discountPct: 47,
     estimatedProfit: 160000,
     featured: false,
-    ribbon: '⚡ $45.000 / Reloj',
-    badgeColor: 'var(--blue)',
+    soldOut: true,
+    ribbon: '🔴 AGOTADO',
+    badgeColor: 'var(--red)',
     image: '/assets/img/media_1791997974589.png',
     includes: [
       '4 Relojes tipo Invicta a elección (Subaqua, Bolt, Skeleton)',
@@ -294,8 +295,9 @@ export const ENTREPRENEUR_COMBOS = [
     discountPct: 50,
     estimatedProfit: 200000,
     featured: true,
-    ribbon: '🔥 Top Ventas · $45.000 c/u',
-    badgeColor: 'var(--green)',
+    soldOut: true,
+    ribbon: '🔴 AGOTADO',
+    badgeColor: 'var(--red)',
     image: '/assets/img/media_1791997978060.png',
     includes: [
       '5 Relojes Invicta surtidos (los 5 modelos top en ventas comprobadas)',
@@ -318,7 +320,8 @@ export const ENTREPRENEUR_COMBOS = [
     discountPct: 50,
     estimatedProfit: 400000,
     featured: false,
-    ribbon: '🏭 Precio Fábrica · $45.000 c/u',
+    soldOut: true,
+    ribbon: '🔴 AGOTADO',
     badgeColor: 'var(--red)',
     image: '/assets/img/models_stacked.png',
     includes: [

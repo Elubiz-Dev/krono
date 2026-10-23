@@ -507,21 +507,25 @@ export default function App() {
       id: 'invicta',
       name: 'INVICTA',
       img: '/assets/img/cat_cover_invicta_v2.jpg',
+      soldOut: false,
     },
     {
       id: 'rolex',
       name: 'ROLEX',
       img: '/assets/img/cat_cover_rolex.jpg',
+      soldOut: false,
     },
     {
       id: 'combos',
       name: 'COMBOS',
       img: '/assets/img/cat_cover_combos.jpg',
+      soldOut: true,
     },
     {
       id: 'emprendedores',
       name: 'EMPRENDEDORES',
       img: '/assets/img/cat_cover_emprendedores.jpg',
+      soldOut: true,
     },
   ];
 
@@ -680,7 +684,7 @@ export default function App() {
                     {COLLECTIONS_LIST.map((col) => (
                       <article
                         key={col.id}
-                        className="col-minimal-card"
+                        className={`col-minimal-card ${col.soldOut ? 'sold-out' : ''}`}
                         onClick={() => {
                           playTick();
                           setSelectedBrand(col.id);
@@ -688,6 +692,9 @@ export default function App() {
                         }}
                       >
                         <div className="cmc-img-box">
+                          {col.soldOut && (
+                            <span className="cmc-soldout-badge">AGOTADO</span>
+                          )}
                           <img
                             src={col.img}
                             alt={col.name}
@@ -695,7 +702,7 @@ export default function App() {
                           />
                         </div>
                         <h2 className="cmc-title">{col.name}</h2>
-                        <span className="cmc-explore">Ver Modelos →</span>
+                        <span className="cmc-explore">{col.soldOut ? '🔴 Temporalmente Agotado' : 'Ver Modelos →'}</span>
                       </article>
                     ))}
                   </div>
@@ -709,7 +716,7 @@ export default function App() {
                       }}
                       className="btn-link-wholesale"
                     >
-                      💼 ¿Deseas comprar para revender? Ver Catálogo Emprendedores ($45K) →
+                      💼 Ver Catálogo para Emprendedores y Mayoristas (Agotado) →
                     </button>
                   </div>
                 </div>
@@ -844,18 +851,21 @@ export default function App() {
               {selectedBrand === 'combos' && (
                 <div className="brand-dedicated-view">
                   <div className="sec-head sr" style={{ marginBottom: 24, textAlign: 'left' }}>
-                    <span className="badge-tag-emerald">🎁 COMBOS &amp; KITS DE LUJO</span>
+                    <div style={{ display: 'inline-flex', alignItems: 'center', gap: 8, background: 'rgba(239, 68, 68, 0.15)', border: '1px solid rgba(239, 68, 68, 0.35)', padding: '5px 14px', borderRadius: 999, marginBottom: 8 }}>
+                      <span style={{ width: 8, height: 8, borderRadius: '50%', background: '#ef4444' }} />
+                      <span style={{ color: '#fca5a5', fontSize: '0.75rem', fontWeight: 900, letterSpacing: '1px' }}>🔴 COMBOS AGOTADOS TEMPORALMENTE</span>
+                    </div>
                     <h1 className="sec-h2" style={{ fontSize: '2.1rem', marginTop: 8, color: '#fff' }}>
-                      Todo lo que Incluye tu Kit Krono
+                      Kits Promocionales Krono
                     </h1>
-                    <p className="sec-p" style={{ margin: '6px 0 0', maxWidth: 740, color: 'var(--t2)', fontSize: '0.95rem' }}>
-                      Sin costos ocultos ni letras pequeñas. Reloj de alta presencia + Estuche rígido acolchado de lujo + Batería sellada en blíster de fábrica + Garantía de 30 días.
+                    <p className="sec-p" style={{ margin: '6px 0 0', maxWidth: 740, color: '#fca5a5', fontSize: '0.95rem' }}>
+                      ⚠️ <strong>Aviso de inventario:</strong> Todos los combos con estuche rígido y batería sellada extra se encuentran temporalmente sin stock. Puedes adquirir modelos individuales en stock de <strong>Invicta</strong> y <strong>Rolex Style</strong> o anotarte en la lista de espera para el próximo despacho.
                     </p>
                   </div>
 
-                  <div className="combo-strip-grid sr">
+                  <div className="combo-strip-grid sr" style={{ opacity: 0.85 }}>
                     <div className="cs-card">
-                      <div className="cs-badge">PIEZA PRINCIPAL</div>
+                      <div className="cs-badge" style={{ background: '#ef4444', color: '#fff' }}>AGOTADO</div>
                       <div className="cs-icon green"><Clock className="w-5 h-5 text-emerald-400" /></div>
                       <h4>1x Reloj de Alta Presencia</h4>
                       <p>Caja robusta de 50mm - 54mm, bisel deportivo y pulso reforzado a tu elección.</p>
@@ -889,8 +899,8 @@ export default function App() {
 
                   <div className="combo-cta-bridge sr" style={{ marginTop: 28 }}>
                     <div className="ccb-text">
-                      <span>El combo de lujo más completo de Colombia</span>
-                      <strong className="text-emerald-400">¡Recibe tu reloj listo para usar con estuche y pila gratis!</strong>
+                      <span style={{ color: '#f87171' }}>Próxima disponibilidad en camino</span>
+                      <strong className="text-white">Puedes adquirir modelos individuales disponibles o reservar cupo:</strong>
                     </div>
                     <div style={{ display: 'flex', gap: 12, flexWrap: 'wrap' }}>
                       <button
@@ -902,17 +912,17 @@ export default function App() {
                         className="btn-cta-emerald"
                         style={{ width: 'auto', padding: '10px 22px' }}
                       >
-                        <Clock className="w-4 h-4" /> Elegir Reloj para mi Combo →
+                        <Clock className="w-4 h-4" /> Ver Relojes Individuales Disponibles (Invicta) →
                       </button>
                       <a
-                        href="https://wa.me/573193620748?text=Hola%20Krono!%20Deseo%20informaci%C3%B3n%20sobre%20el%20Combo%20Completo%20(Reloj%20+%20Estuche%20+%20Pila%20Gratis)."
+                        href="https://wa.me/573193620748?text=Hola%20Krono!%20Deseo%20anotarme%20a%20la%20lista%20de%20espera%20para%20cuando%20lleguen%20nuevos%20Combos."
                         target="_blank"
                         rel="noopener noreferrer"
                         onClick={playChime}
                         className="btn-order-outline"
-                        style={{ width: 'auto', padding: '10px 22px', color: '#fff' }}
+                        style={{ width: 'auto', padding: '10px 22px', color: '#fff', borderColor: 'rgba(239, 68, 68, 0.5)' }}
                       >
-                        <MessageCircle className="w-4 h-4 text-emerald-400" /> Pedir Combo por WhatsApp
+                        <MessageCircle className="w-4 h-4 text-red-400" /> Lista de Espera por WhatsApp
                       </a>
                     </div>
                   </div>
@@ -923,12 +933,15 @@ export default function App() {
               {selectedBrand === 'emprendedores' && (
                 <div className="brand-dedicated-view">
                   <div className="sec-head sr" style={{ marginBottom: 24, textAlign: 'left' }}>
-                    <span className="badge-tag-emerald">💼 LÍNEA MAYORISTA &amp; EMPRENDEDOR</span>
+                    <div style={{ display: 'inline-flex', alignItems: 'center', gap: 8, background: 'rgba(239, 68, 68, 0.15)', border: '1px solid rgba(239, 68, 68, 0.35)', padding: '5px 14px', borderRadius: 999, marginBottom: 8 }}>
+                      <span style={{ width: 8, height: 8, borderRadius: '50%', background: '#ef4444' }} />
+                      <span style={{ color: '#fca5a5', fontSize: '0.75rem', fontWeight: 900, letterSpacing: '1px' }}>🔴 LOTES MAYORISTAS AGOTADOS</span>
+                    </div>
                     <h1 className="sec-h2" style={{ fontSize: '2.1rem', marginTop: 8, color: '#fff' }}>
-                      Lotes Mayoristas con 60% de Margen
+                      Línea Mayorista &amp; Emprendedores
                     </h1>
-                    <p className="sec-p" style={{ margin: '6px 0 0', maxWidth: 740, color: 'var(--t2)', fontSize: '0.95rem' }}>
-                      Precios mayoristas preferenciales desde 4 unidades con estuches rígidos oficiales y pilas de repuesto selladas incluidas. Gana dinero vendiendo en tu ciudad.
+                    <p className="sec-p" style={{ margin: '6px 0 0', maxWidth: 740, color: '#fca5a5', fontSize: '0.95rem' }}>
+                      ⚠️ <strong>Aviso a mayoristas:</strong> Todos los paquetes de emprendedor (Lotes x4, x5 y x10) están <strong>temporalmente agotados</strong> debido a la alta rotación comercial. Estamos reservando cupos con prioridad para el próximo despacho nacional.
                     </p>
                   </div>
 
@@ -940,18 +953,19 @@ export default function App() {
                         alt="Maletín mayorista con relojes Invicta y estuches"
                         loading="lazy"
                         decoding="async"
+                        style={{ filter: 'grayscale(0.6) brightness(0.7)' }}
                       />
                     </div>
                     <div className="ebb-info">
-                      <span className="badge-red-fire">🔥 LOTE MAYORISTA REAL</span>
-                      <h3>Kits Listos con Estuches de Lujo &amp; Baterías</h3>
+                      <span className="badge-red-fire" style={{ background: '#ef4444' }}>🔴 PRÓXIMA IMPORTACIÓN EN CAMINO · AGOTADO</span>
+                      <h3>Kits Mayoristas con Estuches &amp; Baterías</h3>
                       <p>
-                        Así recibirás tu lote: cada reloj dentro de su estuche oficial acolchado, con etiqueta de autenticidad y pila de repuesto sellada de obsequio.
+                        Lotes especiales con estuches rígidos oficiales, pilas de repuesto selladas y asesoría comercial. Reserva tu cupo para garantizar inventario en tu ciudad.
                       </p>
                       <div className="ebb-features">
-                        <span>✅ Listos para entrega inmediata a tus clientes</span>
-                        <span>✅ Fotos y videos en HD para tus redes sociales</span>
-                        <span>✅ Asesoría comercial directa 1 a 1 por WhatsApp</span>
+                        <span>🔴 Stock actual: 0 unidades disponibles</span>
+                        <span>✅ Lista de espera abierta con reserva preferencial</span>
+                        <span>✅ Notificación directa 1 a 1 por WhatsApp al arribar</span>
                       </div>
                     </div>
                   </div>
@@ -960,19 +974,19 @@ export default function App() {
                     {ENTREPRENEUR_COMBOS.map((combo, i) => (
                       <div
                         key={combo.id}
-                        className={`emp-card ${combo.featured ? 'featured' : ''} sr d${i + 1}`}
+                        className={`emp-card ${combo.featured ? 'featured' : ''} sold-out sr d${i + 1}`}
                       >
-                        <span className="emp-ribbon">{combo.ribbon}</span>
+                        <span className="emp-ribbon" style={{ background: '#ef4444', color: '#fff' }}>🔴 AGOTADO</span>
 
                         <div className="emp-head">
                           <div className="emp-icon">
-                            <TrendingUp className="w-6 h-6 text-emerald-400" />
+                            <TrendingUp className="w-6 h-6 text-red-400" />
                           </div>
                           <h3 className="emp-name">{combo.name}</h3>
                           <p className="emp-desc">{combo.subtitle}</p>
                         </div>
 
-                        <div className="emp-pricing">
+                        <div className="emp-pricing" style={{ opacity: 0.85 }}>
                           <div className="emp-price-was">${fmt(combo.oldPriceTotal)} COP</div>
                           <div className="emp-price-now">
                             ${fmt(combo.priceTotal)} <small className="emp-curr">COP</small>
@@ -980,11 +994,11 @@ export default function App() {
                           <div className="emp-price-unit">
                             A solo <strong className="text-emerald-400">${fmt(combo.pricePerUnit)} COP</strong> por reloj con estuche y pila
                           </div>
-                          <span className="emp-save-badge">
-                            Ahorras ${fmt(combo.savings)} COP · {combo.discountPct}% OFF
+                          <span className="emp-save-badge" style={{ background: 'rgba(239, 68, 68, 0.2)', color: '#fca5a5' }}>
+                            Agotado Temporalmente · Cupo Reservable
                           </span>
                           <div className="emp-profit-callout">
-                            📈 Ganancia estimada para ti: <strong>+${fmt(combo.estimatedProfit)} COP</strong>
+                            📈 Ganancia proyectada: <strong>+${fmt(combo.estimatedProfit)} COP</strong>
                           </div>
                         </div>
 
@@ -1000,14 +1014,27 @@ export default function App() {
 
                         <div className="emp-footer">
                           <a
-                            href={directComboWa(combo)}
+                            href={`https://wa.me/573193620748?text=${encodeURIComponent(`¡Hola Krono! 👋 Veo que el *${combo.name}* está agotado. Deseo apartar mi cupo preferencial en la lista de espera para el próximo lote mayorista.`)}`}
                             target="_blank"
                             rel="noopener noreferrer"
                             onClick={playChime}
-                            className="btn-cta-emerald w-full"
+                            className="btn-order-outline w-full"
+                            style={{
+                              display: 'flex',
+                              alignItems: 'center',
+                              justifyContent: 'center',
+                              gap: 8,
+                              borderColor: 'rgba(239, 68, 68, 0.5)',
+                              color: '#fca5a5',
+                              padding: '11px 16px',
+                              borderRadius: 'var(--r1)',
+                              fontWeight: 800,
+                              fontSize: '0.86rem',
+                              textDecoration: 'none'
+                            }}
                           >
-                            <ShoppingBag className="w-4 h-4" />
-                            Pedir {combo.name} por WhatsApp
+                            <MessageCircle className="w-4 h-4 text-red-400" />
+                            Apartar Cupo Próximo Lote ({combo.name})
                           </a>
                         </div>
                       </div>
@@ -1062,7 +1089,7 @@ export default function App() {
           <nav className="desktop-nav">
             {[
               ['coleccion-btn',  'relojes',  '⌚ Colección'],
-              ['emprendedor',    'combos',   '💼 Mayorista'],
+              ['emprendedor',    'combos',   '💼 Mayorista (Agotado)'],
               ['envios-pais',    'envios',   '🚚 Envíos al País'],
               ['order-builder',  'pedido',   '⚡ Pedir Ahora'],
               ['faq',            'faq',      '❓ Dudas'],
@@ -1119,7 +1146,7 @@ export default function App() {
         <div className="mobile-nav-strip">
           {[
             ['coleccion-btn',  'relojes',  '⌚ Colección'],
-            ['emprendedor',    'combos',   '💼 Mayorista'],
+            ['emprendedor',    'combos',   '💼 Mayorista (Agotado)'],
             ['envios-pais',    'envios',   '🚚 Envíos'],
             ['order-builder',  'pedido',   '⚡ Pedir'],
             ['faq',            'faq',      '❓ Dudas'],
@@ -1181,7 +1208,7 @@ export default function App() {
               }}
               style={{ color: 'var(--green)', fontWeight: 800 }}
             >
-              ⌚ Colecciones (Invicta · Rolex · Combos)
+              ⌚ Colecciones (Invicta · Rolex)
             </button>
           </div>
 
@@ -1200,19 +1227,20 @@ export default function App() {
             <button
               className={`mob-acc-toggle ${mobAccSection === 'combos' ? 'expanded' : ''}`}
               onClick={() => { playTick(); setMobAccSection(mobAccSection === 'combos' ? null : 'combos'); }}
+              style={{ color: '#f87171' }}
             >
-              💼 Combos Emprendedor ($45K c/u)
+              💼 Combos Emprendedor — 🔴 AGOTADOS
               <ChevronDown className="w-5 h-5" />
             </button>
             <div className={`mob-acc-body ${mobAccSection === 'combos' ? 'open' : ''}`}>
               <button className="mob-acc-sub" onClick={() => scrollToSection('emprendedor', 'combos')}>
-                <span className="acc-emoji">📦</span> Pack Inicial x4 — $180.000 COP ($45K c/u)
+                <span className="acc-emoji">📦</span> Pack Inicial x4 — 🔴 Agotado
               </button>
               <button className="mob-acc-sub" onClick={() => scrollToSection('emprendedor', 'combos')}>
-                <span className="acc-emoji">🔥</span> Combo Pro x5 — $225.000 COP ($45K c/u)
+                <span className="acc-emoji">🔥</span> Combo Pro x5 — 🔴 Agotado
               </button>
               <button className="mob-acc-sub" onClick={() => scrollToSection('emprendedor', 'combos')}>
-                <span className="acc-emoji">🏭</span> Lote x10 — $450.000 COP (Precio Fábrica $45K c/u)
+                <span className="acc-emoji">🏭</span> Lote x10 — 🔴 Agotado
               </button>
             </div>
           </div>
@@ -1332,7 +1360,7 @@ export default function App() {
             <div className="store-tabs-wrap">
               {[
                 { id: 'relojes', sectionId: 'catalog',       icon: Clock, label: '⌚ Catálogo' },
-                { id: 'combos',  sectionId: 'emprendedor',   icon: TrendingUp, label: '💼 Emprendedor ($45K)' },
+                { id: 'combos',  sectionId: 'emprendedor',   icon: TrendingUp, label: '💼 Emprendedor (Agotado)' },
                 { id: 'envios',  sectionId: 'envios-pais',   icon: Truck, label: '🚚 Envíos al País' },
                 { id: 'pedido',  sectionId: 'order-builder', icon: ShoppingBag, label: '⚡ Pedir Ahora' },
                 { id: 'faq',     sectionId: 'faq',           icon: HelpCircle, label: '❓ Dudas' },
@@ -1364,7 +1392,7 @@ export default function App() {
               {COLLECTIONS_LIST.map((col) => (
                 <article
                   key={col.id}
-                  className="col-minimal-card"
+                  className={`col-minimal-card ${col.soldOut ? 'sold-out' : ''}`}
                   onClick={() => {
                     playTick();
                     setSelectedBrand(col.id);
@@ -1372,10 +1400,13 @@ export default function App() {
                   }}
                 >
                   <div className="cmc-img-box">
+                    {col.soldOut && (
+                      <span className="cmc-soldout-badge">AGOTADO</span>
+                    )}
                     <img src={col.img} alt={col.name} loading="lazy" />
                   </div>
                   <h3 className="cmc-title">{col.name}</h3>
-                  <span className="cmc-explore">Ver Modelos →</span>
+                  <span className="cmc-explore">{col.soldOut ? '🔴 Temporalmente Agotado' : 'Ver Modelos →'}</span>
                 </article>
               ))}
             </div>
@@ -1389,7 +1420,7 @@ export default function App() {
                 }}
                 className="btn-link-wholesale"
               >
-                💼 Ver Catálogo para Emprendedores y Mayoristas →
+                💼 Ver Catálogo para Emprendedores y Mayoristas (Agotado) →
               </button>
             </div>
           </div>
@@ -1504,98 +1535,136 @@ export default function App() {
                           type="button"
                           className={`order-brand-tab ${orderCategoryTab === 'combos' ? 'active' : ''}`}
                           onClick={() => { playTick(); setOrderCategoryTab('combos'); }}
+                          style={orderCategoryTab === 'combos' ? {} : { color: '#f87171' }}
                         >
-                          🎁 Combos
+                          🎁 Combos (Agotado)
                         </button>
                       </div>
 
                       {/* Lista de Relojes según Marca */}
                       <div className="model-grid-scroll">
-                        {(orderCategoryTab === 'combos'
-                          ? ENTREPRENEUR_COMBOS.map(c => ({
-                              id: c.id,
-                              name: `${c.name} (${c.units} Relojes)`,
-                              price: c.priceTotal,
-                              brand: 'Combo Mayorista',
-                              image: '/assets/img/cat_cover_emprendedores.jpg'
-                            }))
-                          : PRODUCTS.filter(p => p.category === orderCategoryTab)
-                        ).map(watch => {
-                          const cartItem = cart.find(i => i.id === watch.id);
-                          const isSelected = !!cartItem;
-                          return (
-                            <div
-                              key={watch.id}
-                              className={`model-opt-card ${isSelected ? 'sel' : ''}`}
-                              onClick={() => {
-                                if (isSelected) {
-                                  removeFromCart(watch.id);
-                                } else {
-                                  addToCart(watch);
-                                }
-                              }}
-                              title={isSelected ? "Haz clic para quitar este modelo del pedido" : "Haz clic para agregar al pedido"}
-                            >
-                              <div className="mo-left">
-                                <img src={watch.image} alt={watch.name} className="model-thumb-clean" loading="lazy" decoding="async" />
-                                <div className="mo-info">
-                                  <h5 title={watch.name}>{watch.name}</h5>
-                                  <div className="mo-meta-row">
-                                    <span className="mo-price text-emerald-400 font-bold">Consultar Precio</span>
-                                    <span className="mo-line-pill">{watch.brand}</span>
-                                    {isSelected && <span className="mo-sel-hint">✓ En pedido</span>}
+                        {orderCategoryTab === 'combos' ? (
+                          <div style={{
+                            padding: '24px 16px',
+                            textAlign: 'center',
+                            background: 'rgba(239, 68, 68, 0.08)',
+                            border: '1px solid rgba(239, 68, 68, 0.28)',
+                            borderRadius: 14,
+                            margin: '8px 0'
+                          }}>
+                            <span style={{
+                              display: 'inline-block',
+                              background: '#ef4444',
+                              color: '#fff',
+                              fontSize: '0.72rem',
+                              fontWeight: 900,
+                              padding: '4px 12px',
+                              borderRadius: 999,
+                              marginBottom: 10
+                            }}>🔴 COMBOS TEMPORALMENTE AGOTADOS</span>
+                            <h4 style={{ color: '#fff', margin: '4px 0 8px', fontSize: '1.02rem', fontWeight: 800 }}>
+                              Lotes y Combos Sin Stock Inmediato
+                            </h4>
+                            <p style={{ color: 'var(--t2)', fontSize: '0.85rem', margin: '0 0 16px', lineHeight: 1.45 }}>
+                              Debido a la alta demanda nacional, todos los combos y paquetes mayoristas se encuentran agotados. Te invitamos a seleccionar piezas individuales disponibles de <strong>Invicta</strong> o <strong>Rolex Style</strong>.
+                            </p>
+                            <div style={{ display: 'flex', gap: 10, justifyContent: 'center', flexWrap: 'wrap' }}>
+                              <button
+                                type="button"
+                                onClick={() => { playTick(); setOrderCategoryTab('invicta'); }}
+                                className="btn-cta-emerald"
+                                style={{ padding: '8px 16px', fontSize: '0.82rem', width: 'auto' }}
+                              >
+                                👑 Ver Modelos Invicta en Stock
+                              </button>
+                              <button
+                                type="button"
+                                onClick={() => { playTick(); setOrderCategoryTab('rolex'); }}
+                                className="btn-order-outline"
+                                style={{ padding: '8px 16px', fontSize: '0.82rem', width: 'auto', color: '#fff' }}
+                              >
+                                💎 Ver Modelos Rolex en Stock
+                              </button>
+                            </div>
+                          </div>
+                        ) : (
+                          PRODUCTS.filter(p => p.category === orderCategoryTab).map(watch => {
+                            const cartItem = cart.find(i => i.id === watch.id);
+                            const isSelected = !!cartItem;
+                            return (
+                              <div
+                                key={watch.id}
+                                className={`model-opt-card ${isSelected ? 'sel' : ''}`}
+                                onClick={() => {
+                                  if (isSelected) {
+                                    removeFromCart(watch.id);
+                                  } else {
+                                    addToCart(watch);
+                                  }
+                                }}
+                                title={isSelected ? "Haz clic para quitar este modelo del pedido" : "Haz clic para agregar al pedido"}
+                              >
+                                <div className="mo-left">
+                                  <img src={watch.image} alt={watch.name} className="model-thumb-clean" loading="lazy" decoding="async" />
+                                  <div className="mo-info">
+                                    <h5 title={watch.name}>{watch.name}</h5>
+                                    <div className="mo-meta-row">
+                                      <span className="mo-price text-emerald-400 font-bold">Consultar Precio</span>
+                                      <span className="mo-line-pill">{watch.brand}</span>
+                                      {isSelected && <span className="mo-sel-hint">✓ En pedido</span>}
+                                    </div>
                                   </div>
                                 </div>
-                              </div>
 
-                              <div className="mo-actions">
-                                {isSelected ? (
-                                  <div className="mo-qty-control" onClick={e => e.stopPropagation()}>
+                                <div className="mo-actions">
+                                  {isSelected ? (
+                                    <div className="mo-qty-control" onClick={e => e.stopPropagation()}>
+                                      <button
+                                        type="button"
+                                        className="mo-qty-btn"
+                                        onClick={() => updateCartQty(watch.id, -1)}
+                                        aria-label="Disminuir cantidad"
+                                        title="Disminuir cantidad"
+                                      >
+                                        -
+                                      </button>
+                                      <span className="mo-qty-val">{cartItem.qty}</span>
+                                      <button
+                                        type="button"
+                                        className="mo-qty-btn"
+                                        onClick={() => updateCartQty(watch.id, 1)}
+                                        aria-label="Aumentar cantidad"
+                                        title="Aumentar cantidad"
+                                      >
+                                        +
+                                      </button>
+                                      <button
+                                        type="button"
+                                        className="mo-del-btn"
+                                        onClick={() => removeFromCart(watch.id)}
+                                        aria-label="Quitar modelo"
+                                        title="Quitar este modelo del pedido"
+                                      >
+                                        ✕
+                                      </button>
+                                    </div>
+                                  ) : (
                                     <button
                                       type="button"
-                                      className="mo-qty-btn"
-                                      onClick={() => updateCartQty(watch.id, -1)}
-                                      aria-label="Disminuir cantidad"
-                                      title="Disminuir cantidad"
+                                      className="mo-add-btn"
+                                      onClick={(e) => {
+                                        e.stopPropagation();
+                                        addToCart(watch);
+                                      }}
                                     >
-                                      -
+                                      + Agregar
                                     </button>
-                                    <span className="mo-qty-val">{cartItem.qty}</span>
-                                    <button
-                                      type="button"
-                                      className="mo-qty-btn"
-                                      onClick={() => updateCartQty(watch.id, 1)}
-                                      aria-label="Aumentar cantidad"
-                                      title="Aumentar cantidad"
-                                    >
-                                      +
-                                    </button>
-                                    <button
-                                      type="button"
-                                      className="mo-del-btn"
-                                      onClick={() => removeFromCart(watch.id)}
-                                      aria-label="Quitar modelo"
-                                      title="Quitar este modelo del pedido"
-                                    >
-                                      ✕
-                                    </button>
-                                  </div>
-                                ) : (
-                                  <button
-                                    type="button"
-                                    className="mo-add-btn"
-                                    onClick={(e) => {
-                                      e.stopPropagation();
-                                      addToCart(watch);
-                                    }}
-                                  >
-                                    + Agregar
-                                  </button>
-                                )}
+                                  )}
+                                </div>
                               </div>
-                            </div>
-                          );
-                        })}
+                            );
+                          })
+                        )}
                       </div>
 
                       {/* Contador total de seleccionados */}
